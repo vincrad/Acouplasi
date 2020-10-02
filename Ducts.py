@@ -75,24 +75,31 @@ class Duct(tr.HasTraits):
     Combines different DuctElements to build a silencer.
     '''
     # geometrie
-    height = tr.Float()
+    #height = tr.Float()
+    
+    #
+    freq = tr.List(trait=tr.Int())
     
     # number of modes
     #M = tr.Int()
     
     # list of duct elements / transfer matrices
     elements = tr.List(trait = tr.Instance(DuctElementDummy))
+        
+    def tmatrix(self):
+       
+        for i in self.elements:
+            
+            print(i)
+            
+            f = np.asarray(self.freq)
+            
+            i.lining.reflection(f)
+            
+            i.tmatrix()
+                
     
     def tl(self):
-        
-        S0 = 2.0
-        Z0 = self.elements[0].medium.c*self.elements[0].medium.rho0
-        
-        self.TL = 20*log10((1/2)*abs(self.elements[0].T[0,0]+(S0/Z0)*self.elements[0].T[0,1]+(Z0/S0)*self.elements[0].T[1,0]+self.elements[0].T[1,1]))
-        
-        return self.TL
-    
-    def test(self, freq):
         
         S0 = 2.0
         Z0 = self.elements[0].medium.c*self.elements[0].medium.rho0
@@ -104,7 +111,7 @@ class Duct(tr.HasTraits):
                 T = self.elements[i].T.T
                 
             else:
-                for f in range(len(freq)):
+                for f in range(len(self.freq)):
                     T[f] = np.dot(T[f], self.elements[i].T.T[f])
         
         # calculating the TL
