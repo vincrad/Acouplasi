@@ -25,17 +25,6 @@ class Fluid(tr.HasTraits):
         
         return self.c
     
-# =============================================================================
-#     rhof = tr.Float()
-#     R = tr.Float()
-#     kappa = tr.Float()
-#     T = tr.List(trait = tr.Float()) 
-#     
-#     def soundspeed(self):
-#         T = np.asarray(self.T)
-#         c = sqrt(self.kappa*self.R*T)
-#         return c
-# =============================================================================
 
     
     

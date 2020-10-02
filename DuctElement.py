@@ -9,7 +9,7 @@ Created on Tue Aug 25 09:47:36 2020
 import traitlets as tr
 import numpy as np
 from Fluid import Fluid
-from Linings import DummyLining, DummyAbsorption
+from Linings import DummyLining
 
 # =============================================================================
 # class DuctElement(tr.HasTraits):
@@ -30,42 +30,22 @@ from Linings import DummyLining, DummyAbsorption
 #     # daraus Berechnung der Transfermatrix
 # =============================================================================
 
-# =============================================================================
-# class DuctElementDummy(tr.HasTraits):
-#     
-#     # Informationen, die eigentlich aus fluid kommen
-#     def __init__(self):
-#         self.c = 343 #m/s
-#         self.rho0 = 1.2  # kg/m³
-#         self.S = 2   # m²
-#         self.l = 1   # m
-#         
-#     lining = tr.Instance(ReflectiveSilencer)
-#     
-# 
-#     def tmatrix(self, freq):
-#          # Kanal ohne Auskleidung
-#          kz = (2*np.pi*freq)/self.c
-#         
-#          # Schallflussimpedanz
-#          Z = ((self.rho0*self.c)/self.S*kz)
-#         
-#          T = np.array([[np.cos(kz*self.l), 1j*Z*np.sin(kz*self.l)],[1j*(1/Z)*np.sin(kz*self.l), np.cos(kz*self.l)]])
-#          
-#          return (T, Z)
-# =============================================================================
 
-class DuctElementDummy2(tr.HasTraits):
+class DuctElementDummy(tr.HasTraits):
     '''
     Class calculates the transfer matrix of a certain duct section.
     '''
     #flowspeed = tr.Float()
     
-    #medium = tr.Instance(Fluid)
+    medium = tr.Instance(Fluid)
     
     lining = tr.Instance(DummyLining)
     
     def tmatrix(self):
+        
+        # wie übergibt man das am schlausten?
+        self.depth = self.lining.depth
+    
         self.T = np.array([[np.cos(self.lining.kz*self.lining.length), 1j*self.lining.Z*np.sin(self.lining.kz*self.lining.length)],[1j*(1/self.lining.Z)*np.sin(self.lining.kz*self.lining.length), np.cos(self.lining.kz*self.lining.length)]])
         
         return self.T

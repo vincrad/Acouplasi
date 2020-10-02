@@ -8,7 +8,7 @@ Created on Tue Aug 25 07:35:22 2020
 
 import traitlets as tr
 import numpy as np
-from DuctElement import DuctElementDummy2
+from DuctElement import DuctElementDummy
 import matplotlib.pyplot as plt
 from numpy import log10
 from numpy import abs
@@ -72,21 +72,21 @@ from numpy import abs
      
 class Duct(tr.HasTraits):
     '''
-    2D-Duct. Combines different DuctElements to build a silencer.
+    Combines different DuctElements to build a silencer.
     '''
     # geometrie
-    #height = tr.Float()
+    height = tr.Float()
     
     # number of modes
     #M = tr.Int()
     
     # list of duct elements / transfer matrices
-    elements = tr.List(trait = tr.Instance(DuctElementDummy2))
+    elements = tr.List(trait = tr.Instance(DuctElementDummy))
     
     def tl(self):
         
         S0 = 2.0
-        Z0 = 1.2*343
+        Z0 = self.elements[0].medium.c*self.elements[0].medium.rho0
         
         self.TL = 20*log10((1/2)*abs(self.elements[0].T[0,0]+(S0/Z0)*self.elements[0].T[0,1]+(Z0/S0)*self.elements[0].T[1,0]+self.elements[0].T[1,1]))
         
@@ -95,7 +95,7 @@ class Duct(tr.HasTraits):
     def test(self, freq):
         
         S0 = 2.0
-        Z0 = 1.2*343
+        Z0 = self.elements[0].medium.c*self.elements[0].medium.rho0
         
         # multiplication of the different element matrices
         for i in range(len(self.elements)):
@@ -117,29 +117,6 @@ class Duct(tr.HasTraits):
     
         
     
-    
-    
-#%% 
-# =============================================================================
-# amp = 1
-# f = 500
-# #f = np.arange(0, 501)
-# rho = 1,2
-# c = 343
-# x = np.arange(0, 1.01, 0.01)
-# omega = 2*np.pi*f
-# 
-# k = omega/c
-# 
-# P = []
-# for i in x:
-#     p = amp*np.exp(-1j*k*i)
-#     P.append(p)
-#     
-# fig = plt.figure()
-# plt.plot(x, P)
-# =============================================================================
-
     
     
     

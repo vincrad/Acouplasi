@@ -31,81 +31,34 @@ from Fluid import Fluid
 #     # transfer of configuration, e.g. StandardPlateResonator 
 #     arrangement = tr.Instance()
 # =============================================================================
-    
-    
-# =============================================================================
-# class ReflectiveSilencer(tr.HasTraits):
-#     '''
-#     Class for reflective silencer.
-#     '''
-#     
-#     # geometrie
-#     length = tr.Float()
-#     depth = tr.Float()
-#     height = tr.Float()
-#     
-#     flu = tr.Instance(Fluid)
-#     
-#     def speed(self):
-#         print(self.flu.c)
-#         self.c = self.flu.c
-#         
-#     def 
-#     
-#     #c = fluid.soundspeed()
-#     #Sk = depth*height
-#           
-#     
-# # =============================================================================
-# #     def __init__(self, freq):
-# #         self.Sk = self.depth*self.height
-# #         self.c = Fluid.soundspeed()
-# #         self.kz = (2*np.pi*freq)/self.c
-# # =============================================================================
-#     
-# =============================================================================
+
 
 class DummyLining(tr.HasTraits):
     
     # geometrie
     length = tr.Float()
     depth = tr.Float()
+    height = tr.Float()
     
-    S = tr.Float()
-    
+    # medium
     medium = tr.Instance(Fluid)
     
-# =============================================================================
-#     # random
-#     kz = tr.CFloat()
-#     Z = tr.CFloat()
-# =============================================================================
-
-    # schallharte Wand  / Reflexionsschalldämpfer
-    def koeff(self, freq):
+    # thickness of absorber
+    dw = tr.Float(default_value=0)
+    
+    # flow resistance
+    Xi = tr.Float(default_value=6000)   # Ns/m⁴
+       
+    # schallharte Wand  / Reflexionsschalldämpfer 
+    def reflection(self, freq):
+        self.S = self.depth*self.height
         self.kz = (2*np.pi*freq)/self.medium.c
         self.Z = (self.medium.rho0*self.medium.c*self.kz)/(self.S*self.kz)
         
         return (self.kz, self.Z)
-        
     
-class DummyAbsorption(tr.HasTraits):
-    
-    # geometrie
-    length = tr.Float()
-    depth = tr.Float()
-    height = tr.Float()
-    dw = tr.Float()
-    
-    # flow resistance
-    Xi = tr.Float(default_value=6000)   # Ns/m⁴
-    
-    
-    
-    medium = tr.Instance(Fluid)
-    
-    def koeff(self, freq):
-        
+    # Absorption
+    def absorption(self, freq):
         self.S = self.depth*self.height
         
         X = (self.medium.rho0*freq)/self.Xi
@@ -123,29 +76,7 @@ class DummyAbsorption(tr.HasTraits):
         self.Z = (Z0*k)/(self.S*self.kz)
         
         return (self.kz, self.Z)
-        
-#%%
-# =============================================================================
-# f = np.arange(1, 200, 11)
-# F = Fluid()
-# test = F.c
-# 
-# silencer = ReflectiveSilencer(length=4, depth=1, height=2)
-# silencer.flu = F
-# print(silencer.length)
-# print(silencer.depth)
-# print(silencer.flu)
-# print(silencer.flu.c)
-# 
-# silencer.speed()
-# 
-# print(silencer.c)
-# 
-# #print(silencer.fluid.c)
-# 
-# 
-# #print(silencer.Sk)
-# =============================================================================
+
 
 
 
