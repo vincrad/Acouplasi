@@ -33,6 +33,52 @@ from Fluid import Fluid
 # =============================================================================
 
 
+# =============================================================================
+# class DummyLining(tr.HasTraits):
+#     
+#     # geometrie
+#     length = tr.Float()
+#     depth = tr.Float()
+#     height = tr.Float()
+#     
+#     # medium
+#     medium = tr.Instance(Fluid)
+#     
+#     # thickness of absorber
+#     dw = tr.Float(default_value=0)
+#     
+#     # flow resistance
+#     Xi = tr.Float(default_value=6000)   # Ns/m⁴
+#        
+#     # schallharte Wand  / Reflexionsschalldämpfer 
+#     def reflection(self, freq):
+#         self.S = self.depth*self.height
+#         self.kz = (2*np.pi*freq)/self.medium.c
+#         self.Z = (self.medium.rho0*self.medium.c*self.kz)/(self.S*self.kz)
+#         
+#         return (self.kz, self.Z)
+#     
+#     # Absorption
+#     def absorption(self, freq):
+#         self.S = self.depth*self.height
+#         
+#         X = (self.medium.rho0*freq)/self.Xi
+#         k = (2*np.pi*freq)/self.medium.c
+#         Z0 = self.medium.rho0*self.medium.c
+#         
+#         # nach Miki
+#         ka = (1+0.0109*X**(-0.618)-1j*0.160*X**(-0.618))*k
+#         Za = (1+0.070*X**(-0.632)-1j*0.107*X**(-0.632))*Z0
+#         
+#         self.Zw = -1j*Za*(1/np.tan(ka*self.dw))
+#         
+#         
+#         self.kz = np.sqrt(k**2-((1j*Z0)/(self.Zw*self.height)))
+#         self.Z = (Z0*k)/(self.S*self.kz)
+#         
+#         return (self.kz, self.Z)
+# =============================================================================
+
 class DummyLining(tr.HasTraits):
     
     # geometrie
@@ -43,13 +89,8 @@ class DummyLining(tr.HasTraits):
     # medium
     medium = tr.Instance(Fluid)
     
-    # thickness of absorber
-    dw = tr.Float(default_value=0)
+class DummyReflection(DummyLining):
     
-    # flow resistance
-    Xi = tr.Float(default_value=6000)   # Ns/m⁴
-       
-    # schallharte Wand  / Reflexionsschalldämpfer 
     def reflection(self, freq):
         self.S = self.depth*self.height
         self.kz = (2*np.pi*freq)/self.medium.c
@@ -57,27 +98,36 @@ class DummyLining(tr.HasTraits):
         
         return (self.kz, self.Z)
     
-    # Absorption
+class DummyAbsorption(DummyLining):
+    
+    # thickness of absorber
+    dw = tr.Float()
+    
+    # flow resistance
+    Xi = tr.Float(default_value=6000) #Ns/m⁴
+    
     def absorption(self, freq):
-        self.S = self.depth*self.height
-        
-        X = (self.medium.rho0*freq)/self.Xi
-        k = (2*np.pi*freq)/self.medium.c
-        Z0 = self.medium.rho0*self.medium.c
-        
-        # nach Miki
-        ka = (1+0.0109*X**(-0.618)-1j*0.160*X**(-0.618))*k
-        Za = (1+0.070*X**(-0.632)-1j*0.107*X**(-0.632))*Z0
-        
-        self.Zw = -1j*Za*(1/np.tan(ka*self.dw))
         
         
-        self.kz = np.sqrt(k**2-((1j*Z0)/(self.Zw*self.height)))
-        self.Z = (Z0*k)/(self.S*self.kz)
+         self.S = self.depth*self.height
+         
+         X = (self.medium.rho0*freq)/self.Xi
+         k = (2*np.pi*freq)/self.medium.c
+         Z0 = self.medium.rho0*self.medium.c
+         
+         # nach Miki
+         ka = (1+0.0109*X**(-0.618)-1j*0.160*X**(-0.618))*k
+         Za = (1+0.070*X**(-0.632)-1j*0.107*X**(-0.632))*Z0
+         
+         self.Zw = -1j*Za*(1/np.tan(ka*self.dw))
+         
+         
+         self.kz = np.sqrt(k**2-((1j*Z0)/(self.Zw*self.height)))
+         self.Z = (Z0*k)/(self.S*self.kz)
+         
+         return (self.kz, self.Z)
+    
         
-        return (self.kz, self.Z)
-
-
 
 
 

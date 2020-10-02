@@ -9,7 +9,7 @@ Created on Tue Aug 25 09:47:36 2020
 import traitlets as tr
 import numpy as np
 from Fluid import Fluid
-from Linings import DummyLining
+from Linings import DummyLining, DummyReflection, DummyAbsorption
 
 # =============================================================================
 # class DuctElement(tr.HasTraits):
