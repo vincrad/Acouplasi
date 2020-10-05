@@ -90,11 +90,9 @@ class Duct(tr.HasTraits):
        
         for i in self.elements:
             
-            print(i)
-            
             f = np.asarray(self.freq)
             
-            i.lining.reflection(f)
+            i.lining.koeff(f)
             
             i.tmatrix()
                 

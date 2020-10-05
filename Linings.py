@@ -91,7 +91,7 @@ class DummyLining(tr.HasTraits):
     
 class DummyReflection(DummyLining):
     
-    def reflection(self, freq):
+    def koeff(self, freq):
         self.S = self.depth*self.height
         self.kz = (2*np.pi*freq)/self.medium.c
         self.Z = (self.medium.rho0*self.medium.c*self.kz)/(self.S*self.kz)
@@ -106,7 +106,7 @@ class DummyAbsorption(DummyLining):
     # flow resistance
     Xi = tr.Float(default_value=6000) #Ns/m⁴
     
-    def absorption(self, freq):
+    def koeff(self, freq):
         
         
          self.S = self.depth*self.height
