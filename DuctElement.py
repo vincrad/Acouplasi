@@ -41,14 +41,37 @@ class DuctElementDummy(tr.HasTraits):
     
     lining = tr.Instance(DummyLining)
     
-    def tmatrix(self):
+    @property
+    def depth(self):
         
-        # wie übergibt man das am schlausten?
-        self.depth = self.lining.depth
+        depth = self.lining.depth
+        
+        return depth
     
-        self.T = np.array([[np.cos(self.lining.kz*self.lining.length), 1j*self.lining.Z*np.sin(self.lining.kz*self.lining.length)],[1j*(1/self.lining.Z)*np.sin(self.lining.kz*self.lining.length), np.cos(self.lining.kz*self.lining.length)]])
+    
+    def T(self,freq):
+        
+        kz = self.lining.kz(freq)
+        Z = self.lining.Z()
+        
+        self.T = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
         
         return self.T
+
+        
+    
+    
+    
+# =============================================================================
+#     def tmatrix(self):
+#         
+#         # wie übergibt man das am schlausten?
+#         self.depth = self.lining.depth
+#     
+#         self.T = np.array([[np.cos(self.lining.kz*self.lining.length), 1j*self.lining.Z*np.sin(self.lining.kz*self.lining.length)],[1j*(1/self.lining.Z)*np.sin(self.lining.kz*self.lining.length), np.cos(self.lining.kz*self.lining.length)]])
+#         
+#         return self.T
+# =============================================================================
         
     
     
