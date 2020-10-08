@@ -89,15 +89,39 @@ class DummyLining(tr.HasTraits):
     # medium
     medium = tr.Instance(Fluid)
     
+    @property
+    def S(self):
+        
+        S = self.depth*self.height
+        
+        return S
+
 class DummyReflection(DummyLining):
     
-    def koeff(self, freq):
-        self.S = self.depth*self.height
+    def kz(self, freq):
+        
         self.kz = (2*np.pi*freq)/self.medium.c
+        
+        return self.kz
+    
+    def Z(self):
+        
         self.Z = (self.medium.rho0*self.medium.c*self.kz)/(self.S*self.kz)
         
-        return (self.kz, self.Z)
+        return self.Z
     
+# =============================================================================
+# class DummyReflection(DummyLining):
+#     
+#     def koeff(self, freq):
+#         self.S = self.depth*self.height
+#         self.kz = (2*np.pi*freq)/self.medium.c
+#         self.Z = (self.medium.rho0*self.medium.c*self.kz)/(self.S*self.kz)
+#         
+#         return (self.kz, self.Z)
+# =============================================================================
+
+
 class DummyAbsorption(DummyLining):
     
     # thickness of absorber
