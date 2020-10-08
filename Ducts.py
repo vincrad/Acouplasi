@@ -69,7 +69,8 @@ from numpy import abs
 #     def height(self):
 #         return self.height
 # =============================================================================
-     
+
+    
 class Duct(tr.HasTraits):
     '''
     Combines different DuctElements to build a silencer.
@@ -78,7 +79,8 @@ class Duct(tr.HasTraits):
     #height = tr.Float()
     
     #
-    freq = tr.List(trait=tr.Int())
+    #freq = tr.List(trait=tr.Int())
+    freq = tr.Instance(np.ndarray)
     
     # number of modes
     #M = tr.Int()
@@ -86,37 +88,66 @@ class Duct(tr.HasTraits):
     # list of duct elements / transfer matrices
     elements = tr.List(trait = tr.Instance(DuctElementDummy))
         
-    def tmatrix(self):
-       
-        for i in self.elements:
-            
-            f = np.asarray(self.freq)
-            
-            i.lining.koeff(f)
-            
-            i.tmatrix()
-                
-    
     def tl(self):
         
         S0 = 2.0
         Z0 = self.elements[0].medium.c*self.elements[0].medium.rho0
         
-        # multiplication of the different element matrices
-        for i in range(len(self.elements)):
+        # multiplication of the different element matrice
+        #T = self.elements[0].T(self.freq)
+  
+        for idx, element in enumerate(self.elements):
+            print(idx, element)
+            T_temp = element.T(self.freq).T
             
-            if i==0:
-                T = self.elements[i].T.T
+            if idx == 0:
+                
+                T = T_temp
                 
             else:
+                
                 for f in range(len(self.freq)):
-                    T[f] = np.dot(T[f], self.elements[i].T.T[f])
+                    T[f] = np.dot(T[f], T_temp[f])
+                    
         
-        # calculating the TL
+        # calculation of TL
         T = T.T
         self.TL = 20*log10((1/2)*abs(T[0,0]+(S0/Z0)*T[0,1]+(Z0/S0)*T[1,0]+T[1,1]))
-                    
-        return (self.TL)
+        
+        
+        return self.TL    
+    
+# =============================================================================
+#     def tmatrix(self):
+#        
+#         for i in self.elements:
+#             
+#             i.lining.koeff(self.freq)
+#             
+#             i.tmatrix()
+#                 
+#     
+#     def tl(self):
+#         
+#         S0 = 2.0
+#         Z0 = self.elements[0].medium.c*self.elements[0].medium.rho0
+#         
+#         # multiplication of the different element matrices
+#         for i in range(len(self.elements)):
+#             
+#             if i==0:
+#                 T = self.elements[i].T.T
+#                 
+#             else:
+#                 for f in range(len(self.freq)):
+#                     T[f] = np.dot(T[f], self.elements[i].T.T[f])
+#         
+#         # calculating the TL
+#         T = T.T
+#         self.TL = 20*log10((1/2)*abs(T[0,0]+(S0/Z0)*T[0,1]+(Z0/S0)*T[1,0]+T[1,1]))
+#                     
+#         return (self.TL)
+# =============================================================================
     
     
     
