@@ -51,12 +51,16 @@ class DuctElementDummy(tr.HasTraits):
     
     def T(self,freq):
         
-        kz = self.lining.kz(freq)
-        Z = self.lining.Z()
+        [kz, Z] = self.lining.Zkz(freq)
         
-        self.T = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
+# =============================================================================
+#         kz = self.lining.kz(freq)
+#         Z = self.lining.Z()
+# =============================================================================
         
-        return self.T
+        T = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
+        
+        return T
 
         
     

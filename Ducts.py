@@ -112,10 +112,10 @@ class Duct(tr.HasTraits):
         
         # calculation of TL
         T = T.T
-        self.TL = 20*log10((1/2)*abs(T[0,0]+(S0/Z0)*T[0,1]+(Z0/S0)*T[1,0]+T[1,1]))
+        TL = 20*log10((1/2)*abs(T[0,0]+(S0/Z0)*T[0,1]+(Z0/S0)*T[1,0]+T[1,1]))
         
         
-        return self.TL    
+        return TL    
     
 # =============================================================================
 #     def tmatrix(self):

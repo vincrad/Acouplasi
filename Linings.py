@@ -98,17 +98,27 @@ class DummyLining(tr.HasTraits):
 
 class DummyReflection(DummyLining):
     
-    def kz(self, freq):
+    def Zkz(self, freq):
         
-        self.kz = (2*np.pi*freq)/self.medium.c
+        kz = (2*np.pi*freq)/self.medium.c
+        Z = (self.medium.rho0*self.medium.c*kz)/(self.S*kz)
         
-        return self.kz
+        return (kz, Z)
     
-    def Z(self):
+# =============================================================================
+#     def kz(self, freq):
+#         
+#         kz = (2*np.pi*freq)/self.medium.c
+#         
+#         return kz
+#     
+#     def Z(self, freq):
+#         
+#         Z = (self.medium.rho0*self.medium.c*self.kz(freq))/(self.S*self.kz(freq))
+#         
+#         return Z 
+# =============================================================================
         
-        self.Z = (self.medium.rho0*self.medium.c*self.kz)/(self.S*self.kz)
-        
-        return self.Z
     
 # =============================================================================
 # class DummyReflection(DummyLining):
