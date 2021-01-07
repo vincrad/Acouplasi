@@ -7,9 +7,10 @@ Created on Tue Aug 25 09:58:19 2020
 """
 
 import traitlets as tr
-import numpy as np
+import numpy as np, numpy
 from Fluid import Fluid
 from Cavity import Cavity
+from Plate import Plate
 
 # =============================================================================
 # class PlateResonator(tr.HasTraits):
@@ -162,7 +163,8 @@ class DummyAbsorption(DummyLining):
          return (self.kz, self.Z)
     
         
-#%% Plate Resonator
+#%% Plate Resonator classes
+# subclasses with different configurations
 
 class PlateResonators(tr.HasTraits):
     
@@ -174,6 +176,9 @@ class PlateResonators(tr.HasTraits):
     length = tr.Float()
     depth = tr.Float(default_value=0)
     
+    # plate
+    plate = tr.Instance(Plate)
+    
     # medium
     medium = tr.Instance(Fluid)
     
@@ -184,12 +189,71 @@ class PlateResonators(tr.HasTraits):
     J = tr.Instance(np.ndarray)
     L = tr.Instance(np.ndarray)
     
+    # flow -> eigene Klasse erstellen?
+    M = tr.Float(default_value=0)
+    
+   
+class SinglePlate(PlateResonators):
+    
+    '''
+    2D single plate resonator without flow
+    '''
+
     def ZMatrix(self, freq):
         
         # cavity impedance matrix
         Zc = self.cavity.ModImp(self.J, self.L, freq)
         
-        Z = Zc
+        # impedance matrix of plate induced sound
+        Zprad = np.zeros((len(self.J), len(self.L), len(freq)), dtype=complex)
+        
+        # cicular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/self.medium.c
+        
+        for j in self.J:
+            
+            for l in self.L:
+                
+                Sum = 0
+                
+                if j==l:
+                    
+                    Sum += 0
+                    
+                else:
+                    
+                    for r in self.cavity.R:
+                        
+                        Krp = -k0*self.M-1j*np.sqrt((1-self.M**2)*(r*np.pi)**2-k0**2, dtype=complex)/(1-self.M**2)
+                        Krm = k0*self.M-1j*np.sqrt((1-self.M**2)*(r*np.pi)**2-k0**2, dtype=complex)/(1-self.M**2)
+                        
+                        x0=numpy.pi**2
+                        x1=self.length**2
+                        x2=Krm**2*x1
+                        x3=j**2
+                        x4=-x0*x3
+                        x5=l**2
+                        x6=-x0*x5
+                        x7=x2 + x6
+                        x8=j + 1
+                        x9=(-1)**(j + l)
+                        x10=1j*self.length
+                        x11=Krm*x10
+                        x12=numpy.exp(x11)
+                        x13=x3 - x5
+                        x14=x0*x13
+                        x15=j*k0*l*x1/x13
+                        x16=Krp**2*x1
+                        x17=x16 + x6
+                        x18=Krp*x10
+                        x19=numpy.exp(x18)
+                        
+                        Sum += (2 - self.cavity.delta(r))*(x15*(x12*x7*((-1)**(l + x8) + 1) + x14*((-1)**x8 + x12*x9))*numpy.exp(-x11)/(x7*(x2 + x4)) + x15*((-1)**(l + 1)*x14 + x14*x19 + x17*x19*(x9 - 1))*numpy.exp(-x18)/(x17*(x16 + x4)))/numpy.sqrt(-k0**2 + r**2*x0, dtype=complex)
+                        
+                Zprad[j-1,l-1,:] = (1/2)*1j*self.length*Sum
+                    
+        Z = Zc+Zprad
         
         return Z
          

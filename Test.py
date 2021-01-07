@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from DuctElement import DuctElementDummy
 from Ducts import Duct
 from Fluid import Fluid
-from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators
+from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
 from Plate import Plate
 from Cavity import Cavity
 
@@ -225,11 +225,9 @@ cavity1 = Cavity(length=1, height=0.5, R=R, S=S, medium=fluid1)
 
 #Zc = cavity1.Imp(J,L,f)
 
-plate1 = PlateResonators(length=1, J=J, L=L, cavity=cavity1, medium=fluid1)
+plate1 = SinglePlate(length=1, J=J, L=L, cavity=cavity1, medium=fluid1)
 
 test = plate1.ZMatrix(f)
-
-
 
 
 
