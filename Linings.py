@@ -9,6 +9,7 @@ Created on Tue Aug 25 09:58:19 2020
 import traitlets as tr
 import numpy as np
 from Fluid import Fluid
+from Cavity import Cavity
 
 # =============================================================================
 # class PlateResonator(tr.HasTraits):
@@ -131,7 +132,6 @@ class DummyReflection(DummyLining):
 #         return (self.kz, self.Z)
 # =============================================================================
 
-
 class DummyAbsorption(DummyLining):
     
     # thickness of absorber
@@ -162,9 +162,37 @@ class DummyAbsorption(DummyLining):
          return (self.kz, self.Z)
     
         
+#%% Plate Resonator
 
-
-
+class PlateResonators(tr.HasTraits):
+    
+    '''
+    Parent class for different plate resonator configurations.
+    '''
+    
+    # geometry
+    length = tr.Float()
+    depth = tr.Float(default_value=0)
+    
+    # medium
+    medium = tr.Instance(Fluid)
+    
+    # cavity
+    cavity = tr.Instance(Cavity)
+    
+    # plate modes
+    J = tr.Instance(np.ndarray)
+    L = tr.Instance(np.ndarray)
+    
+    def ZMatrix(self, freq):
+        
+        # cavity impedance matrix
+        Zc = self.cavity.ModImp(self.J, self.L, freq)
+        
+        Z = Zc
+        
+        return Z
+         
 
     
     

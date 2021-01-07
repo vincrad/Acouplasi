@@ -15,8 +15,9 @@ import matplotlib.pyplot as plt
 from DuctElement import DuctElementDummy
 from Ducts import Duct
 from Fluid import Fluid
-from Linings import DummyLining, DummyReflection, DummyAbsorption
+from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators
 from Plate import Plate
+from Cavity import Cavity
 
 
 
@@ -122,35 +123,37 @@ from Plate import Plate
 
 #%% Test - Temperaturabhängigkeit
 
-f = np.arange(10,260,1)
-
-fluid1 = Fluid()
-
-lining1 = DummyReflection(length=5, depth=2, height=5, medium=fluid1)
-
-lining2 = DummyReflection(length=1, depth=2, height=1, medium=fluid1)
-
-lining3 = DummyReflection(length=4, depth=2, height=5, medium=fluid1)
-
-ductelement1 = DuctElementDummy(lining=lining1, medium=fluid1)
-
-ductelement2 = DuctElementDummy(lining=lining2, medium=fluid1)
-
-ductelement3 = DuctElementDummy(lining=lining3, medium=fluid1)
-
-duct = Duct(elements=[ductelement1, ductelement2, ductelement3], freq = f)
-
-
-temp = np.arange(20.0, 1020.0, 200.0)
-
-fig = plt.figure()
-for i in temp:
-    
-    fluid1.temperatureC = i
-
-    tl = duct.tl()
-
-    plt.plot(f, tl)
+# =============================================================================
+# f = np.arange(10,260,1)
+# 
+# fluid1 = Fluid()
+# 
+# lining1 = DummyReflection(length=5, depth=2, height=5, medium=fluid1)
+# 
+# lining2 = DummyReflection(length=1, depth=2, height=1, medium=fluid1)
+# 
+# lining3 = DummyReflection(length=4, depth=2, height=5, medium=fluid1)
+# 
+# ductelement1 = DuctElementDummy(lining=lining1, medium=fluid1)
+# 
+# ductelement2 = DuctElementDummy(lining=lining2, medium=fluid1)
+# 
+# ductelement3 = DuctElementDummy(lining=lining3, medium=fluid1)
+# 
+# duct = Duct(elements=[ductelement1, ductelement2, ductelement3], freq = f)
+# 
+# 
+# temp = np.arange(20.0, 1020.0, 200.0)
+# 
+# fig = plt.figure()
+# for i in temp:
+#     
+#     fluid1.temperatureC = i
+# 
+#     tl = duct.tl()
+# 
+#     plt.plot(f, tl)
+# =============================================================================
 
 
 #%% Test - Temperaturabhängigkeit
@@ -192,6 +195,48 @@ for i in temp:
 # 
 # T2 = ductelement1.T
 # =============================================================================
+
+
+#%% Test plate resonator
+
+# frequency
+f = np.arange(10, 260, 10)
+
+# number of plate modes
+N = 5
+
+# plate modes
+J = np.arange(1, N+1, 1)
+L = np.arange(1, N+1, 1)
+
+fluid1 = Fluid()
+
+#cavity = Cavity(hc=5.0)
+
+# cavity modes
+R = np.arange(0,5,1)
+S = np.arange(0,5,1)
+
+cavity1 = Cavity(length=1, height=0.5, R=R, S=S, medium=fluid1)
+
+#cavity1.test()
+
+#cavity1.test()
+
+#Zc = cavity1.Imp(J,L,f)
+
+plate1 = PlateResonators(length=1, J=J, L=L, cavity=cavity1, medium=fluid1)
+
+test = plate1.ZMatrix(f)
+
+
+
+
+
+
+
+
+
 
 
 
