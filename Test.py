@@ -15,9 +15,11 @@ import matplotlib.pyplot as plt
 from DuctElement import DuctElementDummy, DuctElementPlate
 from Ducts import Duct
 from Fluid import Fluid
+from Material import Material
 from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
 from Plate import Plate
 from Cavity import Cavity
+
 
 
 
@@ -210,6 +212,13 @@ J = np.arange(1, N+1, 1)
 L = np.arange(1, N+1, 1)
 
 fluid1 = Fluid()
+
+material1 = Material(rhop=35)
+
+plate1 = Plate(hp=0.001, material=material1)
+
+
+test = plate1.lmatrix(1, 1, L, f)
 
 #cavity = Cavity(hc=5.0)
 
