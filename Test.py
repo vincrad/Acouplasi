@@ -12,7 +12,7 @@ Created on Fri Sep  4 14:06:20 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from DuctElement import DuctElementDummy
+from DuctElement import DuctElementDummy, DuctElementPlate
 from Ducts import Duct
 from Fluid import Fluid
 from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
@@ -219,22 +219,13 @@ S = np.arange(0,5,1)
 
 cavity1 = Cavity(length=1, height=0.5, R=R, S=S, medium=fluid1)
 
-#cavity1.test()
+lining1 = SinglePlate(length=1, J=J, L=L, cavity=cavity1, medium=fluid1)
 
-#cavity1.test()
+ductelement1 = DuctElementPlate(lining=lining1, medium=fluid1)
 
-#Zc = cavity1.Imp(J,L,f)
+duct1 = Duct(elements=[ductelement1], freq=f)
 
-plate1 = SinglePlate(length=1, J=J, L=L, cavity=cavity1, medium=fluid1)
-
-test = plate1.ZMatrix(f)
-
-
-
-
-
-
-
+Z, I = duct1.tlplate()
 
 
 

@@ -199,7 +199,7 @@ class SinglePlate(PlateResonators):
     2D single plate resonator without flow
     '''
 
-    def ZMatrix(self, freq):
+    def zmatrix(self, freq):
         
         # cavity impedance matrix
         Zc = self.cavity.ModImp(self.J, self.L, freq)

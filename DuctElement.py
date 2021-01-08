@@ -7,9 +7,9 @@ Created on Tue Aug 25 09:47:36 2020
 """
 
 import traitlets as tr
-import numpy as np
+import numpy as np, numpy
 from Fluid import Fluid
-from Linings import DummyLining, DummyReflection, DummyAbsorption
+from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
 
 # =============================================================================
 # class DuctElement(tr.HasTraits):
@@ -30,14 +30,20 @@ from Linings import DummyLining, DummyReflection, DummyAbsorption
 #     # daraus Berechnung der Transfermatrix
 # =============================================================================
 
-
-class DuctElementDummy(tr.HasTraits):
+class DuctElement(tr.HasTraits):
+    
     '''
-    Class calculates the transfer matrix of a certain duct section.
+    Parental class of different duct elements.
     '''
     #flowspeed = tr.Float()
     
     medium = tr.Instance(Fluid)
+    
+
+class DuctElementDummy(DuctElement):
+    '''
+    Class calculates the transfer matrix of a certain duct section.
+    '''
     
     lining = tr.Instance(DummyLining)
     
@@ -62,10 +68,7 @@ class DuctElementDummy(tr.HasTraits):
         
         return T
 
-        
-    
-    
-    
+
 # =============================================================================
 #     def tmatrix(self):
 #         
@@ -77,6 +80,50 @@ class DuctElementDummy(tr.HasTraits):
 #         return self.T
 # =============================================================================
         
+class DuctElementPlate(DuctElement):
+    
+    '''
+    Duct element class for plate resonator linings.
+    '''
+    
+    lining = tr.Instance(PlateResonators)
+    
+    def incidentsound(self, freq):
+        
+        omega = 2*np.pi*freq
+        
+        k0 = omega/self.medium.c
+        
+        I = np.zeros((len(self.lining.L), len(omega)), dtype=complex)
+
+
+        for l in self.lining.L:
+    
+            x0=self.lining.length**2*k0**2
+            x1=numpy.pi**2*l**2
+            x2=numpy.pi*self.lining.length*l
+            x3=numpy.exp(1j*self.lining.length*k0)
+    
+            I[l-1,:] = (-1)**l*x2/(x0*x3 - x1*x3) - x2/(x0 - x1)
+            
+        return I
+        
+    
+    def solvelgs(self, freq):
+        
+        # impedance matrix of plate resonator liner
+        Z = self.lining.zmatrix(freq)
+        
+        # L-Matrix with material properties of the plate
+        
+        # incident sound
+        I = self.incidentsound(freq)
+        
+        # return Plattenschnelle
+        return [Z, I]
+    
+    
+    
     
     
     

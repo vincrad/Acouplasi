@@ -8,7 +8,7 @@ Created on Tue Aug 25 07:35:22 2020
 
 import traitlets as tr
 import numpy as np
-from DuctElement import DuctElementDummy
+from DuctElement import DuctElementDummy, DuctElement
 import matplotlib.pyplot as plt
 from numpy import log10
 from numpy import abs
@@ -86,8 +86,9 @@ class Duct(tr.HasTraits):
     #M = tr.Int()
     
     # list of duct elements / transfer matrices
-    elements = tr.List(trait = tr.Instance(DuctElementDummy))
-        
+    elements = tr.List(trait = tr.Instance(DuctElement))
+    
+    # TL of reflection and absorption silencer    
     def tl(self):
         
         S0 = 2.0
@@ -115,7 +116,15 @@ class Duct(tr.HasTraits):
         TL = 20*log10((1/2)*abs(T[0,0]+(S0/Z0)*T[0,1]+(Z0/S0)*T[1,0]+T[1,1]))
         
         
-        return TL    
+        return TL
+    
+    # transmission loss of plate resonator silencer
+    def tlplate(self):
+        
+        Z = self.elements[0].solvelgs(self.freq)
+        
+        return Z
+        
     
 # =============================================================================
 #     def tmatrix(self):
