@@ -217,9 +217,6 @@ material1 = Material(rhop=35)
 
 plate1 = Plate(hp=0.001, material=material1)
 
-
-test = plate1.lmatrix(1, 1, L, f)
-
 #cavity = Cavity(hc=5.0)
 
 # cavity modes
@@ -228,13 +225,14 @@ S = np.arange(0,5,1)
 
 cavity1 = Cavity(length=1, height=0.5, R=R, S=S, medium=fluid1)
 
-lining1 = SinglePlate(length=1, J=J, L=L, cavity=cavity1, medium=fluid1)
+lining1 = SinglePlate(length=1, J=J, L=L, plate=plate1, cavity=cavity1, medium=fluid1)
 
 ductelement1 = DuctElementPlate(lining=lining1, medium=fluid1)
 
 duct1 = Duct(elements=[ductelement1], freq=f)
 
-Z, I = duct1.tlplate()
+v = duct1.tlplate()
+
 
 
 

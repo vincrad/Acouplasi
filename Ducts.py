@@ -121,9 +121,9 @@ class Duct(tr.HasTraits):
     # transmission loss of plate resonator silencer
     def tlplate(self):
         
-        Z = self.elements[0].solvelgs(self.freq)
+        v = self.elements[0].solvelgs(self.freq)
         
-        return Z
+        return v
         
     
 # =============================================================================

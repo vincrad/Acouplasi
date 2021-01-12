@@ -115,13 +115,26 @@ class DuctElementPlate(DuctElement):
         Z = self.lining.zmatrix(freq)
         
         # L-Matrix with material properties of the plate
+        Lmatrix = self.lining.plate.lmatrix(self.lining.length, self.lining.depth, self.lining.J, self.lining.L, freq)
         
         # incident sound
         I = self.incidentsound(freq)
         
+        # solving the linear system of equation
+        
+        # building lhs matrix from Z and Lmatrix
+        lhs = Z+Lmatrix            
+        
+        # plate velocity array
+        vp = np.zeros((len(self.lining.L), len(freq)), dtype=complex)
+
+        for idx in range(len(freq)):
+            
+            vp[:,idx] = np.linalg.solve(lhs[:,:,idx], I[:,idx])
+
+        
         # return Plattenschnelle
-        return [Z, I]
-    
+        return [vp, lhs, Z, Lmatrix, I]
     
     
     
