@@ -20,7 +20,7 @@ class Plate(tr.HasTraits):
     
     material = tr.Instance(Material)
     
-    def lmatrix(self, length, depth, L, freq):
+    def lmatrix(self, length, depth, J, L, freq):
         
         # circular frquency
         omega = 2*np.pi*freq
@@ -32,11 +32,19 @@ class Plate(tr.HasTraits):
         B = self.material.bendingstiffness(self.hp, length)
         
         # calculation of L-Matrix
-        Lmatrix = np.zeros((len(L), len(freq)), dtype=complex)
+        Lmatrix = np.zeros((len(J), len(L), len(freq)), dtype=complex)
         
-        for l in L:
+        for j in J:
+        
+            for l in L:
+                
+                if j==l:
             
-            Lmatrix[l-1,:] = ((B/1j*omega)*((l*np.pi)/length)**4+1j*omega*m)*(length/2)
+                    Lmatrix[j-1,l-1,:] = ((B/1j*omega)*((l*np.pi)/length)**4+1j*omega*m)*(length/2)
+                    
+                else:
+                    
+                    pass
             
         return Lmatrix
         
