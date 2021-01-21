@@ -9,6 +9,7 @@ Created on Tue Aug 25 12:02:55 2020
 import traitlets as tr
 import numpy as np
 from numpy import sqrt
+from Temperature import Temperature
 
     
 class Fluid(tr.HasTraits):
@@ -21,12 +22,12 @@ class Fluid(tr.HasTraits):
     R = tr.Float(287.058)   # J/kgK
     c = tr.Float()
     
-    temperatureC = tr.Float(20)
+    temperature = tr.Instance(Temperature)
     
     @property
     def c(self):
         
-        c = np.sqrt(self.kappa*self.R*(self.temperatureC+273.15))
+        c = np.sqrt(self.kappa*self.R*(self.temperature.C+273.15))
         
         return c
     

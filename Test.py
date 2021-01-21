@@ -215,9 +215,9 @@ N = 5
 J = np.arange(1, N+1, 1)
 L = np.arange(1, N+1, 1)
 
-fluid1 = Fluid()
+fluid1 = Fluid(temperature=temp1)
 
-material1 = Material(rhop=35)
+material1 = Material(rhop=35, temperature=temp1)
 
 plate1 = Plate(hp=0.001, material=material1)
 

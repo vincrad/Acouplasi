@@ -8,6 +8,7 @@ Created on Thu Oct  8 13:18:56 2020
 
 import traitlets as tr
 import numpy as np
+from Temperature import Temperature
 
 class Material(tr.HasTraits):
     '''
@@ -18,7 +19,7 @@ class Material(tr.HasTraits):
     rhop = tr.Float()
     
     # temperature
-    temperatureC = tr.Float(20)
+    temperature = tr.Instance(Temperature)
     
     def mass(self, length):
         
