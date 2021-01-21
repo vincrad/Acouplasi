@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from DuctElement import DuctElementDummy, DuctElementPlate
 from Ducts import Duct
+from Temperature import Temperature
 from Fluid import Fluid
 from Material import Material
 from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
@@ -203,6 +204,9 @@ from Cavity import Cavity
 
 # frequency
 f = np.arange(10, 260, 10)
+
+# temperature
+temp1 = Temperature(C=20)
 
 # number of plate modes
 N = 5
