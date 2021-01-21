@@ -233,7 +233,11 @@ duct1 = Duct(elements=[ductelement1], freq=f)
 
 v = duct1.tlplate()
 
+I = ductelement1.incidentsound(f)
 
+Zprad = duct1.elements[0].lining.zmatrix(f)
+
+Zc = duct1.elements[0].lining.cavity.ModImp(J,L,f)
 
 
 

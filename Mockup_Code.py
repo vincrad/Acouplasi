@@ -350,12 +350,12 @@ class Duct(tr.HasTraits):
             
             TL = i.tmatrix_tl(self.freq)
             
-        return TL
+            return TL
+        
+        # eigentlich T-Matrizen aufsummieren und TL des gesamten Kanals berechnen
+
             
-            #if isinstance(i, PlateResonators)==True:
-                
-                #TL = i.tmatrix_tl(self.freq)
-                #print(TL)
+        
                 
                 
                 
