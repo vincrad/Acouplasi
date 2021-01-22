@@ -275,9 +275,9 @@ cavity1 = Cavity(height=0.5, r=r, s=s, medium=fluid1)
 
 #kappars = cavity1.kappars(2)
 
-Zc = cavity1.cavityimpedance(1, 0, j, l, f)
+Zc = cavity1.cavityimpedance(1, 1, j, l, f)
 
-
+Lmatrix2 = plate1.lmatrix(1,1,l,f)
 
 
 

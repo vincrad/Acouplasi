@@ -11,45 +11,76 @@ import numpy as np
 from Material import Material
 
 
+# =============================================================================
+# class Plate(tr.HasTraits):
+#     '''
+#     Class to define a plate for a plate resonator lining.
+#     '''
+#     
+#     hp = tr.Float()
+#     
+#     material = tr.Instance(Material)
+#     
+#     def lmatrix(self, length, depth, J, L, freq):
+#         
+#         # circular frquency
+#         omega = 2*np.pi*freq
+#         
+#         # area density
+#         m = self.material.mass(length)
+#         
+#         # bending stiffness
+#         B = self.material.bendingstiffness(self.hp, length)
+#         
+#         # calculation of L-Matrix
+#         Lmatrix = np.zeros((len(J), len(L), len(freq)), dtype=complex)
+#         
+#         for j in J:
+#         
+#             for l in L:
+#                 
+#                 if j==l:
+#             
+#                     Lmatrix[j-1,l-1,:] = ((B/1j*omega)*((l*np.pi)/length)**4+1j*omega*m)*(length/2)
+#                     
+#                 else:
+#                     
+#                     pass
+#             
+#         return Lmatrix
+# =============================================================================
+        
 class Plate(tr.HasTraits):
+    
     '''
-    Class to define a plate for a plate resonator lining.
+    Class to define a plate for a plate resonator silencer.
     '''
     
-    hp = tr.Float()
+    # plate height
+    hp = tr.Float
     
+    # material of the plate
     material = tr.Instance(Material)
     
-    def lmatrix(self, length, depth, J, L, freq):
+    # method calculate the L matrix for a plate resonator silencer
+    def lmatrix(self, length, depth, l, freq):
         
-        # circular frquency
-        omega = 2*np.pi*freq
+        # define expanded diagonal array of modes 
+        L = np.expand_dims(l*np.identity(len(l)),2)
+       
+        # define diagonal array of circular frequency
+        omega = np.expand_dims(np.identity(len(l)),2)*2*np.pi*freq
         
-        # area density
+        # calculate area density
         m = self.material.mass(length)
         
-        # bending stiffness
-        B = self.material.bendingstiffness(self.hp, length)
+        # calculate bending stiffness
+        B = self.material.bendingstiffness(self.hp, depth)
         
-        # calculation of L-Matrix
-        Lmatrix = np.zeros((len(J), len(L), len(freq)), dtype=complex)
+        # calculate L matrix of the plate
+        Lmatrix = ((B/1j*omega)*((L*np.pi)/length)**4+1j*omega*m)*(length/2)
         
-        for j in J:
-        
-            for l in L:
-                
-                if j==l:
-            
-                    Lmatrix[j-1,l-1,:] = ((B/1j*omega)*((l*np.pi)/length)**4+1j*omega*m)*(length/2)
-                    
-                else:
-                    
-                    pass
-            
         return Lmatrix
-        
-        
-    
 
     
     
