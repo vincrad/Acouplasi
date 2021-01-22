@@ -199,21 +199,67 @@ from Cavity import Cavity
 # T2 = ductelement1.T
 # =============================================================================
 
+#%%
 
 #%% Test plate resonator
 
+# =============================================================================
+# # frequency
+# f = np.arange(10, 260, 10)
+# 
+# # temperature
+# temp1 = Temperature(C=20)
+# 
+# # number of plate modes
+# N = 5
+# 
+# # plate modes
+# J = np.arange(1, N+1, 1)
+# L = np.arange(1, N+1, 1)
+# 
+# fluid1 = Fluid(temperature=temp1)
+# 
+# material1 = Material(rhop=35, temperature=temp1)
+# 
+# plate1 = Plate(hp=0.001, material=material1)
+# 
+# #cavity = Cavity(hc=5.0)
+# 
+# # cavity modes
+# R = np.arange(0,5,1)
+# S = np.arange(0,5,1)
+# 
+# cavity1 = Cavity(length=1, height=0.5, R=R, S=S, medium=fluid1)
+# 
+# lining1 = SinglePlate(length=1, J=J, L=L, plate=plate1, cavity=cavity1, medium=fluid1)
+# 
+# ductelement1 = DuctElementPlate(lining=lining1, medium=fluid1)
+# 
+# duct1 = Duct(elements=[ductelement1], freq=f)
+# 
+# v = duct1.tlplate()
+# 
+# I = ductelement1.incidentsound(f)
+# 
+# #Zprad = duct1.elements[0].lining.zmatrix(f)
+# 
+# #Zc = duct1.elements[0].lining.cavity.ModImp(J,L,f)
+# =============================================================================
+
+#%% Test plate resonator 2
+
 # frequency
-f = np.arange(10, 260, 10)
+f = np.arange(10,260,10)
 
 # temperature
 temp1 = Temperature(C=20)
 
-# number of plate modes
+# # number of plate modes
 N = 5
-
+ 
 # plate modes
-J = np.arange(1, N+1, 1)
-L = np.arange(1, N+1, 1)
+j = np.arange(1, N+1, 1)
+l = np.arange(1, N+1, 1)
 
 fluid1 = Fluid(temperature=temp1)
 
@@ -221,29 +267,15 @@ material1 = Material(rhop=35, temperature=temp1)
 
 plate1 = Plate(hp=0.001, material=material1)
 
-#cavity = Cavity(hc=5.0)
-
 # cavity modes
-R = np.arange(0,5,1)
-S = np.arange(0,5,1)
+r = np.arange(0,5,1)
+s = np.arange(0,5,1)
 
-cavity1 = Cavity(length=1, height=0.5, R=R, S=S, medium=fluid1)
+cavity1 = Cavity(height=0.5, r=r, s=s, medium=fluid1)
 
-lining1 = SinglePlate(length=1, J=J, L=L, plate=plate1, cavity=cavity1, medium=fluid1)
+#kappars = cavity1.kappars(2)
 
-ductelement1 = DuctElementPlate(lining=lining1, medium=fluid1)
-
-duct1 = Duct(elements=[ductelement1], freq=f)
-
-v = duct1.tlplate()
-
-I = ductelement1.incidentsound(f)
-
-Zprad = duct1.elements[0].lining.zmatrix(f)
-
-Zc = duct1.elements[0].lining.cavity.ModImp(J,L,f)
-
-
+Zc = cavity1.cavityimpedance(1, 0, j, l, f)
 
 
 

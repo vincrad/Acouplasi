@@ -254,7 +254,7 @@ Sum = 1j*omega*(2 - deltar)*(2 - deltas)*((-1)**J_new2*x1*x2 - x1)*((-1)**L_new2
 Zcav = np.sum(Sum, axis=(2,3))
 
 
-
+test = np.array([[1,2],[3,4]])
 
 # =============================================================================
 # np.ravel_multi_inde
