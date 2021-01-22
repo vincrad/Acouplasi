@@ -12,7 +12,7 @@ Created on Fri Sep  4 14:06:20 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from DuctElement import DuctElementPlate
+from DuctElement import DuctElement
 from Ducts import Duct
 from Temperature import Temperature
 from Fluid import Fluid
@@ -274,6 +274,13 @@ plate1 = Plate(hp=0.001, material=material1)
 cavity1 = Cavity(height=0.5, r=r, s=s, medium=fluid1)
 
 lining1 = SinglePlateResonator(length=1, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
+
+ductelement1 = DuctElement(lining=lining1, medium=fluid1)
+
+Tl = ductelement1.tmatrix(f)
+
+
+
 
 vp = lining1.platevelocity(0,0,f)
 

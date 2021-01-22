@@ -99,6 +99,7 @@ R_new = R[np.newaxis, np.newaxis, :, np.newaxis]
 # 
 # =============================================================================
 
+
 # new code
 x0=lining1.length**2*k0**2
 x1=numpy.pi**2*L_new**2
