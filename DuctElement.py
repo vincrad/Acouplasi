@@ -9,7 +9,7 @@ Created on Tue Aug 25 09:47:36 2020
 import traitlets as tr
 import numpy as np, numpy
 from Fluid import Fluid
-from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
+from Linings import PlateResonators, SinglePlateResonator
 
 # =============================================================================
 # class DuctElement(tr.HasTraits):
@@ -40,33 +40,35 @@ class DuctElement(tr.HasTraits):
     medium = tr.Instance(Fluid)
     
 
-class DuctElementDummy(DuctElement):
-    '''
-    Class calculates the transfer matrix of a certain duct section.
-    '''
-    
-    lining = tr.Instance(DummyLining)
-    
-    @property
-    def depth(self):
-        
-        depth = self.lining.depth
-        
-        return depth
-    
-    
-    def T(self,freq):
-        
-        [kz, Z] = self.lining.Zkz(freq)
-        
 # =============================================================================
-#         kz = self.lining.kz(freq)
-#         Z = self.lining.Z()
+# class DuctElementDummy(DuctElement):
+#     '''
+#     Class calculates the transfer matrix of a certain duct section.
+#     '''
+#     
+#     lining = tr.Instance(DummyLining)
+#     
+#     @property
+#     def depth(self):
+#         
+#         depth = self.lining.depth
+#         
+#         return depth
+#     
+#     
+#     def T(self,freq):
+#         
+#         [kz, Z] = self.lining.Zkz(freq)
+#         
+# # =============================================================================
+# #         kz = self.lining.kz(freq)
+# #         Z = self.lining.Z()
+# # =============================================================================
+#         
+#         T = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
+#         
+#         return T
 # =============================================================================
-        
-        T = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
-        
-        return T
 
 
 # =============================================================================

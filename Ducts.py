@@ -8,7 +8,7 @@ Created on Tue Aug 25 07:35:22 2020
 
 import traitlets as tr
 import numpy as np
-from DuctElement import DuctElementDummy, DuctElement
+from DuctElement import DuctElement
 import matplotlib.pyplot as plt
 from numpy import log10
 from numpy import abs

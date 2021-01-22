@@ -12,12 +12,12 @@ Created on Fri Sep  4 14:06:20 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from DuctElement import DuctElementDummy, DuctElementPlate
+from DuctElement import DuctElementPlate
 from Ducts import Duct
 from Temperature import Temperature
 from Fluid import Fluid
 from Material import Material
-from Linings import DummyLining, DummyReflection, DummyAbsorption, PlateResonators, SinglePlate
+from Linings import PlateResonators, SinglePlateResonator
 from Plate import Plate
 from Cavity import Cavity
 
@@ -261,23 +261,29 @@ N = 5
 j = np.arange(1, N+1, 1)
 l = np.arange(1, N+1, 1)
 
+# cavity modes
+r = np.arange(0,5,1)
+s = np.arange(0,5,1)
+
 fluid1 = Fluid(temperature=temp1)
 
 material1 = Material(rhop=35, temperature=temp1)
 
 plate1 = Plate(hp=0.001, material=material1)
 
-# cavity modes
-r = np.arange(0,5,1)
-s = np.arange(0,5,1)
-
 cavity1 = Cavity(height=0.5, r=r, s=s, medium=fluid1)
+
+lining1 = SinglePlateResonator(length=1, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
+
+vp = lining1.platevelocity(0,0,f)
 
 #kappars = cavity1.kappars(2)
 
 Zc = cavity1.cavityimpedance(1, 1, j, l, f)
 
 Lmatrix2 = plate1.lmatrix(1,1,l,f)
+
+
 
 
 
