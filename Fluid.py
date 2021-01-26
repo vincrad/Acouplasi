@@ -27,9 +27,8 @@ class Fluid(tr.HasTraits):
     @property
     def c(self):
         
-        c = np.sqrt(self.kappa*self.R*(self.temperature.C+273.15))
+        return np.sqrt(self.kappa*self.R*(self.temperature.C+273.15))
         
-        return c
     
         
     

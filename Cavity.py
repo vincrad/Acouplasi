@@ -126,38 +126,34 @@ class Cavity(tr.HasTraits):
     @property
     def R(self):
         
-        R = self.r[np.newaxis, np.newaxis, :, np.newaxis, np.newaxis]
+        return self.r[np.newaxis, np.newaxis, :, np.newaxis, np.newaxis]
         
-        return R
     
     @property
     def S(self):
         
-        S = self.s[np.newaxis, np.newaxis, np.newaxis, :, np.newaxis]
-        
-        return S
+        return self.s[np.newaxis, np.newaxis, np.newaxis, :, np.newaxis]
+       
     
     # property methods to define the Kronecker delta
     @property
     def deltar(self):    
         
-        deltar = np.eye(len(self.r),1)[np.newaxis, np.newaxis, :, np.newaxis]
-        
-        return deltar
+        return np.eye(len(self.r),1)[np.newaxis, np.newaxis, :, np.newaxis]
+    
     
     @property
     def deltas(self):
         
-        deltas = np.eye(len(self.s),1)[np.newaxis, np.newaxis, np.newaxis, :]
+        return np.eye(len(self.s),1)[np.newaxis, np.newaxis, np.newaxis, :]
         
-        return deltas
     
     # method to calculate kappars
     def kappars(self, length):
         
-        kappars = np.sqrt((self.R*np.pi/length)**2+(self.S*np.pi/self.height)**2)
+        return np.sqrt((self.R*np.pi/length)**2+(self.S*np.pi/self.height)**2)
         
-        return kappars
+        
     
     # method calculate the cavity impedance matrix
     def cavityimpedance(self, length, depth, j, l, freq):

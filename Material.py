@@ -23,9 +23,8 @@ class Material(tr.HasTraits):
     
     def mass(self, length):
         
-        m = self.rhop*length
+        return self.rhop*length
         
-        return m
     
     def bendingstiffness(self, hp, depth):
         

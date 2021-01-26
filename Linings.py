@@ -51,9 +51,8 @@ class SinglePlateResonator(PlateResonators):
     @property
     def deltar(self):
         
-        deltar = np.eye(len(self.cavity.r),1)[np.newaxis, np.newaxis, :]
+        return np.eye(len(self.cavity.r),1)[np.newaxis, np.newaxis, :]
         
-        return deltar
 
     
     # method calculate the impedance matrix of the plate resonator
@@ -149,9 +148,8 @@ class ReflectionLining(Linings):
     @property
     def S(self):
         
-        S = self.depth*self.height
+        return self.depth*self.height
         
-        return S
     
     # method calculate kz and Z
     def Zkz(self, medium, freq):
@@ -180,9 +178,8 @@ class AbsorptionLining(Linings):
     @property
     def S(self):
         
-        S = self.depth*self.height
-        
-        return S
+        return self.depth*self.height
+    
     
     # method calculate kz and Z
     def Zkz(self, medium, freq):
