@@ -281,13 +281,7 @@ duct1 = Duct(freq=f, elements=[ductelement1])
 
 Tl = duct1.tl()
 
-
 #[Z, Zprad] = lining1.zmatrix(0, f)
-
-
-
-
-
 
 
 
