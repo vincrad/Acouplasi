@@ -10,7 +10,7 @@ Created on Fri Sep  4 14:06:20 2020
 # Schalldämpfer Test
 ##############################################################################
 
-import numpy as np
+import numpy as np, numpy
 import matplotlib.pyplot as plt
 from DuctElement import DuctElement
 from Ducts import Duct
@@ -281,7 +281,51 @@ duct1 = Duct(freq=f, elements=[ductelement1])
 
 Tl = duct1.tl()
 
-#[Z, Zprad] = lining1.zmatrix(0, f)
+
+
+# =============================================================================
+# A = np.expand_dims(np.array([[1,2],[3,4]]), axis=2)
+# f = np.arange(1,4,1)
+# 
+# b = np.array([[5],[6]])
+# 
+# Af = f*A
+# #bf = b*f
+# 
+# test = np.block([Af[:,:,0], Af[:,:,1], Af[:,:,2]])
+# 
+# 
+# 
+# Sol1 = []
+# for i in range(len(f)):
+#         
+#     sol = np.linalg.solve(Af[:,:,i],bf[:,i])
+#     
+#     Sol1.append(sol)
+# 
+# Afre = np.reshape(Af, (len(Af[0,0,:])*len(Af[:,0,0]),len(Af[0,:,0])))
+# 
+# bfre = np.reshape(bf, (len(bf[:,0])*len(bf[0,:])))
+# 
+# Solre = np.linalg.solve(Afre, bfre)
+# =============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

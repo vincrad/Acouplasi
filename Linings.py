@@ -120,19 +120,32 @@ class SinglePlateResonator(PlateResonators):
         lhs = Z+Lmatrix
         
         # calculate the plate velocity
-        vp = lhs
+        vp = np.zeros_like(I, dtype=complex)
+        for i in range(len(freq)):
+            
+            vp[:,i] = np.linalg.solve(lhs[:,:,i], I[:,i])
         
         return vp
         
     # method calculates the transmission loss of the plate silencer
-    def transmissionloss(self, I, M, freq):
+    def transmissionloss(self, I, M, medium, freq):
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/medium.c
+        
+        # define extended array of modes
+        J = self.j[:, np.newaxis]
         
         # plate velocity
         vp = self.platevelocity(I, M, freq)
         
         # calculate transmission loss
-        TL = vp
+        x0=self.length**2
+        x1=(1/2)*numpy.pi*J*x0/(numpy.pi**2*J**2 - k0**2*x0)
         
+        TL = -20*np.log(np.abs(1+vp*(-(-1)**J*x1*numpy.exp(1j*self.length*k0) + x1)))
+ 
         return TL
     
     

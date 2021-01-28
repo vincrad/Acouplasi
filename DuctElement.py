@@ -183,7 +183,7 @@ class DuctElement(tr.HasTraits):
             
             I = self.incidentsound(freq)
             
-            TL = self.lining.transmissionloss(I, self.M, freq)
+            TL = self.lining.transmissionloss(I, self.M, self.medium, freq)
             
             return TL
         
