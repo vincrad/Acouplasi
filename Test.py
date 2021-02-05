@@ -275,7 +275,9 @@ cavity1 = Cavity(height=0.5, r=r, s=s, medium=fluid1)
 
 lining1 = SinglePlateResonator(length=1, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
 
-ductelement1 = DuctElement(lining=lining1, medium=fluid1)
+#Z = lining1.zmatrix(0, f)
+
+ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0.3)
 
 duct1 = Duct(freq=f, elements=[ductelement1])
 
@@ -311,18 +313,7 @@ Tl = duct1.tl()
 # =============================================================================
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#%%
 
 
 
