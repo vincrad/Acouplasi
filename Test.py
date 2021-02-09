@@ -283,6 +283,9 @@ duct1 = Duct(freq=f, elements=[ductelement1])
 
 Tl = duct1.tl()
 
+#vp = lining1.platevelocity(ductelement1.incidentsound(f), 0, f)
+
+#temp = lining1.transmissionloss(ductelement1.incidentsound(f), 0, fluid1, f)
 
 
 # =============================================================================
