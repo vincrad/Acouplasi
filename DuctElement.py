@@ -156,7 +156,7 @@ class DuctElement(tr.HasTraits):
     M = tr.Float(default_value=0)
     
     # method calculate the incident sound array for plate silencer
-    def incidentsound(self, freq):
+    def incidentsound(self, M, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -165,13 +165,12 @@ class DuctElement(tr.HasTraits):
         # define expended array of modes
         L = self.lining.l[:, np.newaxis]
         
-        # calculate the incident sound array
-        x0=self.lining.length**2*k0**2
-        x1=numpy.pi**2*L**2
-        x2=numpy.pi*self.lining.length*L
-        x3=numpy.exp(1j*self.lining.length*k0)
-    
-        I = (-1)**L*x2/(x0*x3 - x1*x3) - x2/(x0 - x1)
+        x0=2*M
+        x1=M**2
+        x2=1j*self.lining.length*k0/(M + 1)
+        x3=numpy.pi**2*L**2
+        
+        I = numpy.pi*self.lining.length*L*((-1)**(L + 1) + numpy.exp(x2))*(x0 + x1 + 1)*numpy.exp(-x2)/(-self.lining.length**2*k0**2 + x0*x3 + x1*x3 + x3)
         
         return I
     
@@ -181,7 +180,7 @@ class DuctElement(tr.HasTraits):
         
         if isinstance(self.lining, PlateResonators)==True:
             
-            I = self.incidentsound(freq)
+            I = self.incidentsound(self.M, freq)
             
             TL = self.lining.transmissionloss(I, self.M, self.medium, freq)
             
