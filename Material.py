@@ -21,22 +21,24 @@ class Material(tr.HasTraits):
     # temperature
     temperature = tr.Instance(Temperature)
     
-    def mass(self, length):
+    def mass(self, hp):
         
-        return self.rhop*length
+        return self.rhop*hp
         
     
-    def bendingstiffness(self, hp, depth):
+    def bendingstiffness(self, hp):
         
         E = 1000*10**(6) # Pa
         
         eta = 0.1
         
+        mu = .35
+        
         Ecomplex = E*(1+1j*eta)
         
-        I = (depth*hp**3)/12
+        I = (hp**3)/12/(1-mu**2)
         
-        B = E*I
+        B = Ecomplex*I
         
         return B
     
