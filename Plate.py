@@ -72,13 +72,13 @@ class Plate(tr.HasTraits):
         omega = 2*np.pi*freq
         
         # calculate area density
-        m = self.material.mass(length)
+        m = self.material.mass(self.hp)
         
         # calculate bending stiffness
-        B = self.material.bendingstiffness(self.hp, depth)
+        B = self.material.bendingstiffness(self.hp)
         
         # calculate the values of the L matrix of the plate
-        Lmatrix_temp = ((B/1j*omega)*((L*np.pi)/length)**4+1j*omega*m)*(length/2)
+        Lmatrix_temp = (B/(1j*omega)*((L*np.pi)/length)**4+1j*omega*m)*(length/2)
         
         # diagonalize the L matrix
         Lmatrix = Lmatrix_temp*np.expand_dims(np.identity(len(l)), 2)
