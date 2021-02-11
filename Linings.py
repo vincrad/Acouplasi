@@ -190,7 +190,7 @@ class SinglePlateResonator(PlateResonators):
         
         temp = (1/2)*numpy.pi*J*x0*((-1)**J*x3*x4 + omega*x5 + omega + x2*x5 + x2 - x3)/(omega*(M**2*x1 + 2*M*x1 - k0**2*x0 + x1))
         TL_temp = np.sum(vp*temp, axis=0)
-        TL = -20*np.log10(np.abs(TL_temp))
+        TL = -20*np.log10(np.abs(1+TL_temp))
  
         return TL
     
