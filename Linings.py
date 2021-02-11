@@ -71,8 +71,8 @@ class SinglePlateResonator(PlateResonators):
         R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
         
         # calculate the impedance matrix of the plate induced sound
-        Krp = -k0*M-1j*np.sqrt((1-M**2)*(R*np.pi)**2-k0**2, dtype=complex)/(1-M**2)
-        Krm = k0*M-1j*np.sqrt((1-M**2)*(R*np.pi)**2-k0**2, dtype=complex)/(1-M**2)
+        Krp = (-k0*M-1j*np.sqrt((1-M**2)*(R*np.pi)**2-k0**2, dtype=complex))/(1-M**2)
+        Krm = (k0*M-1j*np.sqrt((1-M**2)*(R*np.pi)**2-k0**2, dtype=complex))/(1-M**2)
         
         # for j=l
         x0=numpy.pi**2
