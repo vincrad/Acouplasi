@@ -19,15 +19,13 @@ class Material(tr.HasTraits):
     rho = tr.Float()
     
     # Complex Youngs Modulus
-    E = tr.Float()
-        
+    E = tr.Callable()
+
     # Poissons Ratio
     mu = tr.Float()
 
     # temperature
-    #temperature = tr.Instance(Temperature)
-    
-    E = tr.Callable()
+#    temperature = tr.Instance(Temperature)
     
     def mass(self, hp):
                    
@@ -38,6 +36,13 @@ class Material(tr.HasTraits):
         
         return self.E(freq)*hp**3/12/(1-self.mu**2)
 
+
+# Polyurethane TPU1195A at -50°C frequency dependent
+TPU1195A_m50 = Material(rho=1150, mu=.48, E = lambda freq: (2.33e+09*freq**.108) + 1j*(1.08e8*freq**-0.027))    
+    
+# Polyurethane TPU1195A at -25°C frequency dependent
+TPU1195A_m25 = Material(rho=1150, mu=.48, E = lambda freq: (9.54e+08*freq**.108) + 1j*(1.35e8*freq**-0.027))    
+    
 # Polyurethane TPU1195A at 0°C frequency dependent
 TPU1195A_0 = Material(rho=1150, mu=.48, E = lambda freq: (2.59e+08*freq**.158) + 1j*(7.06e7*freq**.081))
 
@@ -48,25 +53,25 @@ TPU1195A_25 = Material(rho=1150, mu=.48, E = lambda freq: (7.86e+07*freq**.138) 
 TPU1195A_50 = Material(rho=1150, mu=.48, E = lambda freq: (4.76e+07*freq**.069) + 1j*(4.39e6*freq**.149))
 
 # Polyurethane TPU1195A at 25°C
-TPU1195A = Material(rho = 1150, mu = .48, E = lambda freq: 1.6e8*(1+1j*.166)*np.ones(np.size(freq)))
+TPU1195A = Material(rho = 1150, mu = .48, E = lambda freq: 1.6e8*(1+1j*.166))
 
 # Lead
-Pb = Material(rho = 11300, mu = .43, E = lambda freq: 1.7e10*(1+1j*.02)*np.ones(np.size(freq)))
+Pb = Material(rho = 11300, mu = .43, E = lambda freq: 1.7e10*(1+1j*.02))
 
 # Copper
-Cu = Material(rho = 8900, mu = .35, E = lambda freq: 1.25e11*(1+1j*.002)*np.ones(np.size(freq)))
+Cu = Material(rho = 8900, mu = .35, E = lambda freq: 1.25e11*(1+1j*.002))
 
 # Steel
-Steel = Material(rho = 7800, mu = .31, E = lambda freq: 2.1e11*(1+1j*.0002)*np.ones(np.size(freq)))
+Steel = Material(rho = 7800, mu = .31, E = lambda freq: 2.1e11*(1+1j*.0002))
 
 # Aluminium
-Al = Material(rho = 2700, mu = .34, E = lambda freq: 7.21e10*(1+1j*.0001)*np.ones(np.size(freq)))
+Al = Material(rho = 2700, mu = .34, E = lambda freq: 7.21e10*(1+1j*.0001))
 
 # Magnesium
-Mg = Material(rho = 1740, mu = .29, E = lambda freq: 4.31e10*(1+1j*.0001)*np.ones(np.size(freq)))
+Mg = Material(rho = 1740, mu = .29, E = lambda freq: 4.31e10*(1+1j*.0001))
 
 # Polyurethane TPU1170A at 25°C 
-TPU1170A = Material(rho = 1080, mu = .48, E = lambda freq: 1.4e7*(1+1j*.05)*np.ones(np.size(freq)))
+TPU1170A = Material(rho = 1080, mu = .48, E = lambda freq: 1.4e7*(1+1j*.05))
 
 # Polymere KKP07
-KKP07 = Material(rho = 1100, mu = .45, E = lambda freq: 2.68e7*(1+1j*.55)*np.ones(np.size(freq)))
+KKP07 = Material(rho = 1100, mu = .45, E = lambda freq: 2.68e7*(1+1j*.55))
