@@ -167,15 +167,10 @@ class Cavity(tr.HasTraits):
         k0 = omega/self.medium.c
         
         # calculate the cavity impedance matrix
-        x0=numpy.pi*self.R**2
-        #x1=length*J/(-numpy.pi*J**2 + x0)
-        x1 = np.divide(length*J, (-numpy.pi*J**2 + x0), out=np.zeros_like(J*x0, dtype=float), where=(-numpy.pi*J**2 + x0)!=0)
-        x2=(-1)**self.R
-        #x3=length*L/(-numpy.pi*L**2 + x0)
-        x3 = np.divide(length*L, (-numpy.pi*L**2 + x0), out=np.zeros_like(L*x0), where=(-numpy.pi*L**2 + x0)!=0)
-        
-        # building a temporarily Zc matrix
-        Zctemp = 1j*omega*(2 - self.deltar)*(2 - self.deltas)*((-1)**J*x1*x2 - x1)*((-1)**L*x2*x3 - x3)/(self.height*(-k0**2 + 2*1j*k0*self.kappars(length)*self.zetars + self.kappars(length)**2))
+        x0=-self.R**2
+        x1=1j*k0
+        #Zctemp = J*L*x1*((-1)**(J + self.R) - 1)*((-1)**(L + self.R) - 1)*(self.deltar - 2)*(self.deltas - 2)/(numpy.pi**2*self.height*(J**2 + x0)*(L**2 + x0)*(-k0**2 + self.kappars(length)**2 + 2*self.kappars(length)*x1*self.zetars))     
+        Zctemp = np.divide(J*L*x1*((-1)**(J + self.R) - 1)*((-1)**(L + self.R) - 1)*(self.deltar - 2)*(self.deltas - 2),(numpy.pi**2*self.height*(J**2 + x0)*(L**2 + x0)*(-k0**2 + self.kappars(length)**2 + 2*self.kappars(length)*x1*self.zetars))     , out=np.zeros_like(L*J*self.R*self.S*k0, dtype=complex), where=(J**2 + x0)*(L**2 + x0)!=0)
         
         # building the final Zc matrix by summation over R and S
         Zc = np.sum(Zctemp, axis=(2,3))
