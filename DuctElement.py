@@ -170,7 +170,7 @@ class DuctElement(tr.HasTraits):
         x2=1j*self.lining.length*k0/(M + 1)
         x3=numpy.pi**2*L**2
         
-        I = numpy.pi*self.lining.length*L*((-1)**(L + 1) + numpy.exp(x2))*(x0 + x1 + 1)*numpy.exp(-x2)/(-self.lining.length**2*k0**2 + x0*x3 + x1*x3 + x3)
+        I = numpy.pi*L*((-1)**(L + 1) + numpy.exp(x2))*(x0 + x1 + 1)*numpy.exp(-x2)/(-self.lining.length**2*k0**2 + x0*x3 + x1*x3 + x3)
         
         return I
     
