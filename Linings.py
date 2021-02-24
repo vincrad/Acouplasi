@@ -163,7 +163,7 @@ class SinglePlateResonator(PlateResonators):
         vp = np.zeros_like(I, dtype=complex)
         for i in range(len(freq)):
             
-            vp[:,i] = np.linalg.solve(lhs[:,:,i], I[:,i])
+            vp[:,i] = np.linalg.solve(lhs[:,:,i], -I[:,i])
         
         return vp
         

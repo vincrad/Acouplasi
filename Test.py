@@ -269,7 +269,7 @@ fluid1 = Fluid(temperature=temp1)
 
 material1 = Material(rhop=35, temperature=temp1)
 
-plate1 = Plate(hp=0.001, material=material1)
+plate1 = Plate(hp=0.01, material=material1)
 
 cavity1 = Cavity(height=1, r=r, s=s, medium=fluid1)
 
