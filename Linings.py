@@ -81,25 +81,25 @@ class SinglePlateResonator(PlateResonators):
         x3=-x2
         x4=Krm**2*x1 + x3
         x5=Krm*M
-        x6=1j*self.length
-        x7=Krm*x6
-        x8=numpy.exp(x7)
-        x9=(-1)**(L + 1) + x8
-        x10=2*self.length*x2
-        x11=omega*x10
-        x12=1j*x4*x8
-        x13=omega*x1
-        x14=M*x2
-        x15=(1/2)*self.length/omega
-        x16=Krp**2*x1 + x3
-        x17=Krp*M
-        x18=(-1)**L
-        x19=x10*x17
-        x20=Krp*x6
+        x6=self.length*x2
+        x7=omega*x6
+        x8=(-1)**(L + 1)
+        x9=1j*self.length
+        x10=Krm*x9
+        x11=numpy.exp(x10)
+        x12=2*x11 + 2*x8
+        x13=1j*x11*x4
+        x14=omega*x1
+        x15=M*x2
+        x16=1/(self.length*omega)
+        x17=Krp**2*x1 + x3
+        x18=Krp*M
+        x19=x18*x6
+        x20=Krp*x9
         x21=numpy.exp(x20)
-        x22=1j*x16*x21
+        x22=(1/2)*1j*x17*x21
         
-        Zpll_temp = (1/2)*x6*(2 - self.deltar)*(x15*(k0 + x5)*(-Krm*x12*x13 + x10*x5*x9 + x11*x9 - x12*x14)*numpy.exp(-x7)/x4**2 + x15*(k0 - x17)*(-Krp*x13*x22 - x11*x18 + x11*x21 + x14*x22 + x18*x19 - x19*x21)*numpy.exp(-x20)/x16**2)/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
+        Zpll_temp = (1/2)*x9*(2 - self.deltar)*((1/2)*x16*(k0 + x5)*(-Krm*x13*x14 + x12*x5*x6 + x12*x7 - x13*x15)*numpy.exp(-x10)/x4**2 + x16*(k0 - x18)*((-1)**L*x19 - Krp*x14*x22 + x15*x22 - x19*x21 + x21*x7 + x7*x8)*numpy.exp(-x20)/x17**2)/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
         
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
@@ -124,8 +124,8 @@ class SinglePlateResonator(PlateResonators):
         x17=omega*x16
         x18=(-1)**(L + x9) + 1
         x19=x13*x18*x7
-        #x20=J*L*x1/(omega*x15)
-        x20 = np.divide(J*L*x1, (omega*x15), out=np.zeros_like(J*L*x1/omega), where=(omega*x15)!=0)
+        #x20=J*L/(omega*x15)
+        x20 = np.divide(J*L, (omega*x15), out=np.zeros_like(J*L/omega, dtype=float), where=(omega*x15)!=0)
         x21=Krp**2*x1
         x22=x21 + x6
         x23=Krp*M
@@ -135,7 +135,7 @@ class SinglePlateResonator(PlateResonators):
         x27=x22*x26
         
         Zplj_temp = (1/2)*x11*(2 - self.deltar)*(x20*(k0 + x8)*(omega*x19 + x14*x16*x8 + x14*x17 + x19*x8)*numpy.exp(-x12)/(x7*(x2 + x4)) + x20*(k0 - x23)*((-1)**L*x24 + (-1)**(L + 1)*x17 + omega*x27*(x10 - 1) + x17*x26 + x18*x23*x27 - x24*x26)*numpy.exp(-x25)/(x22*(x21 + x4)))/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
-        
+
         Zplj = np.sum(Zplj_temp, axis=2)
         
         # calculate the overall impedance matrix of the plate induced sound
