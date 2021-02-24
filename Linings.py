@@ -181,14 +181,14 @@ class SinglePlateResonator(PlateResonators):
         vp = self.platevelocity(I, M, freq)
         
         # calculate transmission loss
-        x0=self.length**2
-        x1=numpy.pi**2*J**2
-        x2=M*omega
-        x3=M*k0
-        x4=numpy.exp(1j*self.length*k0/(M + 1))
-        x5=(-1)**(J + 1)*x4
+        x0=numpy.pi**2*J**2
+        x1=M*omega
+        x2=M*k0
+        x3=numpy.exp(1j*self.length*k0/(M + 1))
+        x4=(-1)**(J + 1)*x3
         
-        temp = (1/2)*numpy.pi*J*x0*((-1)**J*x3*x4 + omega*x5 + omega + x2*x5 + x2 - x3)/(omega*(M**2*x1 + 2*M*x1 - k0**2*x0 + x1))
+        temp = (1/2)*numpy.pi*self.length*J*((-1)**J*x2*x3 + omega*x4 + omega + x1*x4 + x1 - x2)/(omega*(-self.length**2*k0**2 + M**2*x0 + 2*M*x0 + x0))
+
         TL_temp = np.sum(vp*temp, axis=0)
         TL = -20*np.log10(np.abs(1+TL_temp))
  
