@@ -17,7 +17,8 @@ class Fluid(tr.HasTraits):
     Class to define the fluid in the duct.
     '''
     
-    rho0 = tr.Float(1.2)
+    p0 = tr.float(101325)
+    rho0 = tr.Float()
     kappa = tr.Float(1.4)
     R = tr.Float(287.058)   # J/kgK
     c = tr.Float()
@@ -28,8 +29,8 @@ class Fluid(tr.HasTraits):
     def c(self):
         
         return np.sqrt(self.kappa*self.R*(self.temperature.C+273.15))
+    
+    @property
+    def rho0(self):
         
-    
-        
-    
-    
+        return self.p0/(self.R*(self.temperature.C+273.15))
