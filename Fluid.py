@@ -17,7 +17,7 @@ class Fluid(tr.HasTraits):
     Class to define the fluid in the duct.
     '''
     
-    p0 = tr.float(101325)
+    p0 = tr.Float(101325)
     rho0 = tr.Float()
     kappa = tr.Float(1.4)
     R = tr.Float(287.058)   # J/kgK
