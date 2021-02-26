@@ -165,12 +165,19 @@ class DuctElement(tr.HasTraits):
         # define expended array of modes
         L = self.lining.l[:, np.newaxis]
         
-        x0=2*M
-        x1=M**2
-        x2=1j*self.lining.length*k0/(M + 1)
-        x3=numpy.pi**2*L**2
+        # calculate incident sound array
+        x0=self.lining.length**2*k0**2
+        x1=numpy.pi**2*L**2
+        x2=2*M
+        x3=M**2
+        x4=x1*x3
+        x5=numpy.pi*self.lining.length*L
+        x6=x5/(x0 - x1*x2 - x1 - x4)
+        x7=numpy.exp(1j*self.lining.length*k0/(M + 1))
+        x8=x1*x7
+        x9=(-1)**L*x5/(x0*x7 - x2*x8 - x4*x7 - x8)
         
-        I = numpy.pi*L*((-1)**(L + 1) + numpy.exp(x2))*(x0 + x1 + 1)*numpy.exp(-x2)/(-self.lining.length**2*k0**2 + x0*x3 + x1*x3 + x3)
+        I = -x2*x6 + x2*x9 - x3*x6 + x3*x9 - x6 + x9
         
         return I
     
