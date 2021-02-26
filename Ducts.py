@@ -170,6 +170,9 @@ class Duct(tr.HasTraits):
     
     # frequency
     freq = tr.Instance(np.ndarray)
+    
+    # duct height
+    height_d = tr.Float()
 
     # list of DuctElements
     elements = tr.List(trait = tr.Instance(DuctElement))
@@ -179,7 +182,7 @@ class Duct(tr.HasTraits):
         
         for i in self.elements:
             
-            TL = i.tmatrix(self.freq)
+            TL = i.tmatrix(self.height_d, self.freq)
             
             return TL
     

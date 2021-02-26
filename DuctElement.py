@@ -176,13 +176,13 @@ class DuctElement(tr.HasTraits):
     
     # method calculates the transfer matrix for reflection and absorption silencer
     # or returns the transmission loss for plate silencer
-    def tmatrix(self, freq):
+    def tmatrix(self, height_d, freq):
         
         if isinstance(self.lining, PlateResonators)==True:
             
             I = self.incidentsound(self.M, freq)
             
-            TL = self.lining.transmissionloss(I, self.M, self.medium, freq)
+            TL = self.lining.transmissionloss(height_d, I, self.M, self.medium, freq)
             
             return TL
         
