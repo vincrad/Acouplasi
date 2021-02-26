@@ -275,45 +275,17 @@ cavity1 = Cavity(height=1, r=r, s=s, medium=fluid1)
 
 lining1 = SinglePlateResonator(length=1, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
 
-#Z = lining1.zmatrix(0, f)
-
 ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0)
 
 duct1 = Duct(freq=f, elements=[ductelement1])
 
 Tl = duct1.tl()
 
-#vp = lining1.platevelocity(ductelement1.incidentsound(f), 0, f)
 
-#temp = lining1.transmissionloss(ductelement1.incidentsound(f), 0, fluid1, f)
+# impedance matrizen
 
+Zc = cavity1.cavityimpedance(1, 1, j, l, f)
 
-# =============================================================================
-# A = np.expand_dims(np.array([[1,2],[3,4]]), axis=2)
-# f = np.arange(1,4,1)
-# 
-# b = np.array([[5],[6]])
-# 
-# Af = f*A
-# #bf = b*f
-# 
-# test = np.block([Af[:,:,0], Af[:,:,1], Af[:,:,2]])
-# 
-# 
-# 
-# Sol1 = []
-# for i in range(len(f)):
-#         
-#     sol = np.linalg.solve(Af[:,:,i],bf[:,i])
-#     
-#     Sol1.append(sol)
-# 
-# Afre = np.reshape(Af, (len(Af[0,0,:])*len(Af[:,0,0]),len(Af[0,:,0])))
-# 
-# bfre = np.reshape(bf, (len(bf[:,0])*len(bf[0,:])))
-# 
-# Solre = np.linalg.solve(Afre, bfre)
-# =============================================================================
 
 
 #%%
