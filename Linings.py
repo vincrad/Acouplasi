@@ -52,10 +52,17 @@ class SinglePlateResonator(PlateResonators):
     def deltar(self):
         
         return np.eye(len(self.cavity.r),1)[np.newaxis, np.newaxis, :]
+    
+    # method to calculate kappar
+    def kappar(self, height_d):
+        
+        R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
+        
+        return ((R*np.pi)/(height_d))
         
     
     # methode calculate the impedance matrix of the plate resonator
-    def zmatrix(self, M, freq):
+    def zmatrix(self, height_d, M, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -71,70 +78,148 @@ class SinglePlateResonator(PlateResonators):
         R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
         
         # calculate the impedance matrix of the plate induced sound
-        Krp = (-k0*M-1j*np.sqrt((1-M**2)*(R*np.pi)**2-k0**2, dtype=complex))/(1-M**2)
-        Krm = (k0*M-1j*np.sqrt((1-M**2)*(R*np.pi)**2-k0**2, dtype=complex))/(1-M**2)
+        Krp = (-k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
+        Krm = (k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
         
         # for j=l
-        x0=numpy.pi**2
-        x1=self.length**2
-        x2=L**2*x0
+        x0=Krp*M
+        x1=numpy.pi**2*L**2
+        x2=2*x1
         x3=-x2
-        x4=Krm**2*x1 + x3
-        x5=Krm*M
-        x6=self.length*x2
-        x7=omega*x6
-        x8=(-1)**(L + 1)
+        x4=self.length**2
+        x5=Krp**2*x4
+        x6=2*x5
+        x7=1j*self.length**3
+        x8=-k0*x2
         x9=1j*self.length
-        x10=Krm*x9
-        x11=numpy.exp(x10)
-        x12=2*x11 + 2*x8
-        x13=1j*x11*x4
-        x14=omega*x1
-        x15=M*x2
-        x16=1/(self.length*omega)
-        x17=Krp**2*x1 + x3
-        x18=Krp*M
-        x19=x18*x6
-        x20=Krp*x9
-        x21=numpy.exp(x20)
-        x22=(1/2)*1j*x17*x21
+        x10=M*x1*x9
+        x11=k0*x1
+        x12=(-k0*x5 + x11)**(-1.0)
+        x13=x12/(x1 - x5)
+        x14=x11*x4
+        x15=x1*x4
+        x16=(-1)**L
+        x17=numpy.exp(Krp*x9)
+        x18=x12/(x1*x17 - x17*x5)
+        x19=x15*x16
+        x20=Krm*M
+        x21=Krm**2*x4
+        x22=2*x21
+        x23=numpy.exp(Krm*x9)
+        x24=x1*x23
+        x25=1/((-x1 + x21)*(-x21*x23 + x24))
+        x26=x19*x25
+        x27=x24*x25*x4
+        x28=x20/k0
         
-        Zpll_temp = (1/2)*x9*(2 - self.deltar)*((1/2)*x16*(k0 + x5)*(-Krm*x13*x14 + x12*x5*x6 + x12*x7 - x13*x15)*numpy.exp(-x10)/x4**2 + x16*(k0 - x18)*((-1)**L*x19 - Krp*x14*x22 + x15*x22 - x19*x21 + x21*x7 + x7*x8)*numpy.exp(-x20)/x17**2)/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
+        Zpll_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*((k0 - x0)*(-Krp*x7/(x3 + x6) - x0*x13*x15 + x0*x18*x19 + x10/(k0*x6 + x8) + x13*x14 - x14*x16*x18) + (k0 + x20)*(-Krm*x7/(x22 + x3) - x10/(k0*x22 + x8) + x26*x28 + x26 - x27*x28 - x27))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M)**2, dtype=complex))
+        
+        
+        
+        
+# =============================================================================
+#         x0=numpy.pi**2
+#         x1=self.length**2
+#         x2=L**2*x0
+#         x3=-x2
+#         x4=Krm**2*x1 + x3
+#         x5=Krm*M
+#         x6=self.length*x2
+#         x7=omega*x6
+#         x8=(-1)**(L + 1)
+#         x9=1j*self.length
+#         x10=Krm*x9
+#         x11=numpy.exp(x10)
+#         x12=2*x11 + 2*x8
+#         x13=1j*x11*x4
+#         x14=omega*x1
+#         x15=M*x2
+#         x16=1/(self.length*omega)
+#         x17=Krp**2*x1 + x3
+#         x18=Krp*M
+#         x19=x18*x6
+#         x20=Krp*x9
+#         x21=numpy.exp(x20)
+#         x22=(1/2)*1j*x17*x21
+#         
+#         Zpll_temp = (1/2)*x9*(2 - self.deltar)*((1/2)*x16*(k0 + x5)*(-Krm*x13*x14 + x12*x5*x6 + x12*x7 - x13*x15)*numpy.exp(-x10)/x4**2 + x16*(k0 - x18)*((-1)**L*x19 - Krp*x14*x22 + x15*x22 - x19*x21 + x21*x7 + x7*x8)*numpy.exp(-x20)/x17**2)/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
+# =============================================================================
         
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
         # for j != l
-        x0=numpy.pi**2
-        x1=self.length**2
-        x2=Krm**2*x1
-        x3=J**2
-        x4=-x0*x3
-        x5=L**2
-        x6=-x0*x5
-        x7=x2 + x6
-        x8=Krm*M
-        x9=J + 1
-        x10=(-1)**(J + L)
-        x11=1j*self.length
-        x12=Krm*x11
-        x13=numpy.exp(x12)
-        x14=(-1)**x9 + x10*x13
-        x15=x3 - x5
-        x16=x0*x15
-        x17=omega*x16
-        x18=(-1)**(L + x9) + 1
-        x19=x13*x18*x7
-        #x20=J*L/(omega*x15)
-        x20 = np.divide(J*L, (omega*x15), out=np.zeros_like(J*L/omega, dtype=float), where=(omega*x15)!=0)
-        x21=Krp**2*x1
-        x22=x21 + x6
-        x23=Krp*M
-        x24=x16*x23
-        x25=Krp*x11
-        x26=numpy.exp(x25)
-        x27=x22*x26
+        x0=Krp*M
+        x1=J**2
+        x2=L**2
+        x3=self.length**2
+        x4=J*L*x3
+        #x5=numpy.pi*x4/(numpy.pi*x1 - numpy.pi*x2)
+        x5 = np.divide(numpy.pi*x4, (numpy.pi*x1 - numpy.pi*x2), out=np.zeros_like(J*L, dtype=float), where=(numpy.pi*x1 - numpy.pi*x2)!=0)
+        x6=numpy.pi**2
+        x7=x1*x6
+        x8=Krp**2*x3
+        x9=(k0*x7 - k0*x8)**(-1.0)
+        x10=k0*x9
+        x11=x10*x5
+        x12=x0*x9
+        x13=x12*x5
+        x14=x2*x6
+        x15=x4*x6
+        x16=x15/(x14 - x8)
+        x17=(-1)**J
+        x18=(-1)**L
+        x19=x17*x18
+        x20=1j*self.length
+        x21=numpy.exp(Krp*x20)
+        x22=x15*x18/(x14*x21 - x21*x8)
+        x23=Krm*M
+        x24=Krm**2*x3
+        x25=x5/(-x24 + x7)
+        x26=x19*x25
+        x27=x23/k0
+        x28=numpy.exp(Krm*x20)
+        x29=x15*x17/((x24 - x7)*(x14*x28 - x24*x28))
+        x30=x18*x28*x29
         
-        Zplj_temp = (1/2)*x11*(2 - self.deltar)*(x20*(k0 + x8)*(omega*x19 + x14*x16*x8 + x14*x17 + x19*x8)*numpy.exp(-x12)/(x7*(x2 + x4)) + x20*(k0 - x23)*((-1)**L*x24 + (-1)**(L + 1)*x17 + omega*x27*(x10 - 1) + x17*x26 + x18*x23*x27 - x24*x26)*numpy.exp(-x25)/(x22*(x21 + x4)))/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
+        Zplj_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*((k0 - x0)*(x10*x16 - x10*x22 - x11*x19 + x11 - x12*x16 + x12*x22 + x13*x19 - x13) + (k0 + x23)*(-x25*x27 - x25 + x26*x27 + x26 + x27*x29 - x27*x30 + x29 - x30))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M)**2, dtype=complex))
+        
+        
+        
+        
+        
+# =============================================================================
+#         x0=numpy.pi**2
+#         x1=self.length**2
+#         x2=Krm**2*x1
+#         x3=J**2
+#         x4=-x0*x3
+#         x5=L**2
+#         x6=-x0*x5
+#         x7=x2 + x6
+#         x8=Krm*M
+#         x9=J + 1
+#         x10=(-1)**(J + L)
+#         x11=1j*self.length
+#         x12=Krm*x11
+#         x13=numpy.exp(x12)
+#         x14=(-1)**x9 + x10*x13
+#         x15=x3 - x5
+#         x16=x0*x15
+#         x17=omega*x16
+#         x18=(-1)**(L + x9) + 1
+#         x19=x13*x18*x7
+#         #x20=J*L/(omega*x15)
+#         x20 = np.divide(J*L, (omega*x15), out=np.zeros_like(J*L/omega, dtype=float), where=(omega*x15)!=0)
+#         x21=Krp**2*x1
+#         x22=x21 + x6
+#         x23=Krp*M
+#         x24=x16*x23
+#         x25=Krp*x11
+#         x26=numpy.exp(x25)
+#         x27=x22*x26
+#         
+#         Zplj_temp = (1/2)*x11*(2 - self.deltar)*(x20*(k0 + x8)*(omega*x19 + x14*x16*x8 + x14*x17 + x19*x8)*numpy.exp(-x12)/(x7*(x2 + x4)) + x20*(k0 - x23)*((-1)**L*x24 + (-1)**(L + 1)*x17 + omega*x27*(x10 - 1) + x17*x26 + x18*x23*x27 - x24*x26)*numpy.exp(-x25)/(x22*(x21 + x4)))/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
+# =============================================================================
 
         Zplj = np.sum(Zplj_temp, axis=2)
         
@@ -147,10 +232,10 @@ class SinglePlateResonator(PlateResonators):
         return Z
    
     # method calculate the plate velocity
-    def platevelocity(self, I, M, freq):
+    def platevelocity(self, height_d, I, M, freq):
         
         # impedance matrix
-        Z = self.zmatrix(M, freq)
+        Z = self.zmatrix(height_d, M, freq)
         
         # L matrix with material properties of the plate
         Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, freq)
@@ -168,7 +253,7 @@ class SinglePlateResonator(PlateResonators):
         return vp
         
     # method calculates the transmission loss of the plate silencer
-    def transmissionloss(self, I, M, medium, freq):
+    def transmissionloss(self, height_d, I, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -178,7 +263,7 @@ class SinglePlateResonator(PlateResonators):
         J = self.j[:, np.newaxis]
         
         # plate velocity
-        vp = self.platevelocity(I, M, freq)
+        vp = self.platevelocity(height_d, I, M, freq)
         
         # calculate transmission loss
         x0=numpy.pi**2*J**2
