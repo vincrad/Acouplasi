@@ -267,7 +267,7 @@ s = np.arange(0,5,1)
 
 fluid1 = Fluid(temperature=temp1)
 
-material1 = Material(rhop=35, temperature=temp1)
+material1 = Material(rhop=3500, temperature=temp1)
 
 plate1 = Plate(hp=0.01, material=material1)
 

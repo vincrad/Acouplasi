@@ -114,37 +114,6 @@ class SinglePlateResonator(PlateResonators):
         
         Zpll_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*((k0 - x0)*(-Krp*x7/(x3 + x6) - x0*x13*x15 + x0*x18*x19 + x10/(k0*x6 + x8) + x13*x14 - x14*x16*x18) + (k0 + x20)*(-Krm*x7/(x22 + x3) - x10/(k0*x22 + x8) + x26*x28 + x26 - x27*x28 - x27))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M)**2, dtype=complex))
         
-        
-        
-        
-# =============================================================================
-#         x0=numpy.pi**2
-#         x1=self.length**2
-#         x2=L**2*x0
-#         x3=-x2
-#         x4=Krm**2*x1 + x3
-#         x5=Krm*M
-#         x6=self.length*x2
-#         x7=omega*x6
-#         x8=(-1)**(L + 1)
-#         x9=1j*self.length
-#         x10=Krm*x9
-#         x11=numpy.exp(x10)
-#         x12=2*x11 + 2*x8
-#         x13=1j*x11*x4
-#         x14=omega*x1
-#         x15=M*x2
-#         x16=1/(self.length*omega)
-#         x17=Krp**2*x1 + x3
-#         x18=Krp*M
-#         x19=x18*x6
-#         x20=Krp*x9
-#         x21=numpy.exp(x20)
-#         x22=(1/2)*1j*x17*x21
-#         
-#         Zpll_temp = (1/2)*x9*(2 - self.deltar)*((1/2)*x16*(k0 + x5)*(-Krm*x13*x14 + x12*x5*x6 + x12*x7 - x13*x15)*numpy.exp(-x10)/x4**2 + x16*(k0 - x18)*((-1)**L*x19 - Krp*x14*x22 + x15*x22 - x19*x21 + x21*x7 + x7*x8)*numpy.exp(-x20)/x17**2)/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
-# =============================================================================
-        
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
         # for j != l
@@ -182,44 +151,6 @@ class SinglePlateResonator(PlateResonators):
         x30=x18*x28*x29
         
         Zplj_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*((k0 - x0)*(x10*x16 - x10*x22 - x11*x19 + x11 - x12*x16 + x12*x22 + x13*x19 - x13) + (k0 + x23)*(-x25*x27 - x25 + x26*x27 + x26 + x27*x29 - x27*x30 + x29 - x30))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M)**2, dtype=complex))
-        
-        
-        
-        
-        
-# =============================================================================
-#         x0=numpy.pi**2
-#         x1=self.length**2
-#         x2=Krm**2*x1
-#         x3=J**2
-#         x4=-x0*x3
-#         x5=L**2
-#         x6=-x0*x5
-#         x7=x2 + x6
-#         x8=Krm*M
-#         x9=J + 1
-#         x10=(-1)**(J + L)
-#         x11=1j*self.length
-#         x12=Krm*x11
-#         x13=numpy.exp(x12)
-#         x14=(-1)**x9 + x10*x13
-#         x15=x3 - x5
-#         x16=x0*x15
-#         x17=omega*x16
-#         x18=(-1)**(L + x9) + 1
-#         x19=x13*x18*x7
-#         #x20=J*L/(omega*x15)
-#         x20 = np.divide(J*L, (omega*x15), out=np.zeros_like(J*L/omega, dtype=float), where=(omega*x15)!=0)
-#         x21=Krp**2*x1
-#         x22=x21 + x6
-#         x23=Krp*M
-#         x24=x16*x23
-#         x25=Krp*x11
-#         x26=numpy.exp(x25)
-#         x27=x22*x26
-#         
-#         Zplj_temp = (1/2)*x11*(2 - self.deltar)*(x20*(k0 + x8)*(omega*x19 + x14*x16*x8 + x14*x17 + x19*x8)*numpy.exp(-x12)/(x7*(x2 + x4)) + x20*(k0 - x23)*((-1)**L*x24 + (-1)**(L + 1)*x17 + omega*x27*(x10 - 1) + x17*x26 + x18*x23*x27 - x24*x26)*numpy.exp(-x25)/(x22*(x21 + x4)))/numpy.sqrt(-k0**2 + R**2*x0*(1 - M**2), dtype=complex)
-# =============================================================================
 
         Zplj = np.sum(Zplj_temp, axis=2)
         
@@ -266,13 +197,14 @@ class SinglePlateResonator(PlateResonators):
         vp = self.platevelocity(height_d, I, M, freq)
         
         # calculate transmission loss
-        x0=numpy.pi**2*J**2
-        x1=M*omega
-        x2=M*k0
-        x3=numpy.exp(1j*self.length*k0/(M + 1))
-        x4=(-1)**(J + 1)*x3
+        x0=(M + 1)**(-1.0)
+        x1=numpy.pi**2*J**2*k0
+        x2=self.length*k0
+        x3=numpy.pi*J*x2/(-self.length**2*k0**3 + M**2*x1 + 2*M*x1 + x1)
+        x4=M*x3
+        x5=(-1)**J*numpy.exp(1j*x0*x2)
         
-        temp = (1/2)*numpy.pi*self.length*J*((-1)**J*x2*x3 + omega*x4 + omega + x1*x4 + x1 - x2)/(omega*(-self.length**2*k0**2 + M**2*x0 + 2*M*x0 + x0))
+        temp = (1/2)*self.cavity.medium.c*self.cavity.medium.rho0*x0*(-x3*x5 + x3 - x4*x5 + x4)/height_d
 
         TL_temp = np.sum(vp*temp, axis=0)
         TL = -20*np.log10(np.abs(1+TL_temp))
