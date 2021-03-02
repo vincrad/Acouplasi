@@ -204,7 +204,7 @@ class SinglePlateResonator(PlateResonators):
         x4=M*x3
         x5=(-1)**J*numpy.exp(1j*x0*x2)
         
-        temp = (1/2)*self.cavity.medium.c*self.cavity.medium.rho0*x0*(-x3*x5 + x3 - x4*x5 + x4)/height_d
+        temp = (1/2)*x0*(-x3*x5 + x3 - x4*x5 + x4)/(self.cavity.medium.c*height_d)
 
         TL_temp = np.sum(vp*temp, axis=0)
         TL = -20*np.log10(np.abs(1+TL_temp))
