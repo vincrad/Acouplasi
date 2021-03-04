@@ -82,75 +82,66 @@ class SinglePlateResonator(PlateResonators):
         Krm = (k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
         
         # for j=l
-        x0=Krp*M
+        x0=self.length**2
         x1=numpy.pi**2*L**2
-        x2=2*x1
-        x3=-x2
-        x4=self.length**2
-        x5=Krp**2*x4
-        x6=2*x5
-        x7=1j*self.length**3
-        x8=-k0*x2
-        x9=1j*self.length
-        x10=M*x1*x9
-        x11=k0*x1
-        x12=(-k0*x5 + x11)**(-1.0)
-        x13=x12/(x1 - x5)
-        x14=x11*x4
-        x15=x1*x4
-        x16=(-1)**L
-        x17=numpy.exp(Krp*x9)
-        x18=x12/(x1*x17 - x17*x5)
-        x19=x15*x16
-        x20=Krm*M
-        x21=Krm**2*x4
-        x22=2*x21
-        x23=numpy.exp(Krm*x9)
-        x24=x1*x23
-        x25=1/((-x1 + x21)*(-x21*x23 + x24))
-        x26=x19*x25
-        x27=x24*x25*x4
-        x28=x20/k0
+        x2=-x1
+        x3=Krm**2*x0 + x2
+        x4=Krm*M
+        x5=1j*self.length
+        x6=Krm*x5
+        x7=numpy.exp(x6)
+        x8=(-1)**(L + 1) + x7
+        x9=2*self.length*x1
+        x10=k0*x9
+        x11=1j*x3*x7
+        x12=k0*x0
+        x13=M*x1
+        x14=(1/2)*self.length/k0
+        x15=Krp**2*x0 + x2
+        x16=Krp*M
+        x17=(-1)**L
+        x18=x16*x9
+        x19=Krp*x5
+        x20=numpy.exp(x19)
+        x21=1j*x15*x20
         
-        Zpll_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*((k0 - x0)*(-Krp*x7/(x3 + x6) - x0*x13*x15 + x0*x18*x19 + x10/(k0*x6 + x8) + x13*x14 - x14*x16*x18) + (k0 + x20)*(-Krm*x7/(x22 + x3) - x10/(k0*x22 + x8) + x26*x28 + x26 - x27*x28 - x27))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M)**2, dtype=complex))
+        Zpll_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(x14*(k0 + x4)*(-Krm*x11*x12 + x10*x8 - x11*x13 + x4*x8*x9)*numpy.exp(-x6)/x3**2 + x14*(k0 - x16)*(-Krp*x12*x21 - x10*x17 + x10*x20 + x13*x21 + x17*x18 - x18*x20)*numpy.exp(-x19)/x15**2)/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M**2), dtype=complex))
+
         
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
-        # for j != l
-        x0=Krp*M
-        x1=J**2
-        x2=L**2
-        x3=self.length**2
-        x4=J*L*x3
-        #x5=numpy.pi*x4/(numpy.pi*x1 - numpy.pi*x2)
-        x5 = np.divide(numpy.pi*x4, (numpy.pi*x1 - numpy.pi*x2), out=np.zeros_like(J*L, dtype=float), where=(numpy.pi*x1 - numpy.pi*x2)!=0)
-        x6=numpy.pi**2
-        x7=x1*x6
-        x8=Krp**2*x3
-        x9=(k0*x7 - k0*x8)**(-1.0)
-        x10=k0*x9
-        x11=x10*x5
-        x12=x0*x9
-        x13=x12*x5
-        x14=x2*x6
-        x15=x4*x6
-        x16=x15/(x14 - x8)
-        x17=(-1)**J
-        x18=(-1)**L
-        x19=x17*x18
-        x20=1j*self.length
-        x21=numpy.exp(Krp*x20)
-        x22=x15*x18/(x14*x21 - x21*x8)
-        x23=Krm*M
-        x24=Krm**2*x3
-        x25=x5/(-x24 + x7)
-        x26=x19*x25
-        x27=x23/k0
-        x28=numpy.exp(Krm*x20)
-        x29=x15*x17/((x24 - x7)*(x14*x28 - x24*x28))
-        x30=x18*x28*x29
+        # for j != l#
+        x0=self.length**2
+        x1=Krm**2*x0
+        x2=numpy.pi**2
+        x3=J**2
+        x4=-x2*x3
+        x5=L**2
+        x6=-x2*x5
+        x7=x1 + x6
+        x8=Krm*M
+        x9=J + 1
+        x10=(-1)**(J + L)
+        x11=1j*self.length
+        x12=Krm*x11
+        x13=numpy.exp(x12)
+        x14=(-1)**x9 + x10*x13
+        x15=x3 - x5
+        x16=x15*x2
+        x17=k0*x16
+        x18=(-1)**(L + x9) + 1
+        x19=x13*x18*x7
+        #x20=J*L*x0/(k0*x15)
+        x20 = np.divide(J*L*x0, (k0*x15), out=np.zeros_like(J*L*k0, dtype=float), where=(k0*x15)!=0)
+        x21=Krp**2*x0
+        x22=x21 + x6
+        x23=Krp*M
+        x24=x16*x23
+        x25=Krp*x11
+        x26=numpy.exp(x25)
+        x27=x22*x26
         
-        Zplj_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*((k0 - x0)*(x10*x16 - x10*x22 - x11*x19 + x11 - x12*x16 + x12*x22 + x13*x19 - x13) + (k0 + x23)*(-x25*x27 - x25 + x26*x27 + x26 + x27*x29 - x27*x30 + x29 - x30))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M)**2, dtype=complex))
+        Zplj_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(x20*(k0 + x8)*(k0*x19 + x14*x16*x8 + x14*x17 + x19*x8)*numpy.exp(-x12)/(x7*(x1 + x4)) + x20*(k0 - x23)*((-1)**L*x24 + (-1)**(L + 1)*x17 + k0*x27*(x10 - 1) + x17*x26 + x18*x23*x27 - x24*x26)*numpy.exp(-x25)/(x22*(x21 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M**2), dtype=complex))
 
         Zplj = np.sum(Zplj_temp, axis=2)
         
