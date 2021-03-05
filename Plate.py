@@ -9,7 +9,7 @@ Created on Tue Aug 25 10:34:23 2020
 import traitlets as tr
 import numpy as np
 from Material import Material
-
+from Temperature import Temperature
 
 # =============================================================================
 # class Plate(tr.HasTraits):
@@ -60,7 +60,10 @@ class Plate(tr.HasTraits):
     hp = tr.Float
     
     # material of the plate
-    material = tr.Instance(Material)   
+    material = tr.Instance(Material)
+    
+    # temperature
+    temperature = tr.Instance(Temperature)
     
     # method calculate the L matrix for a plate resonator silencer
     def lmatrix(self, length, depth, l, freq):
@@ -75,7 +78,7 @@ class Plate(tr.HasTraits):
         m = self.material.mass(self.hp)
         
         # calculate bending stiffness
-        B = self.material.bendingstiffness(self.hp)
+        B = self.material.bendingstiffness(self.hp, freq, self.temperature)
         
         # calculate the values of the L matrix of the plate
         Lmatrix_temp = (B/(1j*omega)*((L*np.pi)/length)**4+1j*omega*m)*(length/2)
