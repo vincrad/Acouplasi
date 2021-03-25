@@ -9,6 +9,8 @@ Created on Thu Jan 21 17:22:29 2021
 import traitlets as tr
 import numpy as np
 
+#%%
+
 class Temperature(tr.HasTraits):
     
     '''

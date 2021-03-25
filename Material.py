@@ -9,6 +9,7 @@ Created February 2021
 import traitlets as tr
 import numpy as np
 
+#%%
 
 class Material(tr.HasTraits):
     '''

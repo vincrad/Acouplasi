@@ -11,6 +11,7 @@ import numpy as np
 from numpy import sqrt
 from Temperature import Temperature
 
+#%%
     
 class Fluid(tr.HasTraits):
     '''
