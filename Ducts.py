@@ -38,6 +38,15 @@ class Duct(tr.HasTraits):
             TL = i.tmatrix(self.height_d, self.freq)
             
             return TL
+        
+    # method calculate the coefficients of the duct
+    def coefficients(self):
+        
+        for i in self.elements:
+            
+            alpha, beta, tau = i.coefficients(self.height_d, self.freq)
+            
+            return alpha, beta, tau
     
     
     

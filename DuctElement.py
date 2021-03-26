@@ -76,7 +76,22 @@ class DuctElement(tr.HasTraits):
         
             return T
     
-    
+    # method calculate the transmission, reflection and absorption coefficient of the plate silencer duct element
+    def coefficients(self, height_d, freq):
+        
+        # incident sound
+        I = self.incidentsound(self.M, freq)
+        
+        # transmission coefficient
+        tau = self.lining.transmission(height_d, I, self.M, self.medium, freq)
+        
+        # reflection coefficient
+        beta = self.lining.reflection(height_d, I, self.M, self.medium, freq)
+        
+        # absorption coefficient
+        alpha = self.lining.absorption(height_d, I, self.M, self.medium, freq)
+        
+        return alpha, beta, tau
         
         
         
