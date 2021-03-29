@@ -18,7 +18,7 @@ from Temperature import Temperature
 from Fluid import Fluid
 from Material import Material
 from Linings import PlateResonators, SinglePlateResonator, SimpleTwoSidedPlateResonator
-from Plate import Plate
+from Plate import Plate, Plate3D
 from Cavity import Cavity
 
 #%% Test plate resonator 
@@ -30,15 +30,15 @@ f = np.arange(10,260,10)
 temp1 = Temperature(C=20)
 
 # # number of plate modes
-N = 15
+N = 5
  
 # plate modes
 j = np.arange(1, N+1, 1)
 l = np.arange(1, N+1, 1)
 
 # cavity modes
-r = np.arange(0,30,1)
-s = np.arange(0,30,1)
+r = np.arange(0,10,1)
+s = np.arange(0,10,1)
 
 fluid1 = Fluid(temperature=temp1)
 
@@ -62,6 +62,7 @@ plt.plot(f,Tl)
 plt.title('Transmission Loss')
 plt.show()
 
+Lmatrix = plate1.lmatrix(5,1,l,f)
 
 #%%
 
@@ -74,6 +75,73 @@ ax.stackplot(f, t, r, a, labels=labels)
 ax.legend()
 plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
 plt.show()
+
+#%% Test plate silencer 3D
+
+# frequency
+f = np.arange(10,260,10)
+
+# temperature
+temp1 = Temperature(C=20)
+
+# # number of plate modes
+N = 5
+ 
+# plate modes
+j = np.arange(1, N+1, 1)
+k = np.arange(1, N+1, 1)
+l = np.arange(1, N+1, 1)
+n = np.arange(1, N+1, 1)
+
+# cavity modes
+r = np.arange(0,10,1)
+s = np.arange(0,10,1)
+t = np.arange(0,10,1)
+
+fluid1 = Fluid(temperature=temp1)
+
+material1 = Material(rho = 2700, mu = .34, E = lambda freq, temp: 7.21e10*(1+1j*.0001))
+
+plate2 = Plate3D(hp=0.0003, material=material1, temperature=temp1)
+
+Lmatrix_2 = plate2.lmatrix(5,1,l,n,f)
+
+#test = plate1.lmatrix(5,1,l,f)
+
+
+
+#%%
+
+w = len(l)
+
+i,k = np.ogrid[:w, :w]
+
+res = np.zeros((w,w,w,w), int)
+res[i,i,k,k] = 1
+
+
+test = res[:,:,:,:, np.newaxis]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
