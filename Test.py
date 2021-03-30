@@ -19,7 +19,7 @@ from Fluid import Fluid
 from Material import Material
 from Linings import PlateResonators, SinglePlateResonator, SimpleTwoSidedPlateResonator
 from Plate import Plate, Plate3D
-from Cavity import Cavity
+from Cavity import Cavity, Cavity3D
 
 #%% Test plate resonator 
 
@@ -104,6 +104,8 @@ material1 = Material(rho = 2700, mu = .34, E = lambda freq, temp: 7.21e10*(1+1j*
 
 plate2 = Plate3D(hp=0.0003, material=material1, temperature=temp1)
 
+cavity1 = Cavity3D(height=1, r=r, s=s, t=t, medium=fluid1)
+
 Lmatrix_2 = plate2.lmatrix(5,1,l,n,f)
 
 #test = plate1.lmatrix(5,1,l,f)
@@ -112,16 +114,7 @@ Lmatrix_2 = plate2.lmatrix(5,1,l,n,f)
 
 #%%
 
-w = len(l)
-
-i,k = np.ogrid[:w, :w]
-
-res = np.zeros((w,w,w,w), int)
-res[i,i,k,k] = 1
-
-
-test = res[:,:,:,:, np.newaxis]
-
+test2 = cavity1.cavityimpedance(5,1,j,k,l,n,f)
 
 
 
