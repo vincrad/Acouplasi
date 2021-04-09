@@ -25,40 +25,17 @@ class Material(tr.HasTraits):
     mu = tr.Float()
 
 
-    def mass(self, hp):
-                   
-        return self.rho*hp
-    
-    
-    def bendingstiffness(self, hp, freq, temp):
-        
-        return self.E(freq,temp)*hp**3/12/(1-self.mu**2)
-
-def E_func(freq,temp):
-    if temp == -50:
-        return (2.33e+09*freq**.108) + 1j*(1.08e8*freq**-0.027)
-    elif temp == -25:
-        return (9.54e+08*freq**.108) + 1j*(1.35e8*freq**-0.027)
-    elif temp == 0:
-        return (2.59e+08*freq**.158) + 1j*(7.06e7*freq**.081)
-    elif temp == 25:
-        return (7.86e+07*freq**.138) + 1j*(1.55e7*freq**.172)
-    elif temp == 50:
-        return (4.76e+07*freq**.069) + 1j*(4.39e6*freq**.149)
-    else:
-        return 1.6e8*(1+1j*.166)
-
-# Polyurethane TPU1195A at 25°C
-TPU1195A = Material(rho = 1150, mu = .48, E = E_func )
+# Polyurethane TPU1195A
+TPU1195A = Material(rho = 1150, mu = .48, E = lambda freq, temp: 3.1e8*.97**(temp.C-7*np.log10(freq))+1j*4.7e7*.96**(temp.C-7*np.log10(freq)))
 
 # Lead
-Pb = Material(rho = 11300, mu = .43, E = lambda freq, temp: 1.7e10*(1+1j*.02))
+Pb = Material(rho = 11300, mu = .43, E = lambda freq, temp: 1.7e10*(1+1j*.1))
 
 # Copper
 Cu = Material(rho = 8900, mu = .35, E = lambda freq, temp: 1.25e11*(1+1j*.002))
 
 # Steel
-Steel = Material(rho = 7800, mu = .31, E = lambda freq, temp: 2.1e11*(1+1j*.0002))
+Steel = Material(rho = 7800, mu = .31, E = lambda freq, temp: 2.1e11*(1+1j*.0003))
 
 # Aluminium
 Al = Material(rho = 2700, mu = .34, E = lambda freq, temp: 7.21e10*(1+1j*.0001))
