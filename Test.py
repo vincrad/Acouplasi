@@ -51,7 +51,7 @@ cavity1 = Cavity(height=1, r=r, s=s, medium=fluid1,)
 #lining1 = SinglePlateResonator(length=5, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
 lining1 = SimpleTwoSidedPlateResonator(length=5, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
 
-ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0)
+ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0.3)
 
 duct1 = Duct(freq=f, height_d=1, elements=[ductelement1])
 
@@ -75,6 +75,8 @@ ax.stackplot(f, t, r, a, labels=labels)
 ax.legend()
 plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
 plt.show()
+
+test = a+r+t
 
 #%% Test plate silencer 3D
 
@@ -115,12 +117,6 @@ Lmatrix_2 = plate2.lmatrix(5,1,l,n,f)
 #%%
 
 test2 = cavity1.cavityimpedance(5,1,j,k,l,n,f)
-
-
-
-
-
-
 
 
 

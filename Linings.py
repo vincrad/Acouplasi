@@ -211,7 +211,10 @@ class SinglePlateResonator(PlateResonators):
         
         temp = (1/2)*numpy.pi*self.length*J*((-1)**J - numpy.exp(-x0))*numpy.exp(x0)/(self.cavity.medium.c*height_d*(self.length**2*k0**2 - M**2*x1 + 2*M*x1 - x1))
         
-        beta = np.abs(np.sum(vp*temp, axis=0))**2
+        beta_temp = np.abs(np.sum(vp*temp, axis=0))**2
+        
+        # energetic correction of reflection coefficient due to mean flow
+        beta = beta_temp*((1-M)/(1+M))**2
         
         return beta
     
@@ -413,7 +416,10 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         
         temp = (1/2)*numpy.pi*self.length*J*((-1)**J - numpy.exp(-x0))*numpy.exp(x0)/(self.cavity.medium.c*height_d*(self.length**2*k0**2 - M**2*x1 + 2*M*x1 - x1))
         
-        beta = np.abs(np.sum(vp*(2*temp), axis=0))**2
+        beta_temp = np.abs(np.sum(vp*(2*temp), axis=0))**2
+        
+        # energetic correction of reflection coefficient due to mean flow
+        beta = beta_temp*((1-M)/(1+M))**2
         
         return beta
     
