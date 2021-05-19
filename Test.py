@@ -120,18 +120,18 @@ lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, plate=pl
 
 ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
 
-# lining 1 - Numba-Loop test
-start = time.time()
-Z = lining1.zmatrix(1,0,f)
-end = time.time()
+# # lining 1 - Numba-Loop test
+# start = time.time()
+# Z = lining1.zmatrix(1,0,f)
+# end = time.time()
 
-print('Time: ',+ end-start)
+# print('Time: ',+ end-start)
 
-start = time.time()
-Z1 = lining1.zmatrix(1,0,f)
-end = time.time()
+# start = time.time()
+# Z1 = lining1.zmatrix(1,0,f)
+# end = time.time()
 
-print('Time2: ', + end-start)
+# print('Time2: ', + end-start)
 
 # # lining 2 - simple loop
 # start = time.time()
@@ -151,21 +151,23 @@ print('Time2: ', + end-start)
 # print('Time4:', + end-start)
 
 
-# %% Test calculate TL
+# %% Test calculate TL and coefficients
 
-I = ductelement1.incidentsound(0, f)
+# numba loop test
+start = time.time()
+TL = ductelement1.tmatrix(1, f)
+end = time.time()
+print('Time1:', + end-start)
 
-vp = lining1.platevelocity(1, I, 0, f)
+start = time.time()
+TL = ductelement1.tmatrix(1, f)
+end = time.time()
+print('Time2:', + end-start)
 
-tau = lining1.transmission(1, I, 0, fluid1, f)
-
-beta = lining1.reflection(1, I, 0, fluid1, f)
-
-alpha = lining1.absorption(1, I, 0, fluid1, f)
-
-TL = lining1.transmissionloss(1, I, 0, fluid1, f)
-
-print(tau, beta)
+start = time.time()
+[alpha, beta, tau] = ductelement1.coefficients(1, f)
+end = time.time()
+print('Time 3:', + end-start)
 
 plt.figure()
 plt.plot(f,TL)
