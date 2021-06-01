@@ -16,7 +16,7 @@ Created on Fri Sep  4 14:06:20 2020
 import numpy as np, numpy
 import matplotlib.pyplot as plt
 from DuctElement import DuctElement, DuctElement3D
-from Ducts import Duct
+from Ducts import Duct, Duct3D
 from Temperature import Temperature
 from Fluid import Fluid
 from Material import Material
@@ -120,6 +120,8 @@ lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, plate=pl
 
 ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
 
+duct1 = Duct3D(freq=f, height_d=1, elements=[ductelement1])
+
 # # lining 1 - Numba-Loop test
 # start = time.time()
 # Z = lining1.zmatrix(1,0,f)
@@ -155,19 +157,19 @@ ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
 
 # numba loop test
 start = time.time()
-TL = ductelement1.tmatrix(1, f)
+TL = duct1.tl()
 end = time.time()
-print('Time1:', + end-start)
+print('Time4:', + end-start)
 
 start = time.time()
-TL = ductelement1.tmatrix(1, f)
+TL = duct1.tl()
 end = time.time()
-print('Time2:', + end-start)
+print('Time5:', + end-start)
 
 start = time.time()
-[alpha, beta, tau] = ductelement1.coefficients(1, f)
+[alpha, beta, tau] = duct1.coefficients()
 end = time.time()
-print('Time 3:', + end-start)
+print('Time6:', + end-start)
 
 plt.figure()
 plt.plot(f,TL)
