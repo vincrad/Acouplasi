@@ -557,7 +557,7 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                             
                                         else:
                                             
-                                            x0=numpy.pi**2
+                                            x0=(np.pi)**(2+0j)
                                             x1=Krsm*M
                                             x2=Krsm*length
                                             x3=1j*x2
@@ -567,65 +567,63 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                             x7=numpy.exp(x3)
                                             x8=1j*x7
                                             x9=k0*x8
-                                            x10=Krsm**3*length**4*x9
-                                            x11=numpy.pi**4*M*L**4
+                                            x10=(Krsm)**(3+0j)*(length)**(4+0j)*x9
+                                            x11=(np.pi)**(4+0j)*M*(L)**(4+0j)
                                             x12=x11*x7
                                             x13=N + R
                                             x14=N + 1
-                                            x15=(-1)**x14
-                                            x16=(-1)**x13
-                                            x17=(-1)**(R + 1)
-                                            x18=L**2*x0
-                                            x19=length**2*x18
+                                            x15=(-1)**(x14+0j)
+                                            x16=(-1)**(x13+0j)
+                                            x17=(-1)**(R + 1+0j)
+                                            x18=(L)**(2+0j)*x0
+                                            x19=(length)**(2+0j)*x18
                                             x20=Krsm*x19*x9
-                                            x21=Krsm**2*M*x19*x8
-                                            x22=(-1)**L
+                                            x21=(Krsm)**(2+0j)*M*x19*x8
+                                            x22=(-1)**(L+0j)
                                             x23=2*k0
                                             x24=2*x1
                                             x25=L + 1
-                                            x26=(-1)**(N + x25)
+                                            x26=(-1)**(N + x25+0j)
                                             x27=k0*x26
                                             x28=L + R
-                                            x29=(-1)**(x28 + 1)
-                                            x30=(-1)**(N + x28)
+                                            x29=(-1)**(x28 + 1+0j)
+                                            x30=(-1)**(N + x28+0j)
                                             x31=x1*x26
                                             x32=1j*numpy.pi
                                             x33=x28*x32
                                             x34=3*x33
                                             x35=numpy.exp(x34)
                                             x36=3*L
-                                            x37=(-1)**(x36 + x5 + 1)
+                                            x37=(-1)**(x36 + x5 + 1+0j)
                                             x38=numpy.exp(x3 + x33)
                                             x39=k0*x22
                                             x40=1j*x6
                                             x41=numpy.exp(x3 + x40)
-                                            x42=(-1)**x25
+                                            x42=(-1)**(x25+0j)
                                             x43=k0*x42
-                                            x44=(-1)**(L + N)*x41
+                                            x44=(-1)**(L + N+0j)*x41
                                             x45=numpy.exp(x3 + x34)
                                             x46=numpy.exp(x3 + 3*x40)
                                             x47=x1*x22
                                             x48=x1*x42
-                                            x49=(-1)**(x14 + x28)*x46
+                                            x49=(-1)**(x14 + x28+0j)*x46
                                             x50=x30*numpy.exp(x3 + x32*(R + x36))
                                             
-                                            # numpy issue: e.g. (-1)**(2.5)
-                                            # modified: (-1) -> np.complex(-1)
-                                            Sum += -1/4*1j*length*depth*c*rho0*(2 - deltar)*(2 - deltas)*(k0 + x1)*(N**2 - 2*R**2)*((-1)**N*x20 + (-1)**R*x20 + np.complex(-1)**(N + 1/2)*x12 + np.complex(-1)**(R + 1/2)*x12 + (-1)**(R + x14)*x20 + np.complex(-1)**(x13 + 3/2)*x12 + length*x18*(k0*x29 - k0*x35 + k0*x37 + k0*x44 + k0*x49 + k0*x50 + x1*x29 - x1*x35 + x1*x37 + x1*x44 + x1*x49 + x1*x50 + x22*x23 + x22*x24 + x23*x30 + x24*x30 + x27*x38 + x27 + x31*x38 + x31 + x38*x39 + x38*x47 + x39*x45 + x41*x43 + x41*x48 + x43*x46 + x45*x47 + x46*x48) + x10*x15 + x10*x16 + x10*x17 + x10 - x11*x8 + x15*x21 + x16*x21 + x17*x21 - x20 + x21)*numpy.exp(-x3)/(height_d*k0*N*R*x0*x5*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2)*(N - x4)*(x2 - x6)**2*(x2 + x6)**2)
+                                            Sum += -1/4*1j*length*depth*c*rho0*(2 - deltar)*(2 - deltas)*(k0 + x1)*((N)**(2+0j) - 2*(R)**(2+0j))*((-1)**(N+0j)*x20 + (-1)**(R+0j)*x20 + (-1)**(N + 1/2+0j)*x12 + (-1)**(R + 1/2+0j)*x12 + (-1)**(R + x14+0j)*x20 + (-1)**(x13 + 3/2+0j)*x12 + length*x18*(k0*x29 - k0*x35 + k0*x37 + k0*x44 + k0*x49 + k0*x50 + x1*x29 - x1*x35 + x1*x37 + x1*x44 + x1*x49 + x1*x50 + x22*x23 + x22*x24 + x23*x30 + x24*x30 + x27*x38 + x27 + x31*x38 + x31 + x38*x39 + x38*x47 + x39*x45 + x41*x43 + x41*x48 + x43*x46 + x45*x47 + x46*x48) + x10*x15 + x10*x16 + x10*x17 + x10 - x11*x8 + x15*x21 + x16*x21 + x17*x21 - x20 + x21)*numpy.exp(-x3)/(height_d*k0*N*R*x0*x5*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j)*(N - x4)*(x2 - x6)**(2+0j)*(x2 + x6)**(2+0j))
 
                                     # j=l, n=r
                                     elif N==R:
                                         
-                                        x0=(-1)**R
-                                        x1=numpy.pi**2
+                                        x0=(-1)**(R+0j)
+                                        x1=(np.pi)**(2+0j)
                                         x2=Krsm*M
                                         x3=numpy.pi*L
                                         x4=Krsm*length
                                         x5=1j*k0
-                                        x6=Krsm**3*length**4*x5
-                                        x7=numpy.pi**4*M*L**4
+                                        x6=(Krsm)**(3+0j)*(length)**(4+0j)*x5
+                                        x7=(np.pi)**(4+0j)*M*(L)**(4+0j)
                                         x8=2*k0
-                                        x9=L**2*x1
+                                        x9=(L)**(2+0j)*x1
                                         x10=length*x9
                                         x11=x10*x8
                                         x12=M*x9
@@ -633,72 +631,76 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         x14=2*x13
                                         x15=K + R
                                         x16=K + 1
-                                        x17=(-1)**x16
-                                        x18=(-1)**x15
-                                        x19=(-1)**(R + 1)
-                                        x20=length**2
+                                        x17=(-1)**(x16+0j)
+                                        x18=(-1)**(x15+0j)
+                                        x19=(-1)**(R + 1+0j)
+                                        x20=(length)**(2+0j)
                                         x21=Krsm*x20*x5*x9
-                                        x22=1j*Krsm**2*x12*x20
-                                        x23=(-1)**(K + 2*R)
+                                        x22=1j*(Krsm)**(2+0j)*x12*x20
+                                        x23=(-1)**(K + 2*R+0j)
                                         x24=k0*x10
                                         x25=4*R
-                                        x26=(-1)**(K + x25)
-                                        x27=(-1)**L
+                                        x26=(-1)**(K + x25+0j)
+                                        x27=(-1)**(L+0j)
                                         x28=L + R
-                                        x29=(-1)**x28
-                                        x30=(-1)**(L + x16)
-                                        x31=(-1)**(L + x15)
+                                        x29=(-1)**(x28+0j)
+                                        x30=(-1)**(L + x16+0j)
+                                        x31=(-1)**(L + x15+0j)
                                         x32=2*x2
-                                        x33=(-1)**(3*L + x16 + x25)
+                                        x33=(-1)**(3*L + x16 + x25+0j)
                                         x34=x0*numpy.exp(3*1j*numpy.pi*x28)
                                         
-                                        # numpy issue: e.g. (-1)**(2.5)
-                                        # modified: (-1) -> np.complex(-1)
-                                        Sum += (1/12)*1j*length*depth*c*rho0*x0*(2 - deltar)*(2 - deltas)*(k0 + x2)*((-1)**K*x21 + np.complex(-1)**(K + 1/2)*x7 + np.complex(-1)**(R + 1/2)*x7 + (-1)**(R + x16)*x21 + np.complex(-1)**(x15 + 3/2)*x7 + x0*x11 + x0*x14 + x0*x21 + x10*(k0*x27 + k0*x30 + k0*x33 + k0*x34 + x2*x27 + x2*x30 + x2*x33 + x2*x34 - x29*x32 - x29*x8 + x31*x32 + x31*x8)*numpy.exp(-1j*x4) - x11*x18 - x11 + x13*x23 + x13*x26 - x14*x18 - x14 + x17*x22 + x17*x6 + x18*x22 + x18*x6 + x19*x22 + x19*x6 - x21 + x22 + x23*x24 + x24*x26 + x6 - 1j*x7)/(height_d*K*k0*R*x1*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2)*(-x3 + x4)**2*(x3 + x4)**2)
+                                        Sum += (1/12)*1j*length*depth*c*rho0*x0*(2 - deltar)*(2 - deltas)*(k0 + x2)*((-1)**(K+0j)*x21 + (-1)**(K + 1/2+0j)*x7 + (-1)**(R + 1/2+0j)*x7 + (-1)**(R + x16+0j)*x21 + (-1)**(x15 + 3/2+0j)*x7 + x0*x11 + x0*x14 + x0*x21 + x10*(k0*x27 + k0*x30 + k0*x33 + k0*x34 + x2*x27 + x2*x30 + x2*x33 + x2*x34 - x29*x32 - x29*x8 + x31*x32 + x31*x8)*numpy.exp(-1j*x4) - x11*x18 - x11 + x13*x23 + x13*x26 - x14*x18 - x14 + x17*x22 + x17*x6 + x18*x22 + x18*x6 + x19*x22 + x19*x6 - x21 + x22 + x23*x24 + x24*x26 + x6 - 1j*x7)/(height_d*K*k0*R*x1*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j)*(-x3 + x4)**(2+0j)*(x3 + x4)**(2+0j))
 
 
                                     # j=l, n=2r
                                     elif N==2*R:
                                         
                                         # j=l, n=2r, k=r
-                                        # weiter oben abgefangen
+                                        # intercepted above
                                         if K==R:
                                             pass
                                         
                                         else:
                                             
-                                            x0=numpy.pi**2
-                                            x1=(-1)**R
-                                            x2=Krsp*length
-                                            x3=1j*x2
-                                            x4=Krsp*M
-                                            x5=numpy.pi*L
-                                            x6=2*(-1)**L
-                                            x7=K + L
-                                            x8=L + R
-                                            x9=L**2*x0
-                                            x10=length*x9
-                                            x11=1j*M
-                                            x12=numpy.pi**4*L**4
-                                            x13=1j*k0
-                                            x14=Krsp**3*length**4
-                                            x15=k0*x10
-                                            x16=M*x9
-                                            x17=x16*x2
-                                            # numpy issue: e.g. (-1)**(2.5)
-                                            # modiefied: (-1) -> np.complex(-1)
-                                            x18=np.complex(-1)**(K + 1/2)
-                                            x19=(-1)**K
-                                            x20=2*x15
-                                            x21=2*x17
-                                            x22=length**2
-                                            x23=Krsp*x9
-                                            x24=Krsp**2
-                                            # numpy issue: e.g. (-1)**(2.5)
-                                            # modified: (-1) -> np.complex(-1)
-                                            x25=np.complex(-1)**(K + 3/2)*x22
+                                            x0=(np.pi)**(2+0j)
+                                            x1=K + R
+                                            x2=K - R
+                                            x3=numpy.pi*L
+                                            x4=Krsp*length
+                                            x5=(x3 + x4)**(2+0j)
+                                            x6=(-x3 + x4)**(2+0j)
+                                            x7=3*K
+                                            x8=Krsm*length + numpy.pi*x7
+                                            x9=(np.pi)**(4+0j)*(L)**(4+0j)
+                                            x10=(length)**(4+0j)
+                                            x11=(length)**(2+0j)
+                                            x12=(L)**(2+0j)
+                                            x13=x0*x12
+                                            x14=2*x13
+                                            x15=(Krsm)**(4+0j)*x10 - (Krsm)**(2+0j)*x11*x14 + x9
+                                            x16=numpy.exp(1j*x4)
+                                            x17=7*L
+                                            x18=1j*k0
+                                            x19=(-1)**(R+0j)
+                                            x20=Krsp*M
+                                            x21=2*(-1)**(L+0j)
+                                            x22=K + L
+                                            x23=L + R
+                                            x24=M*x9
+                                            x25=(Krsp)**(3+0j)*x10
+                                            x26=length*k0
+                                            x27=4*x13
+                                            x28=M*x4
+                                            x29=(-1)**(K + 1/2+0j)
+                                            x30=(-1)**(K+0j)
+                                            x31=x14*x26
+                                            x32=x14*x28
+                                            x33=x11*x13
+                                            x34=(Krsp)**(2+0j)*M
+                                            x35=(-1)**(K + 3/2+0j)*x33
                                             
-                                            Sum += -1/6*1j*length*depth*c*K*rho0*(deltar - 2)*(deltas - 2)*(-k0 + x4)*(x1 - 1)*(2*x10*((-1)**x7*k0 + (-1)**x8*k0 + (-1)**(x7 + 1)*x4 + (-1)**(x8 + 1)*x4 + k0*x6 - x4*x6) + (M*x12*x18 + k0*x14*x18 + k0*x23*x25 - x1*x20 + x1*x21 + x11*x12 - x11*x22*x24*x9 + x13*x14 - x13*x22*x23 - 4*x15 + x16*x24*x25 + 4*x17 - x19*x20 + x19*x21)*numpy.exp(x3))*numpy.exp(-x3)/(height_d*k0*R*x0*(K - R)*(K + R)*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2)*(x2 - x5)**2*(x2 + x5)**2)
+                                            Sum += (1/48)*1j*length*depth*c*rho0*(deltar - 2)*(deltas - 2)*(3*(np.pi)**(3+0j)*length*R*x1*x12*x16*x18*x2*x5*x6*(Krsm*M + k0)*((-1)**(4*K + x17+0j) + (-1)**(L + 1+0j) + (-1)**(9*L + x7+0j) + (-1)**(x17 + x7 + 1+0j)) - 8*(K)**(2+0j)*x15*(-k0 + x20)*(x19 - 1)*(length*x14*((-1)**(x22+0j)*k0 + (-1)**(x23+0j)*k0 + (-1)**(x22 + 1+0j)*x20 + (-1)**(x23 + 1+0j)*x20 + k0*x21 - x20*x21) + x16*(Krsp*k0*x35 - Krsp*x18*x33 + k0*x25*x29 + x18*x25 - x19*x31 + x19*x32 + x24*x29 + 1j*x24 - x26*x27 + x27*x28 - x30*x31 + x30*x32 - 1j*x33*x34 + x34*x35))*numpy.exp(1j*x8))*numpy.exp(-1j*(x4 + x8))/(height_d*K*k0*R*x0*x1*x15*x2*x5*x6*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j))
                                             
                                     else:
                                         
@@ -710,56 +712,48 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         x5=-x3
                                         x6=Krsp*M
                                         x7=1j*M
-                                        x8=numpy.pi**4*L**4
+                                        x8=(np.pi)**(4+0j)*(L)**(4+0j)
                                         x9=x7*x8
                                         x10=1j*k0
-                                        x11=length**4
-                                        x12=Krsp**3*x11
+                                        x11=(length)**(4+0j)
+                                        x12=(Krsp)**(3+0j)*x11
                                         x13=x10*x12
-                                        x14=numpy.pi**2
-                                        x15=L**2*x14
+                                        x14=(np.pi)**(2+0j)
+                                        x15=(L)**(2+0j)*x14
                                         x16=length*x15
                                         x17=2*x16
                                         x18=k0*x17
                                         x19=M*x15
                                         x20=2*x19*x4
                                         x21=K + N
-                                        # numpy issue: e.g. (-1)**(2.5)
-                                        # modified: (-1) -> np.complex(-1)
-                                        x22=np.complex(-1)**(x21 + 1/2)
+                                        x22=(-1)**(x21 + 1/2+0j)
                                         x23=M*x8
                                         x24=k0*x12
-                                        # numpy issue: e.g. (-1)**(2.5)
-                                        # modified: (-1) -> np.complex(-1)
-                                        x25=np.complex(-1)**(x0 + 3/2)
-                                        x26=length**2
+                                        x25=(-1)**(x0 + 3/2+0j)
+                                        x26=(length)**(2+0j)
                                         x27=Krsp*x15
                                         x28=x10*x26*x27
-                                        x29=(-1)**x21
-                                        x30=(-1)**x0
-                                        x31=(-1)**x2
-                                        x32=Krsp**2
+                                        x29=(-1)**(x21+0j)
+                                        x30=(-1)**(x0+0j)
+                                        x31=(-1)**(x2+0j)
+                                        x32=(Krsp)**(2+0j)
                                         x33=x15*x26
                                         x34=x33*x7
                                         x35=k0*x27
-                                        # numpy issue: e.g. (-1)**(2.5)
-                                        # modified: (-1) -> np.complex(-1)
-                                        x36=np.complex(-1)**(x21 + 3/2)
+                                        x36=(-1)**(x21 + 3/2+0j)
                                         x37=x26*x36
-                                        # numpy issue: e.g. (-1)**(2.5)
-                                        # modified: (-1) -> np.complex(-1)
-                                        x38=np.complex(-1)**(x0 + 1/2)*x26
+                                        x38=(-1)**(x0 + 1/2+0j)*x26
                                         x39=x19*x32
-                                        x40=(-1)**L
+                                        x40=(-1)**(L+0j)
                                         x41=k0*x40
-                                        x42=(-1)**(L + x21)
+                                        x42=(-1)**(L + x21+0j)
                                         x43=k0*x42
                                         x44=L + 1
-                                        x45=(-1)**x44
-                                        x46=(-1)**(x2 + x44)
+                                        x45=(-1)**(x44+0j)
+                                        x46=(-1)**(x2 + x44+0j)
                                         x47=k0*x46
-                                        x48=(-1)**(L + x2)
-                                        x49=(1/2)*length*depth**2/(k0*x14)
+                                        x48=(-1)**(L + x2+0j)
+                                        x49=(1/2)*length*(depth)**(2+0j)/(k0*x14)
                                         x50=2*R
                                         x51=N + x50
                                         x52=Krsm*length
@@ -767,15 +761,15 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         x54=1j*x52
                                         x55=numpy.exp(x54)
                                         x56=x10*x55
-                                        x57=Krsm**3*x11*x56
+                                        x57=(Krsm)**(3+0j)*x11*x56
                                         x58=x23*x55
-                                        x59=(-1)**(K + 1)
-                                        x60=(-1)**(N + 1)
+                                        x59=(-1)**(K + 1+0j)
+                                        x60=(-1)**(N + 1+0j)
                                         x61=Krsm*x33*x56
-                                        x62=Krsm**2*x34*x55
+                                        x62=(Krsm)**(2+0j)*x34*x55
                                         x63=x40*x53
-                                        x64=(-1)**(K + x44)
-                                        x65=(-1)**(N + x44)
+                                        x64=(-1)**(K + x44+0j)
+                                        x65=(-1)**(N + x44+0j)
                                         x66=k0*x65
                                         x67=x53*x65
                                         x68=1j*numpy.pi
@@ -784,14 +778,14 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         x71=numpy.exp(x70)
                                         x72=3*L
                                         x73=x51 + x72
-                                        x74=(-1)**(x73 + 1)
+                                        x74=(-1)**(x73 + 1+0j)
                                         x75=3*K
-                                        x76=(-1)**(x73 + x75)
+                                        x76=(-1)**(x73 + x75+0j)
                                         x77=numpy.exp(x54 + x69)
                                         x78=1j*x3
                                         x79=numpy.exp(x54 + x78)
                                         x80=k0*x45
-                                        x81=(-1)**(L + N)*x79
+                                        x81=(-1)**(L + N+0j)*x79
                                         x82=numpy.exp(x54 + x70)
                                         x83=numpy.exp(x54 + 3*x78)
                                         x84=x45*x53
@@ -799,9 +793,7 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         x86=x48*numpy.exp(x54 + x68*x85)
                                         x87=numpy.exp(x54 + x68*(x75 + x85))
                                         
-                                        # numpy issue: e.g. (-1)**(2.5)
-                                        # modified: (-1) -> np.complex(-1)
-                                        Sum += (1/2)*1j*c*rho0*(2 - deltar)*(2 - deltas)*(-K*N*x49*(k0 - x6)*(np.complex(-1)**(x2 + 1/2)*x26*x39 + (-1)**(x2 + 1)*x13 + np.complex(-1)**(x2 + 3/2)*x23 + x13 + x17*((-1)**(L + x0)*x6 + (-1)**(x0 + x44)*k0 + (-1)**(x21 + x44)*x6 + x41 + x43 + x45*x6 + x47 + x48*x6)*numpy.exp(-1j*x4) - x18*x29 + x18*x30 + x18*x31 - x18 + x20*x29 - x20*x30 - x20*x31 + x20 + x22*x23 + x22*x24 + x23*x25 + x24*x25 + x28*x31 - x28 - x32*x34 + x35*x37 + x35*x38 + x37*x39 + x38*x39 + x9)/(x0*x2*(K + x1)*(N + x1)*(x3 + x4)**2*(x4 + x5)**2) - x49*(k0 + x53)*(N**2 - 2*R**2)*((-1)**K*x61 + (-1)**N*x61 + np.complex(-1)**(K + 1/2)*x58 + np.complex(-1)**(N + 1/2)*x58 + (-1)**(x21 + 1)*x61 + x16*(k0*x64 - k0*x71 + k0*x74 + k0*x76 + k0*x81 + k0*x86 + x41*x77 + x41*x82 + 2*x41 + x42*x53 + x43 + x46*x53*x87 + x47*x87 + x53*x64 - x53*x71 + x53*x74 + x53*x76 + x53*x81 + x53*x86 + x63*x77 + x63*x82 + 2*x63 + x66*x77 + x66 + x67*x77 + x67 + x79*x80 + x79*x84 + x80*x83 + x83*x84) + x29*x57 + x29*x62 + x36*x58 - x55*x9 + x57*x59 + x57*x60 + x57 + x59*x62 + x60*x62 - x61 + x62)*numpy.exp(-x54)/(K*N*x51*(N - x50)*(x3 + x52)**2*(x5 + x52)**2))/(depth*height_d*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2))        
+                                        Sum += (1/2)*1j*c*rho0*(2 - deltar)*(2 - deltas)*(-K*N*x49*(k0 - x6)*((-1)**(x2 + 1/2+0j)*x26*x39 + (-1)**(x2 + 1+0j)*x13 + (-1)**(x2 + 3/2+0j)*x23 + x13 + x17*((-1)**(L + x0+0j)*x6 + (-1)**(x0 + x44+0j)*k0 + (-1)**(x21 + x44+0j)*x6 + x41 + x43 + x45*x6 + x47 + x48*x6)*numpy.exp(-1j*x4) - x18*x29 + x18*x30 + x18*x31 - x18 + x20*x29 - x20*x30 - x20*x31 + x20 + x22*x23 + x22*x24 + x23*x25 + x24*x25 + x28*x31 - x28 - x32*x34 + x35*x37 + x35*x38 + x37*x39 + x38*x39 + x9)/(x0*x2*(K + x1)*(N + x1)*(x3 + x4)**(2+0j)*(x4 + x5)**(2+0j)) - x49*(k0 + x53)*((N)**(2+0j) - 2*(R)**(2+0j))*((-1)**(K+0j)*x61 + (-1)**(N+0j)*x61 + (-1)**(K + 1/2+0j)*x58 + (-1)**(N + 1/2+0j)*x58 + (-1)**(x21 + 1+0j)*x61 + x16*(k0*x64 - k0*x71 + k0*x74 + k0*x76 + k0*x81 + k0*x86 + x41*x77 + x41*x82 + 2*x41 + x42*x53 + x43 + x46*x53*x87 + x47*x87 + x53*x64 - x53*x71 + x53*x74 + x53*x76 + x53*x81 + x53*x86 + x63*x77 + x63*x82 + 2*x63 + x66*x77 + x66 + x67*x77 + x67 + x79*x80 + x79*x84 + x80*x83 + x83*x84) + x29*x57 + x29*x62 + x36*x58 - x55*x9 + x57*x59 + x57*x60 + x57 + x59*x62 + x60*x62 - x61 + x62)*numpy.exp(-x54)/(K*N*x51*(N - x50)*(x3 + x52)**(2+0j)*(x5 + x52)**(2+0j)))/(depth*height_d*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j))
 
                                 # k=r
                                 elif K==R:
@@ -811,12 +803,14 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         
                                         Sum += 0
                                     # k=r, j=l
-                                    # weiter oben abgefangen
+                                    # intercepted above
                                     elif J==L:
                                         pass
                                     
                                     else:
-                                        x0=numpy.pi**2
+                                        
+                                        
+                                        x0=(np.pi)**(2+0j)
                                         x1=J + L
                                         x2=2*R
                                         x3=N + x2
@@ -824,124 +818,124 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                         x5=Krsm*length
                                         x6=numpy.pi*L
                                         x7=Krsm*M
-                                        x8=(-1)**J
-                                        x9=L**2
+                                        x8=(-1)**(J+0j)
+                                        x9=(L)**(2+0j)
                                         x10=2*k0
                                         x11=x10*x9
                                         x12=x0*x11
-                                        x13=length**2
+                                        x13=(length)**(2+0j)
                                         x14=x13*x8
-                                        x15=Krsm**2*x10
-                                        x16=2*Krsm**3*M
-                                        x17=(-1)**L
+                                        x15=(Krsm)**(2+0j)*x10
+                                        x16=2*(Krsm)**(3+0j)*M
+                                        x17=(-1)**(L+0j)
                                         x18=x13*x15
                                         x19=x13*x16
                                         x20=2*x7
                                         x21=x20*x9
                                         x22=x0*x21
-                                        x23=(-1)**(J + N)
+                                        x23=(-1)**(J + N+0j)
                                         x24=J + R
-                                        x25=(-1)**x24
-                                        x26=(-1)**(L + N)
-                                        x27=(-1)**(L + R)
+                                        x25=(-1)**(x24+0j)
+                                        x26=(-1)**(L + N+0j)
+                                        x27=(-1)**(L + R+0j)
                                         x28=N + R
-                                        x29=(-1)**(J + x28)
-                                        x30=(-1)**(L + x28)
+                                        x29=(-1)**(J + x28+0j)
+                                        x30=(-1)**(L + x28+0j)
                                         x31=1j*x5
-                                        x32=J**2
-                                        x33=(-1)**N
+                                        x32=(J)**(2+0j)
+                                        x33=(-1)**(N+0j)
                                         x34=k0*x9
-                                        x35=(-1)**R
+                                        x35=(-1)**(R+0j)
                                         x36=x7*x9
                                         x37=N + 1
-                                        x38=(-1)**x37
+                                        x38=(-1)**(x37+0j)
                                         x39=k0*x32
-                                        x40=(-1)**x28
-                                        x41=(-1)**(R + 1)
+                                        x40=(-1)**(x28+0j)
+                                        x41=(-1)**(R + 1+0j)
                                         x42=R + x37
-                                        x43=(-1)**x42
+                                        x43=(-1)**(x42+0j)
                                         x44=x32*x7
                                         x45=2*J
-                                        x46=(-1)**(x28 + x45)
-                                        x47=(-1)**(x42 + x45)
+                                        x46=(-1)**(x28 + x45+0j)
+                                        x47=(-1)**(x42 + x45+0j)
                                         x48=4*J + x3
-                                        x49=(-1)**x48
-                                        x50=(-1)**(x48 + 1)
+                                        x49=(-1)**(x48+0j)
+                                        x50=(-1)**(x48 + 1+0j)
                                         x51=1j*numpy.pi
                                         x52=x24*x51
                                         x53=3*x52
                                         x54=numpy.exp(x53)
                                         x55=x54*x8
-                                        x56=(-1)**(J + 1)*x54
+                                        x56=(-1)**(J + 1+0j)*x54
                                         x57=1j*x4
                                         x58=numpy.exp(x31 + x57)
-                                        x59=(-1)**x1
+                                        x59=(-1)**(x1+0j)
                                         x60=x34*x59
                                         x61=numpy.exp(x31 + 3*x57)
-                                        x62=(-1)**(x1 + 1)
+                                        x62=(-1)**(x1 + 1+0j)
                                         x63=x39*x62
-                                        x64=(-1)**(N + x1)
+                                        x64=(-1)**(N + x1+0j)
                                         x65=x58*x64
                                         x66=x36*x59
                                         x67=numpy.exp(x31 + x52)
                                         x68=x39*x59
-                                        x69=(-1)**(x1 + x37)
+                                        x69=(-1)**(x1 + x37+0j)
                                         x70=x58*x69
                                         x71=x44*x62
                                         x72=numpy.exp(x31 + x53)
                                         x73=x34*x62
                                         x74=x64*x67
-                                        x75=(-1)**(x1 + x28)
+                                        x75=(-1)**(x1 + x28+0j)
                                         x76=x61*x75
                                         x77=x44*x59
                                         x78=x67*x69
-                                        x79=(-1)**(x1 + x42)
+                                        x79=(-1)**(x1 + x42+0j)
                                         x80=x61*x79
                                         x81=x36*x62
                                         x82=numpy.exp(x31 + x51*(3*J + R))
                                         x83=x75*x82
                                         x84=x79*x82
                                         
-                                        Sum += -1/4*1j*depth*c*J*L*rho0*x14*(2 - deltar)*(2 - deltas)*(k0 + x7)*(N**2 - 2*R**2)*(x0*(x10*x32 - x11 + x20*x32 - x21 + x33*x34 + x33*x36 + x34*x35 + x34*x43 + x34*x47 + x34*x49 + x34*x55 + x34*x70 + x34*x74 + x34*x76 + x34*x84 + x35*x36 + x36*x43 + x36*x47 + x36*x49 + x36*x55 + x36*x70 + x36*x74 + x36*x76 + x36*x84 + x38*x39 + x38*x44 + x39*x40 + x39*x41 + x39*x46 + x39*x50 + x39*x56 + x39*x65 + x39*x78 + x39*x80 + x39*x83 + x40*x44 + x41*x44 + x44*x46 + x44*x50 + x44*x56 + x44*x65 + x44*x78 + x44*x80 + x44*x83 + x58*x60 + x58*x63 + x58*x66 + x58*x71 + x60*x61 + x61*x63 + x61*x66 + x61*x71 + x67*x68 + x67*x73 + x67*x77 + x67*x81 + x68*x72 + x72*x73 + x72*x77 + x72*x81)*numpy.exp(-x31) - x12*x17 - x12*x23 - x12*x25 + x12*x26 + x12*x27 + x12*x29 - x12*x30 + x12*x8 - x14*x15 - x14*x16 + x17*x18 + x17*x19 - x17*x22 + x18*x23 + x18*x25 - x18*x26 - x18*x27 - x18*x29 + x18*x30 + x19*x23 + x19*x25 - x19*x26 - x19*x27 - x19*x29 + x19*x30 - x22*x23 - x22*x25 + x22*x26 + x22*x27 + x22*x29 - x22*x30 + x22*x8)/(height_d*k0*N*R*x0*x1*x3*(J - L)*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2)*(N - x2)*(-x4 + x5)*(x4 + x5)*(x5 - x6)*(x5 + x6))
+                                        Sum += -1/4*1j*depth*c*J*L*rho0*x14*(2 - deltar)*(2 - deltas)*(k0 + x7)*((N)**(2+0j) - 2*(R)**(2+0j))*(x0*(x10*x32 - x11 + x20*x32 - x21 + x33*x34 + x33*x36 + x34*x35 + x34*x43 + x34*x47 + x34*x49 + x34*x55 + x34*x70 + x34*x74 + x34*x76 + x34*x84 + x35*x36 + x36*x43 + x36*x47 + x36*x49 + x36*x55 + x36*x70 + x36*x74 + x36*x76 + x36*x84 + x38*x39 + x38*x44 + x39*x40 + x39*x41 + x39*x46 + x39*x50 + x39*x56 + x39*x65 + x39*x78 + x39*x80 + x39*x83 + x40*x44 + x41*x44 + x44*x46 + x44*x50 + x44*x56 + x44*x65 + x44*x78 + x44*x80 + x44*x83 + x58*x60 + x58*x63 + x58*x66 + x58*x71 + x60*x61 + x61*x63 + x61*x66 + x61*x71 + x67*x68 + x67*x73 + x67*x77 + x67*x81 + x68*x72 + x72*x73 + x72*x77 + x72*x81)*numpy.exp(-x31) - x12*x17 - x12*x23 - x12*x25 + x12*x26 + x12*x27 + x12*x29 - x12*x30 + x12*x8 - x14*x15 - x14*x16 + x17*x18 + x17*x19 - x17*x22 + x18*x23 + x18*x25 - x18*x26 - x18*x27 - x18*x29 + x18*x30 + x19*x23 + x19*x25 - x19*x26 - x19*x27 - x19*x29 + x19*x30 - x22*x23 - x22*x25 + x22*x26 + x22*x27 + x22*x29 - x22*x30 + x22*x8)/(height_d*k0*N*R*x0*x1*x3*(J - L)*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j)*(N - x2)*(-x4 + x5)*(x4 + x5)*(x5 - x6)*(x5 + x6))
 
                                 # n=r
                                 elif N==R:
                                     
                                     # n=r, j=l
-                                    # weiter oben abgefangen
+                                    # intercepted above
                                     if J==L:
                                         
                                         pass
                                     
                                     else:
                                         
-                                        x0=numpy.pi**2
-                                        x1=length**2
+                                        x0=(np.pi)**(2+0j)
+                                        x1=(length)**(2+0j)
                                         x2=J + L
                                         x3=numpy.pi*J
                                         x4=Krsm*length
                                         x5=numpy.pi*L
-                                        x6=L**2
+                                        x6=(L)**(2+0j)
                                         x7=x0*x6
                                         x8=2*x7
-                                        x9=2*Krsm**2*x1
-                                        x10=(-1)**K
-                                        x11=(-1)**R
-                                        x12=(-1)**x2
-                                        x13=J**2
+                                        x9=2*(Krsm)**(2+0j)*x1
+                                        x10=(-1)**(K+0j)
+                                        x11=(-1)**(R+0j)
+                                        x12=(-1)**(x2+0j)
+                                        x13=(J)**(2+0j)
                                         x14=x0*x13
                                         x15=2*x14
                                         x16=K + R
-                                        x17=(-1)**x16
-                                        x18=(-1)**(R + x2)
-                                        x19=(-1)**(K + x2)
+                                        x17=(-1)**(x16+0j)
+                                        x18=(-1)**(R + x2+0j)
+                                        x19=(-1)**(K + x2+0j)
                                         x20=3*R + x2
                                         x21=x16 + x2
-                                        x22=(-1)**(x21 + 1)
+                                        x22=(-1)**(x21 + 1+0j)
                                         x23=x20 + 1
                                         x24=J + 1
                                         
-                                        Sum += -1/12*1j*depth*c*J*L*rho0*x1*(2 - deltar)*(2 - deltas)*(Krsm*M + k0)**2*((-1)**x20*x14 + (-1)**x21*x9 + (-1)**x23*x7 + (-1)**(K + x20)*x7 + (-1)**(K + x23)*x14 + 2*x0*((-1)**J*x13 + (-1)**x24*x6 + (-1)**(J + K)*x6 + (-1)**(J + R)*x6 + (-1)**(J + x16)*x13 + (-1)**(K + x24)*x13 + (-1)**(R + x24)*x13 + (-1)**(x16 + x24)*x6)*numpy.exp(-1j*x4) - x10*x8 + x10*x9 - x11*x8 + x11*x9 - x12*x15 + x12*x9 + x14*x18 + x14*x22 + x15*x19 + x17*x8 - x17*x9 + x18*x7 - x18*x9 - x19*x9 + x22*x7 + x8 - x9)/(height_d*K*k0*R*x0*x2*(J - L)*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2)*(-x3 + x4)*(x3 + x4)*(x4 - x5)*(x4 + x5))
+                                        Sum += -1/12*1j*depth*c*J*L*rho0*x1*(2 - deltar)*(2 - deltas)*(Krsm*M + k0)**(2+0j)*((-1)**(x20+0j)*x14 + (-1)**(x21+0j)*x9 + (-1)**(x23+0j)*x7 + (-1)**(K + x20+0j)*x7 + (-1)**(K + x23+0j)*x14 + 2*x0*((-1)**(J+0j)*x13 + (-1)**(x24+0j)*x6 + (-1)**(J + K+0j)*x6 + (-1)**(J + R+0j)*x6 + (-1)**(J + x16+0j)*x13 + (-1)**(K + x24+0j)*x13 + (-1)**(R + x24+0j)*x13 + (-1)**(x16 + x24+0j)*x6)*numpy.exp(-1j*x4) - x10*x8 + x10*x9 - x11*x8 + x11*x9 - x12*x15 + x12*x9 + x14*x18 + x14*x22 + x15*x19 + x17*x8 - x17*x9 + x18*x7 - x18*x9 - x19*x9 + x22*x7 + x8 - x9)/(height_d*K*k0*R*x0*x2*(J - L)*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j)*(-x3 + x4)*(x3 + x4)*(x4 - x5)*(x4 + x5))
                                         
                                 # n=2r
                                 elif N==2*R:
@@ -960,20 +954,20 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                     
                                     else:
                                         
-                                        x0=numpy.pi**2
-                                        x1=length**2
-                                        x2=(-1)**R
+                                        x0=(np.pi)**(2+0j)
+                                        x1=(length)**(2+0j)
+                                        x2=(-1)**(R+0j)
                                         x3=J + L
                                         x4=Krsp*length
                                         x5=1j*x4
                                         x6=numpy.pi*J
                                         x7=numpy.pi*L
-                                        x8=J**2
-                                        x9=L**2
-                                        x10=Krsp**2*x1
+                                        x8=(J)**(2+0j)
+                                        x9=(L)**(2+0j)
+                                        x10=(Krsp)**(2+0j)*x1
                                         
-                                        Sum += -1/3*1j*depth*c*J*K*L*rho0*x1*(deltar - 2)*(deltas - 2)*(x2 - 1)*(Krsp*M - k0)**2*((-1)**(L + 1)*x0*(x8 - x9) + ((-1)**x3*x10 + (-1)**(x3 + 1)*x0*x9 + x0*x8 - x10)*numpy.exp(x5))*((-1)**K + x2 + 2)*numpy.exp(-x5)/(height_d*k0*R*x0*x3*(J - L)*(K - R)*(K + R)*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2)*(x4 - x6)*(x4 + x6)*(x4 - x7)*(x4 + x7))
-                                
+                                        Sum += -1/3*1j*depth*c*J*K*L*rho0*x1*(deltar - 2)*(deltas - 2)*(x2 - 1)*(Krsp*M - k0)**(2+0j)*((-1)**(L + 1+0j)*x0*(x8 - x9) + ((-1)**(x3+0j)*x10 + (-1)**(x3 + 1+0j)*x0*x9 + x0*x8 - x10)*numpy.exp(x5))*((-1)**(K+0j) + x2 + 2)*numpy.exp(-x5)/(height_d*k0*R*x0*x3*(J - L)*(K - R)*(K + R)*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j)*(x4 - x6)*(x4 + x6)*(x4 - x7)*(x4 + x7))
+
                                 # jk!=lm
                                 else:
                                     
@@ -985,41 +979,41 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                     x5=-x3
                                     x6=Krsp*M
                                     x7=K + N
-                                    x8=(-1)**x7
+                                    x8=(-1)**(x7+0j)
                                     x9=K + 1
                                     x10=N + 1
-                                    x11=numpy.pi**2
-                                    x12=J**2
+                                    x11=(np.pi)**(2+0j)
+                                    x12=(J)**(2+0j)
                                     x13=x11*x12
-                                    x14=length**2
-                                    x15=Krsp**2*x14
+                                    x14=(length)**(2+0j)
+                                    x15=(Krsp)**(2+0j)*x14
                                     x16=J + L
-                                    x17=(-1)**x16
-                                    x18=(-1)**(x16 + 1)
-                                    x19=L**2
+                                    x17=(-1)**(x16+0j)
+                                    x18=(-1)**(x16 + 1+0j)
+                                    x19=(L)**(2+0j)
                                     x20=x11*x19
                                     x21=L + 1
-                                    x22=depth**2*J*L*x14/(k0*x11*x16*(J - L))
-                                    x23=(-1)**J
+                                    x22=(depth)**(2+0j)*J*L*x14/(k0*x11*x16*(J - L))
+                                    x23=(-1)**(J+0j)
                                     x24=2*R
                                     x25=N + x24
                                     x26=Krsm*length
                                     x27=2*x19
                                     x28=x11*x27
-                                    x29=2*Krsm**2*x14
-                                    x30=(-1)**L
+                                    x29=2*(Krsm)**(2+0j)*x14
+                                    x30=(-1)**(L+0j)
                                     x31=J + K
-                                    x32=(-1)**x31
-                                    x33=(-1)**(J + N)
+                                    x32=(-1)**(x31+0j)
+                                    x33=(-1)**(J + N+0j)
                                     x34=K + L
-                                    x35=(-1)**x34
+                                    x35=(-1)**(x34+0j)
                                     x36=L + N
-                                    x37=(-1)**x36
-                                    x38=(-1)**(J + x7)
-                                    x39=(-1)**(L + x7)
+                                    x37=(-1)**(x36+0j)
+                                    x38=(-1)**(J + x7+0j)
+                                    x39=(-1)**(L + x7+0j)
                                     x40=2*J
                                     x41=L + x40
-                                    x42=(-1)**x41
+                                    x42=(-1)**(x41+0j)
                                     x43=2*x12
                                     x44=x36 + x40
                                     x45=4*J + x25
@@ -1029,9 +1023,8 @@ def get_zprad(c, rho0, j, k, l, n, r, s, length, depth, height_d, M, freq):
                                     x49=x45 + x48
                                     x50=x45 + 1
                                     
-                                    Sum += (1/2)*1j*c*rho0*(2 - deltar)*(2 - deltas)*(-K*N*x22*(-k0 + x6)*(k0 - x6)*((-1)**(R + x10) + (-1)**(R + x9) + x8 + 1)*((-1)**x21*x11*(x12 - x19)*numpy.exp(-1j*x2) + x13 + x15*x17 - x15 + x18*x20)/((K + R)*(K + x0)*(N + R)*(N + x0)*(x1 + x2)*(x2 + x3)*(x2 + x4)*(x2 + x5)) + (1/2)*x22*x23*(N**2 - 2*R**2)*(Krsm*M + k0)**2*((-1)**x44*x20 + (-1)**x46*x20 + (-1)**(x10 + x41)*x13 + (-1)**(x21 + x45)*x13 + (-1)**(x21 + x49)*x20 + (-1)**(x34 + x40)*x20 + (-1)**(x41 + x7)*x13 + (-1)**(x41 + x9)*x13 + (-1)**(x44 + x9)*x20 + (-1)**(x46 + x48)*x13 + x11*x42*x43 + x11*((-1)**K*x12 + (-1)**N*x12 + (-1)**x10*x19 + (-1)**x45*x12 + (-1)**x49*x19 + (-1)**x50*x19 + (-1)**x9*x19 + (-1)**(J + 1)*x19*x47 + (-1)**(N + x9)*x12 + (-1)**(x48 + x50)*x12 + x12*x23*x47 + x19*x8 + x27 - x43)*numpy.exp(-1j*x26) + x13*x18*x47 + x17*x20*x47 - x23*x28 + x23*x29 + x28*x30 + x28*x32 + x28*x33 - x28*x35 - x28*x37 - x28*x38 + x28*x39 - x28*x42 - x29*x30 - x29*x32 - x29*x33 + x29*x35 + x29*x37 + x29*x38 - x29*x39)/(K*N*x25*(N - x24)*(x1 + x26)*(x26 + x3)*(x26 + x4)*(x26 + x5)))/(depth*height_d*numpy.sqrt(-k0**2 + kappars**2*(1 - M)**2))
+                                    Sum += (1/2)*1j*c*rho0*(2 - deltar)*(2 - deltas)*(-K*N*x22*(-k0 + x6)*(k0 - x6)*((-1)**(R + x10+0j) + (-1)**(R + x9+0j) + x8 + 1)*((-1)**(x21+0j)*x11*(x12 - x19)*numpy.exp(-1j*x2) + x13 + x15*x17 - x15 + x18*x20)/((K + R)*(K + x0)*(N + R)*(N + x0)*(x1 + x2)*(x2 + x3)*(x2 + x4)*(x2 + x5)) + (1/2)*x22*x23*((N)**(2+0j) - 2*(R)**(2+0j))*(Krsm*M + k0)**(2+0j)*((-1)**(x44+0j)*x20 + (-1)**(x46+0j)*x20 + (-1)**(x10 + x41+0j)*x13 + (-1)**(x21 + x45+0j)*x13 + (-1)**(x21 + x49+0j)*x20 + (-1)**(x34 + x40+0j)*x20 + (-1)**(x41 + x7+0j)*x13 + (-1)**(x41 + x9+0j)*x13 + (-1)**(x44 + x9+0j)*x20 + (-1)**(x46 + x48+0j)*x13 + x11*x42*x43 + x11*((-1)**(K+0j)*x12 + (-1)**(N+0j)*x12 + (-1)**(x10+0j)*x19 + (-1)**(x45+0j)*x12 + (-1)**(x49+0j)*x19 + (-1)**(x50+0j)*x19 + (-1)**(x9+0j)*x19 + (-1)**(J + 1+0j)*x19*x47 + (-1)**(N + x9+0j)*x12 + (-1)**(x48 + x50+0j)*x12 + x12*x23*x47 + x19*x8 + x27 - x43)*numpy.exp(-1j*x26) + x13*x18*x47 + x17*x20*x47 - x23*x28 + x23*x29 + x28*x30 + x28*x32 + x28*x33 - x28*x35 - x28*x37 - x28*x38 + x28*x39 - x28*x42 - x29*x30 - x29*x32 - x29*x33 + x29*x35 + x29*x37 + x29*x38 - x29*x39)/(K*N*x25*(N - x24)*(x1 + x26)*(x26 + x3)*(x26 + x4)*(x26 + x5)))/(depth*height_d*(-k0**2 + kappars**2*(1 - M**2))**(1/2+0j))
                                 
-
                         Zprad[J-1, K-1, L-1, N-1,:] = Sum
     
     return Zprad
@@ -1103,10 +1096,10 @@ class SinglePlateResonator3D(PlateResonators):
         vp = self.platevelocity(height_d, I, M, freq)
         
         # calculate transmission coefficient
-        x0=numpy.pi**2*J**2
+        x0=(np.pi)**(2+0j)*(J)**(2+0j)
         x1=self.length*k0/(M + 1) + numpy.pi*J
         
-        temp = (1/2)*self.length*J*((-1)**(K + 1) - numpy.exp(1j*x1) + numpy.exp(1j*(numpy.pi*K + x1)) + 1)/(medium.c*height_d*K*(-self.length**2*k0**2 + M**2*x0 + 2*M*x0 + x0))
+        temp = (1/2)*self.length*J*((-1)**(K + 1+0j) - numpy.exp(1j*x1) + numpy.exp(1j*(numpy.pi*K + x1)) + 1)/(medium.c*height_d*K*(-(self.length)**(2+0j)*(k0)**(2+0j) + (M)**(2+0j)*x0 + 2*M*x0 + x0))
         
         tau = np.abs(np.sum(vp*temp, axis=(0,1))+1)**2
         

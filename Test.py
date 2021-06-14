@@ -174,7 +174,6 @@ print('Time6:', + end-start)
 plt.figure()
 plt.plot(f,TL)
 plt.title('Transmission Loss')
-plt.show()
 
 labels = ['t', 'r', 'a']
 
