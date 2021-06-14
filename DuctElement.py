@@ -122,12 +122,12 @@ class DuctElement3D(tr.HasTraits):
         N = self.lining.n[np.newaxis, :, np.newaxis]
         
         # calculate incident sound array
-        x0=numpy.pi**2*L**2
-        x1=2*M
-        x2=M**2
-        x3=(-1)**L*numpy.exp(1j*self.lining.length*k0/(M - 1))
+        x0=2*M
+        x1=(M)**(2+0j)
+        x2=1j*self.lining.length*k0/(M + 1)
+        x3=(np.pi)**(2+0j)*(L)**(2+0j)
         
-        I = -self.lining.length*self.lining.depth*self.medium.c**2*L*self.medium.rho0*((-1)**N - 1)*(-x1*x3 + x1 + x2*x3 - x2 + x3 - 1)/(N*(self.lining.length**2*k0**2 + x0*x1 - x0*x2 - x0))
+        I = -self.lining.length*self.lining.depth*(self.medium.c)**(2+0j)*L*self.medium.rho0*((-1)**(N+0j) - 1)*((-1)**(L + 1+0j) + numpy.exp(x2))*(x0 + x1 + 1)*numpy.exp(-x2)/(N*(-(self.lining.length)**(2+0j)*(k0)**(2+0j) + x0*x3 + x1*x3 + x3))
         
         return I
 
