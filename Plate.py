@@ -247,7 +247,7 @@ class SimplePlate3D(Plate3D):
 
         return Lmatrix
 
-class DoubleLayerPlate3D(Plate):
+class DoubleLayerPlate3D(Plate3D):
     
     '''
     Class to define a double layer plate for a 3D plate silencer.
