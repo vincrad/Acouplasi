@@ -14,13 +14,18 @@ from Temperature import Temperature
 #%%
 
 class Plate(tr.HasTraits):
+    
+    '''
+    Parental class to define a singel, double or triple layer plate for a 2D plate silencer.
+    '''
+    
     # temperature
     temperature = tr.Instance(Temperature)
 
 class SimplePlate(Plate):
     
     '''
-    Class to define a plate for a plate resonator silencer.
+    Class to define a single layer plate for a plate resonator silencer.
     '''
     
     # plate height
@@ -69,7 +74,7 @@ class SimplePlate(Plate):
 class DoubleLayerPlate(Plate):
     
     '''
-    Class to define a plate for a plate resonator silencer.
+    Class to define a double layer plate for a plate resonator silencer.
     '''
     
     # plate height
@@ -120,7 +125,7 @@ class DoubleLayerPlate(Plate):
 class TripleLayerPlate(Plate):
     
     '''
-    Class to define a plate for a plate resonator silencer.
+    Class to define a triple layer plate for a plate resonator silencer.
     '''
     
     # plate height
@@ -178,4 +183,60 @@ class TripleLayerPlate(Plate):
         # diagonalize the L matrix
         Lmatrix = Lmatrix_temp*np.expand_dims(np.identity(len(l)), 2)
         
+        return Lmatrix
+    
+#%%
+class Plate3D(tr.HasTraits):
+    
+    '''
+    Class to define a plate for a 3D plate silencer.
+    '''
+    
+    # plate height
+    hp = tr.Float()
+    
+    # material of the plate
+    material = tr.Instance(Material)
+    
+    # temperature
+    temperature = tr.Instance(Temperature)
+    
+    # mass per area
+    def mass(self):
+        
+        return self.material.rho*self.hp
+    
+    # beding stiffness
+    def bendingstiffness(self, freq, temp):
+        
+        return self.material.E(freq, temp)*self.hp**3/12/(1-self.material.mu**2)
+    
+    # method calculate the L matrix of the 3D plate silencer
+    def lmatrix(self, length, depth, l, n, freq):
+        
+        # define extended arrays of modes
+        L = l[:, np.newaxis, np.newaxis]
+        N = n[np.newaxis, :, np.newaxis]
+        
+        # circular frequency
+        omega = 2*np.pi*freq
+        
+        # calculate area density
+        m = self.mass()
+        
+        # calculate bending stiffness
+        B = self.bendingstiffness(freq, self.temperature)
+        
+        # calculate the values of L matrix of the plate
+        Lmatrix_temp = ((B/(1j*omega))*(((L*np.pi)/length)**4+2*((L*np.pi)/length)**2*((N*np.pi)/depth)**2+((N*np.pi)/depth)**4)+1j*omega*m)*((length*depth)/4)
+        
+        # expand L matrix taking into account jk=lm
+        # building an array with 1 for jk=lm and 0 for jk!=lm
+        j,k = np.ogrid[:len(l), :len(l)]
+        kron = np.zeros((len(l), len(l), len(l), len(l)))[:, :, :, :, np.newaxis]
+        kron[j,k,j,k] = 1
+        
+        # expand L matrix
+        Lmatrix = Lmatrix_temp*kron
+
         return Lmatrix
