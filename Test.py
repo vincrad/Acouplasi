@@ -112,7 +112,7 @@ fluid1 = Fluid(temperature=temp1)
 
 material1 = Material(rho = 2700, mu = .34, E = lambda freq, temp: 7.21e10*(1+1j*.0001))
 
-plate1 = TripleLayerPlate3D(hp1=0.0003, hp2=0.0002, hp3=0.001, material1=material1, material2=material1, material3=material1, temperature=temp1)
+plate1 = SimplePlate3D(hp=0.0003, material=material1, temperature=temp1)
 
 cavity1 = Cavity3D(height=1, r=r, s=s, t=t, medium=fluid1)
 
