@@ -20,7 +20,7 @@ from Ducts import Duct, Duct3D
 from Temperature import Temperature
 from Fluid import Fluid
 from Material import Material
-from Linings import PlateResonators, SinglePlateResonator, SimpleTwoSidedPlateResonator, SinglePlateResonator3D
+from Linings import PlateResonators, SinglePlateResonator, SimpleTwoSidedPlateResonator, SinglePlateResonator3D, SimpleTwoSidedPlateResonator3D
 from Plate import DoubleLayerPlate3D, Plate, Plate3D, SimplePlate3D, TripleLayerPlate3D
 from Cavity import Cavity, Cavity3D
 
@@ -89,7 +89,7 @@ import numba as nb
 #%% Test plate silencer 3D
 
 # frequency
-f = np.arange(10,260,10)
+f = np.arange(10, 260, 10)
 
 # temperature
 temp1 = Temperature(C=20)
@@ -117,10 +117,13 @@ plate1 = SimplePlate3D(hp=0.0003, material=material1, temperature=temp1)
 cavity1 = Cavity3D(height=1, r=r, s=s, t=t, medium=fluid1)
 
 lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, plate=plate1, cavity=cavity1)
+lining2 = SimpleTwoSidedPlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, plate=plate1, cavity=cavity1)
 
 ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
+ductelement2 = DuctElement3D(lining=lining2, medium=fluid1, M=0)
 
 duct1 = Duct3D(freq=f, height_d=1, elements=[ductelement1])
+duct2 = Duct3D(freq=f, height_d=1, elements=[ductelement2])
 
 # # lining 1 - Numba-Loop test
 # start = time.time()
@@ -157,33 +160,43 @@ duct1 = Duct3D(freq=f, height_d=1, elements=[ductelement1])
 
 # numba loop test
 start = time.time()
-TL = duct1.tl()
+TL1 = duct1.tl()
+TL2 = duct2.tl()
 end = time.time()
 print('Time4:', + end-start)
 
 start = time.time()
-TL = duct1.tl()
+TL1 = duct1.tl()
+TL2 = duct2.tl()
 end = time.time()
 print('Time5:', + end-start)
 
 start = time.time()
-[alpha, beta, tau] = duct1.coefficients()
+[alpha1, beta1, tau1] = duct1.coefficients()
+[alpha2, beta2, tau2] = duct2.coefficients()
 end = time.time()
 print('Time6:', + end-start)
 
 plt.figure()
-plt.plot(f,TL)
+plt.plot(f,TL1)
+plt.plot(f,TL2)
 plt.title('Transmission Loss')
 
 labels = ['t', 'r', 'a']
 
 fig, ax = plt.subplots()
-ax.stackplot(f, tau, beta, alpha, labels=labels)
+ax.stackplot(f, tau1, beta1, alpha1, labels=labels)
+ax.legend()
+plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
+
+
+fig, ax = plt.subplots()
+ax.stackplot(f, tau2, beta2, alpha2, labels=labels)
 ax.legend()
 plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
 plt.show()
 
-print(alpha+beta+tau)
+print(alpha1+beta1+tau1)
 
 
 #%%     

@@ -134,7 +134,7 @@ class DuctElement3D(tr.HasTraits):
     # method returns the transmission loss for plate silencer
     def tmatrix(self, height_d, freq):
         
-        if isinstance(self.lining, SinglePlateResonator3D)==True:
+        if isinstance(self.lining, PlateResonators)==True:
             
             I = self.incidentsound(self.M, freq)
             
