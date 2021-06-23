@@ -10,16 +10,25 @@ import traitlets as tr
 import numpy as np, numpy
 from Fluid import Fluid
 
-#%%
+#%% 2D Cavities
 
-class Cavity(tr.HasTraits):
+class Cavities2D(tr.HasTraits):
     
     '''
-    Class to define a cavity for a plate resonator silencer.
+    Parental class for different types of cavities. 
     '''
     
     # height of the cavity
     height = tr.Float()
+    
+    # medium
+    medium = tr.Instance(Fluid)
+
+class Cavity2D(Cavities2D):
+    
+    '''
+    Class to define a 2D cavity for a plate silencer according to Wang.
+    '''   
     
     # modes of the cavity
     r = tr.Instance(np.ndarray)
@@ -27,9 +36,6 @@ class Cavity(tr.HasTraits):
     
     # loss factor
     zetars = tr.Float(default_value=0.1)
-    
-    # medium
-    medium = tr.Instance(Fluid)   
     
     # property methods to define expanded arrays of modes
     @property
@@ -89,9 +95,55 @@ class Cavity(tr.HasTraits):
         Zc = np.sum(Zc_temp, axis=(2,3))
         
         return Zc
+    
+class CavityAlt2D(Cavities2D):
+    
+    '''
+    Class to define a 2D cavity, derived from a rectangular duct, for a plate silencer.
+    '''
+    
+    # modes of the cavity
+    r = tr.Instance(np.ndarray)
+    
+    # property methods to define expanded arrays of modes
+    @property
+    def R(self):
         
+        return self.r[np.newaxis, np.newaxis, :, np.newaxis]
+    
+    # property methods to define the Kronecker delta
+    @property
+    def deltar(self):    
         
-#%%
+        deltar=np.zeros(len(self.r))
+        deltar[0]=1
+
+        return deltar[np.newaxis, np.newaxis, :, np.newaxis]
+    
+    # method to calculate wave number kr
+    def kr(self, k0, length):
+        
+        return np.sqrt(k0**2 - (np.pi*self.R/length)**2)
+    
+    # method calculate the cavity impedance matrix
+    def cavityimpedance(self, length, depth, j, l, freq):
+        
+        # define expanded arrays of modes
+        L = l[:, np.newaxis, np.newaxis, np.newaxis]
+        J = j[np.newaxis, :, np.newaxis, np.newaxis]
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/self.medium.c
+        
+        # calculate the cavity impedance matrix
+        Zc_temp = 1j*length*omega*self.medium.rho0*(self.deltar - 2)/(np.pi**2*self.kr(k0, length)*np.tan(self.height*self.kr(k0, length)))*np.divide(L*((-1)**(L + self.R) - 1), (L**2 - self.R**2), out=np.zeros_like(L*self.R, dtype=float), where=L!=self.R)*np.divide(J*((-1)**(J + self.R) - 1), (J**2 - self.R**2), out=np.zeros_like(J*self.R, dtype=float), where=J!=self.R)
+        
+        # building the final Zc matrix by summation over R
+        Zc = np.sum(Zc_temp, axis=2)
+        
+        return Zc
+#%% 3D Cavity
 
 class Cavity3D(tr.HasTraits):
     

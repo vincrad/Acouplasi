@@ -9,7 +9,7 @@ Created on Tue Aug 25 09:58:19 2020
 import traitlets as tr
 import numpy as np, numpy
 from Fluid import Fluid
-from Cavity import Cavity, Cavity3D
+from Cavity import Cavities2D, Cavity2D, Cavity3D
 from Plate import Plate, Plate3D
 
 import numba as nb
@@ -51,7 +51,7 @@ class SinglePlateResonator(PlateResonators):
     plate = tr.Instance(Plate)
     
     # cavity
-    cavity = tr.Instance(Cavity)
+    cavity = tr.Instance(Cavities2D)
     
     # property method to define the Kronecker delta
     @property
@@ -255,7 +255,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
     plate = tr.Instance(Plate)
     
     # cavity on both sides
-    cavity = tr.Instance(Cavity)
+    cavity = tr.Instance(Cavities2D)
     
     # property method to define the Kronecker delta
     @property
