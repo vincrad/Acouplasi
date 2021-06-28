@@ -82,14 +82,17 @@ class DuctElement(tr.HasTraits):
         # incident sound
         I = self.incidentsound(self.M, freq)
         
+        # plate velocity
+        vp = self.lining.platevelocity(height_d, I, self.M, freq)
+
         # transmission coefficient
-        tau = self.lining.transmission(height_d, I, self.M, self.medium, freq)
+        tau = self.lining.transmission(vp, height_d, I, self.M, self.medium, freq)
         
         # reflection coefficient
-        beta = self.lining.reflection(height_d, I, self.M, self.medium, freq)
+        beta = self.lining.reflection(vp, height_d, I, self.M, self.medium, freq)
         
         # absorption coefficient
-        alpha = self.lining.absorption(height_d, I, self.M, self.medium, freq)
+        alpha = 1-tau-beta
         
         return alpha, beta, tau
         
@@ -152,14 +155,17 @@ class DuctElement3D(tr.HasTraits):
         # incident sound
         I = self.incidentsound(self.M, freq)
         
+        # plate velocity
+        vp = self.lining.platevelocity(height_d, I, self.M, freq)
+        
         # transmission coefficient
-        tau = self.lining.transmission(height_d, I, self.M, self.medium, freq)
+        tau = self.lining.transmission(vp, height_d, I, self.M, self.medium, freq)
         
         # reflection coefficient
-        beta = self.lining.reflection(height_d, I, self.M, self.medium, freq)
+        beta = self.lining.reflection(vp, height_d, I, self.M, self.medium, freq)
         
         # absorption coefficient
-        alpha = self.lining.absorption(height_d, I, self.M, self.medium, freq)
+        alpha = 1-tau-beta
         
         return alpha, beta, tau
     
