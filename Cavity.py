@@ -21,6 +21,9 @@ class Cavities2D(tr.HasTraits):
     # height of the cavity
     height = tr.Float()
     
+    # modes of the cavity
+    r = tr.Instance(np.ndarray)
+    
     # medium
     medium = tr.Instance(Fluid)
 
@@ -31,7 +34,6 @@ class Cavity2D(Cavities2D):
     '''   
     
     # modes of the cavity
-    r = tr.Instance(np.ndarray)
     s = tr.Instance(np.ndarray)
     
     # loss factor
@@ -102,9 +104,6 @@ class CavityAlt2D(Cavities2D):
     Class to define a 2D cavity, derived from a rectangular duct, for a plate silencer.
     '''
     
-    # modes of the cavity
-    r = tr.Instance(np.ndarray)
-    
     # property methods to define expanded arrays of modes
     @property
     def R(self):
@@ -115,15 +114,7 @@ class CavityAlt2D(Cavities2D):
     @property
     def deltar(self):    
         
-        deltar=np.zeros(len(self.r))
-        deltar[0]=1
-
-        return deltar[np.newaxis, np.newaxis, :, np.newaxis]
-    
-    # method to calculate wave number kr
-    def kr(self, k0, length):
-        
-        return np.sqrt(k0**2 - (np.pi*self.R/length)**2)
+        return np.eye(len(self.r),1)[np.newaxis, np.newaxis, :]
     
     # method calculate the cavity impedance matrix
     def cavityimpedance(self, length, depth, j, l, freq):
@@ -137,20 +128,22 @@ class CavityAlt2D(Cavities2D):
         k0 = omega/self.medium.c
         
         # calculate the cavity impedance matrix
-        Zc_temp = 1j*length*omega*self.medium.rho0*(self.deltar - 2)/(np.pi**2*self.kr(k0, length)*np.tan(self.height*self.kr(k0, length)))*np.divide(L*((-1)**(L + self.R) - 1), (L**2 - self.R**2), out=np.zeros_like(L*self.R, dtype=float), where=L!=self.R)*np.divide(J*((-1)**(J + self.R) - 1), (J**2 - self.R**2), out=np.zeros_like(J*self.R, dtype=float), where=J!=self.R)
+        x0 = np.pi**2
+        x1 = self.R**2
+        x2 = -x1
         
+        kr = np.sqrt(k0**2 - x0*x1/length**2)
+        
+        Zrjl = 1j*length*omega*self.medium.rho0*(self.deltar - 2)/(kr*x0*np.tan(self.height*kr))*np.divide(J*((-1)**(J + self.R) - 1),(J**2 + x2), out=np.zeros_like(J*self.R, dtype=float), where=J!=self.R)*np.divide(L*((-1)**(L + self.R) - 1),(L**2 + x2), out=np.zeros_like(L*self.R, dtype=float), where=L!=self.R)
+
         # building the final Zc matrix by summation over R
         Zc = np.sum(Zc_temp, axis=2)
         
         return Zc
 #%% 3D Cavity
 
-class Cavity3D(tr.HasTraits):
-    
-    '''
-    Class to define a 3D cavity for a plate silencer.
-    '''
-    
+class Cavities3D(tr.HasTraits):
+
     # height of the cavity
     height = tr.Float()
     
@@ -159,14 +152,21 @@ class Cavity3D(tr.HasTraits):
     r = tr.Instance(np.ndarray)
     # y direction
     s = tr.Instance(np.ndarray)
+    
+    # medium
+    medium = tr.Instance(Fluid)
+
+class Cavity3D(Cavities3D):
+    
+    '''
+    Class to define a 3D cavity for a plate silencer.
+    '''
+    
     # z direction
     t = tr.Instance(np.ndarray)
     
     # loss factor
-    zetarst = tr.Float(default_value=0.1)
-    
-    # medium
-    medium = tr.Instance(Fluid)
+    zetarst = tr.Float(default_value=0.01)
     
     # property methods to define expanded arrays of modes
     @property
@@ -269,30 +269,63 @@ class Cavity3D(tr.HasTraits):
                          
                             
         
-            
+class CavityAlt3D(Cavities3D):
+    
+    '''
+    Class to define a 3D cavity for a plate silencer.
+    '''
+    
+    # property methods to define expanded arrays of modes
+    @property
+    def R(self):
         
+        return self.r[np.newaxis, np.newaxis, np.newaxis, np.newaxis, :, np.newaxis, np.newaxis]
+    
+    @property
+    def S(self):
         
+        return self.s[np.newaxis, np.newaxis, np.newaxis, np.newaxis, np.newaxis, :, np.newaxis]
     
+    # property methods to define the Kronecker deltas
+    @property
+    def deltar(self):    
+        
+        return np.eye(len(self.r),1)[np.newaxis, np.newaxis, np.newaxis, np.newaxis, :, np.newaxis]
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    @property
+    def deltas(self):    
+        
+        return np.eye(len(self.s),1)[np.newaxis, np.newaxis, np.newaxis, np.newaxis, np.newaxis, :]
+
+    # method calculate the cavity impedance matrix
+    def cavityimpedance(self, length, depth, j, k, l, n, freq):
+        
+        # define expanded arrays of modes
+        J = j[:, np.newaxis, np.newaxis, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
+        K = k[np.newaxis, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
+        L = l[np.newaxis, np.newaxis, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
+        N = n[np.newaxis, np.newaxis, np.newaxis, :, np.newaxis, np.newaxis, np.newaxis]
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/self.medium.c
+        
+        # calculate the cavity impedance matrix
+        x0 = np.pi**2
+        x1 = self.S**2
+        x2 = self.R**2
+        x3 = -x2
+        x4 = -x1
+        x5 = J + self.R
+        x6 = K + self.S
+        x7 = L + self.R
+        x8 = N + self.S
+        
+        krs = np.sqrt(k0**2 - x0*x2/length**2 - x0*x1/depth**2)
+        
+        Zc_temp = -1j*length*depth*J*K*L*N*omega*self.medium.rho0*(self.deltar - 2)*(self.deltas - 2)*np.divide((-(-1)**x5 - (-1)**x6 + (-1)**(x5 + x6) + 1)*(-(-1)**x7 - (-1)**x8 + (-1)**(x7 + x8) + 1),(J**2 + x3)*(K**2 + x4)*(L**2 + x3)*(N**2 + x4), out=np.zeros_like(J*L*K*N*self.R*self.S, dtype=float), where= np.logical_and(np.logical_and(J!=self.R, L!=self.R), np.logical_and(K!=self.S, N!=self.S)))/(np.pi**4*krs*np.tan(self.height*krs))
+        
+        # building the final cavity impedance matrix by summation over R, S
+        Zc = np.sum(Zc_temp, axis=(4,5))
+        
+        return Zc            
