@@ -134,7 +134,7 @@ class CavityAlt2D(Cavities2D):
         
         kr = np.sqrt(k0**2 - x0*x1/length**2)
         
-        Zrjl = 1j*length*omega*self.medium.rho0*(self.deltar - 2)/(kr*x0*np.tan(self.height*kr))*np.divide(J*((-1)**(J + self.R) - 1),(J**2 + x2), out=np.zeros_like(J*self.R, dtype=float), where=J!=self.R)*np.divide(L*((-1)**(L + self.R) - 1),(L**2 + x2), out=np.zeros_like(L*self.R, dtype=float), where=L!=self.R)
+        Zc_temp = 1j*length*omega*self.medium.rho0*(self.deltar - 2)/(kr*x0*np.tan(self.height*kr))*np.divide(J*((-1)**(J + self.R) - 1),(J**2 + x2), out=np.zeros_like(J*self.R, dtype=float), where=J!=self.R)*np.divide(L*((-1)**(L + self.R) - 1),(L**2 + x2), out=np.zeros_like(L*self.R, dtype=float), where=L!=self.R)
 
         # building the final Zc matrix by summation over R
         Zc = np.sum(Zc_temp, axis=2)
