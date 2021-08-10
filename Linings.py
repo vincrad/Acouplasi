@@ -317,7 +317,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         x19=Ktp*M
         
         # calculate Zpll_temp with additional factor for two-sided plate resonator
-        Zpll_temp = (1+(-1)**T)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(x0*x17*(-Ktm**3*x7 - Ktm**2*x15 + Ktm*x14 - x0*x16*numpy.exp(-1j*x2) + x11 + x12*x2 + x5)/((x1 + x2)**2*(x2 + x3)**2) + x17*(k0 - x19)*(-Ktp**3*x7 + Ktp**2*x15 + Ktp*x14 + x11 - x12*x18 + x16*(-k0 + x19)*numpy.exp(-1j*x18) - x5)/((x1 + x18)**2*(x18 + x3)**2))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex)))
+        Zpll_temp = (1+(-1)**T)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltat)*(x0*x17*(-Ktm**3*x7 - Ktm**2*x15 + Ktm*x14 - x0*x16*numpy.exp(-1j*x2) + x11 + x12*x2 + x5)/((x1 + x2)**2*(x2 + x3)**2) + x17*(k0 - x19)*(-Ktp**3*x7 + Ktp**2*x15 + Ktp*x14 + x11 - x12*x18 + x16*(-k0 + x19)*numpy.exp(-1j*x18) - x5)/((x1 + x18)**2*(x18 + x3)**2))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex)))
        
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
@@ -346,7 +346,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         x19=Ktp**2*x8
         
         # calculate Zplj_temp with additional factor for two-sided plate resonator
-        Zplj_temp = (1+(-1)**T)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(-x16*(-k0 + x18)*(k0 - x18)*((-1)**(L + 1)*x15*numpy.exp(-1j*x17) + x11*x19 + x12*x7 + x14 - x19)/((x0 + x17)*(x17 + x2)*(x17 + x3)*(x17 + x4)) - x16*(Ktm*M + k0)**2*((-1)**J*x15*numpy.exp(-1j*x1) + x11*x9 + x12*x14 + x7 - x9)/((x0 + x1)*(x1 + x2)*(x1 + x3)*(x1 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex)))
+        Zplj_temp = (1+(-1)**T)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltat)*(-x16*(-k0 + x18)*(k0 - x18)*((-1)**(L + 1)*x15*numpy.exp(-1j*x17) + x11*x19 + x12*x7 + x14 - x19)/((x0 + x17)*(x17 + x2)*(x17 + x3)*(x17 + x4)) - x16*(Ktm*M + k0)**2*((-1)**J*x15*numpy.exp(-1j*x1) + x11*x9 + x12*x14 + x7 - x9)/((x0 + x1)*(x1 + x2)*(x1 + x3)*(x1 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex)))
 
         Zplj = np.sum(Zplj_temp, axis=2)
         
