@@ -30,7 +30,7 @@ import numba as nb
 #%% Test plate resonator 
 
 # =============================================================================
-# frequency
+# # frequency
 # f = np.arange(10,260,10)
 
 # # temperature
@@ -45,7 +45,7 @@ import numba as nb
 
 # # cavity modes
 # r = np.arange(0,10,1)
-# s = np.arange(0,10,1)
+# t = np.arange(0,10,1)
 
 # fluid1 = Fluid(temperature=temp1)
 
@@ -53,11 +53,11 @@ import numba as nb
 
 # plate1 = SimplePlate(hp=0.0003, material=material1, temperature=temp1)
 
-# #cavity1 = Cavity2D(height=1, r=r, s=s, medium=fluid1)
+# #cavity1 = Cavity2D(height=1, r=r, t=t, medium=fluid1)
 # cavity1 = CavityAlt2D(height=1, r=r, medium=fluid1)
 
-# #lining1 = SinglePlateResonator(length=5, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
-# lining1 = SimpleTwoSidedPlateResonator(length=5, depth=1, j=j, l=l, plate=plate1, cavity=cavity1)
+# lining1 = SinglePlateResonator(length=5, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
+# #lining1 = SimpleTwoSidedPlateResonator(length=5, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
 
 # ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0.3)
 

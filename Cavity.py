@@ -23,6 +23,7 @@ class Cavities2D(tr.HasTraits):
     height = tr.Float()
     
     # modes of the cavity
+    # x direction
     r = tr.Instance(np.ndarray)
     
     # medium
@@ -35,10 +36,11 @@ class Cavity2D(Cavities2D):
     '''   
     
     # modes of the cavity
-    s = tr.Instance(np.ndarray)
+    # z-axis
+    t = tr.Instance(np.ndarray)
     
     # loss factor
-    zetars = tr.Float(default_value=0.1)
+    zetart = tr.Float(default_value=0.1)
     
     # property methods to define expanded arrays of modes
     @property
@@ -48,9 +50,9 @@ class Cavity2D(Cavities2D):
         
     
     @property
-    def S(self):
+    def T(self):
         
-        return self.s[np.newaxis, np.newaxis, np.newaxis, :, np.newaxis]
+        return self.t[np.newaxis, np.newaxis, np.newaxis, :, np.newaxis]
        
     
     # property methods to define the Kronecker delta
@@ -61,15 +63,15 @@ class Cavity2D(Cavities2D):
     
     
     @property
-    def deltas(self):
+    def deltat(self):
         
-        return np.eye(len(self.s),1)[np.newaxis, np.newaxis, np.newaxis, :]
+        return np.eye(len(self.t),1)[np.newaxis, np.newaxis, np.newaxis, :]
         
     
     # method to calculate kappars
-    def kappars(self, length):
+    def kappart(self, length):
         
-        return np.sqrt((self.R*np.pi/length)**2+(self.S*np.pi/self.height)**2)
+        return np.sqrt((self.R*np.pi/length)**2+(self.T*np.pi/self.height)**2)
         
         
     
@@ -94,7 +96,7 @@ class Cavity2D(Cavities2D):
         
         Zc_temp = 1j*omega*self.medium.rho0*(2 - self.deltar)*(2 - self.deltas)*((-1)**J*x1*x2 - x1)*((-1)**L*x2*x3 - x3)/(length*self.height*(-k0**2 + 2*1j*k0*self.kappars(length)*self.zetars + self.kappars(length)**2))
         
-        # building the final Zc matrix by summation over R and S
+        # building the final Zc matrix by summation over R and T
         Zc = np.sum(Zc_temp, axis=(2,3))
         
         return Zc
