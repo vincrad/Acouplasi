@@ -9,7 +9,7 @@ Created on Tue Aug 25 09:58:19 2020
 import traitlets as tr
 import numpy as np, numpy
 from Fluid import Fluid
-from Cavity import Cavities2D, Cavity2D, Cavity3D
+from Cavity import Cavities2D, Cavities3D
 from Plate import Plate, Plate3D
 
 import numba as nb
@@ -40,6 +40,10 @@ class PlateResonators(Linings):
     # 3D
     k = tr.Instance(np.ndarray)
     n = tr.Instance(np.ndarray)
+    
+    # duct modes
+    # z-axis
+    t = tr.Instance(np.ndarray)
 
 class SinglePlateResonator(PlateResonators):
     
@@ -55,16 +59,16 @@ class SinglePlateResonator(PlateResonators):
     
     # property method to define the Kronecker delta
     @property
-    def deltar(self):
+    def deltat(self):
         
-        return np.eye(len(self.cavity.r),1)[np.newaxis, np.newaxis, :]
+        return np.eye(len(self.t),1)[np.newaxis, np.newaxis, :]
     
-    # method to calculate kappar
-    def kappar(self, height_d):
+    # method to calculate kappat
+    def kappat(self, height_d):
         
-        R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
+        T = self.t[np.newaxis, np.newaxis, :, np.newaxis]
         
-        return ((R*np.pi)/(height_d))
+        return ((T*np.pi)/(height_d))
         
     
     # methode calculate the impedance matrix of the plate resonator
@@ -81,16 +85,16 @@ class SinglePlateResonator(PlateResonators):
         # define expanded arrays of modes
         L = self.l[:, np.newaxis, np.newaxis, np.newaxis]
         J = self.j[np.newaxis, :, np.newaxis, np.newaxis]
-        R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
+        T = self.t[np.newaxis, np.newaxis, :, np.newaxis]
         
         # calculate the impedance matrix of the plate induced sound
-        Krp = (-k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
-        Krm = (k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
+        Ktp = (-k0*M-1j*np.sqrt((1-M**2)*self.kappat(height_d)**2-k0**2, dtype=complex))/(1-M**2)
+        Ktm = (k0*M-1j*np.sqrt((1-M**2)*self.kappat(height_d)**2-k0**2, dtype=complex))/(1-M**2)
         
         # for j=l
-        x0=Krm*M + k0
+        x0=Ktm*M + k0
         x1=numpy.pi*L
-        x2=Krm*self.length
+        x2=Ktm*self.length
         x3=-x1
         x4=1j*M
         x5=numpy.pi**4*L**4*x4
@@ -106,17 +110,17 @@ class SinglePlateResonator(PlateResonators):
         x15=x13*x4
         x16=(-1)**L*x10
         x17=(1/2)*self.length/k0
-        x18=Krp*self.length
-        x19=Krp*M
+        x18=Ktp*self.length
+        x19=Ktp*M
         
-        Zpll_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(x0*x17*(-Krm**3*x7 - Krm**2*x15 + Krm*x14 - x0*x16*numpy.exp(-1j*x2) + x11 + x12*x2 + x5)/((x1 + x2)**2*(x2 + x3)**2) + x17*(k0 - x19)*(-Krp**3*x7 + Krp**2*x15 + Krp*x14 + x11 - x12*x18 + x16*(-k0 + x19)*numpy.exp(-1j*x18) - x5)/((x1 + x18)**2*(x18 + x3)**2))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M**2), dtype=complex))
+        Zpll_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltat)*(x0*x17*(-Ktm**3*x7 - Ktm**2*x15 + Ktm*x14 - x0*x16*numpy.exp(-1j*x2) + x11 + x12*x2 + x5)/((x1 + x2)**2*(x2 + x3)**2) + x17*(k0 - x19)*(-Ktp**3*x7 + Ktp**2*x15 + Ktp*x14 + x11 - x12*x18 + x16*(-k0 + x19)*numpy.exp(-1j*x18) - x5)/((x1 + x18)**2*(x18 + x3)**2))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex))
        
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
         
         # for j != l#
         x0=numpy.pi*J
-        x1=Krm*self.length
+        x1=Ktm*self.length
         x2=numpy.pi*L
         x3=-x0
         x4=-x2
@@ -124,7 +128,7 @@ class SinglePlateResonator(PlateResonators):
         x6=L**2
         x7=x5*x6
         x8=self.length**2
-        x9=Krm**2*x8
+        x9=Ktm**2*x8
         x10=J + L
         x11=(-1)**x10
         x12=(-1)**(x10 + 1)
@@ -133,11 +137,11 @@ class SinglePlateResonator(PlateResonators):
         x15=x5*(x13 - x6)
         #x16=J*L*x8/(k0*x10*(J - L))
         x16 = np.divide(J*L*x8, (k0*x10*(J - L)), np.zeros_like(J*L*k0, dtype=complex), where=(k0*x10*(J - L))!=0)
-        x17=Krp*self.length
-        x18=Krp*M
-        x19=Krp**2*x8
+        x17=Ktp*self.length
+        x18=Ktp*M
+        x19=Ktp**2*x8
         
-        Zplj_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(-x16*(-k0 + x18)*(k0 - x18)*((-1)**(L + 1)*x15*numpy.exp(-1j*x17) + x11*x19 + x12*x7 + x14 - x19)/((x0 + x17)*(x17 + x2)*(x17 + x3)*(x17 + x4)) - x16*(Krm*M + k0)**2*((-1)**J*x15*numpy.exp(-1j*x1) + x11*x9 + x12*x14 + x7 - x9)/((x0 + x1)*(x1 + x2)*(x1 + x3)*(x1 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M**2), dtype=complex))
+        Zplj_temp = (1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltat)*(-x16*(-k0 + x18)*(k0 - x18)*((-1)**(L + 1)*x15*numpy.exp(-1j*x17) + x11*x19 + x12*x7 + x14 - x19)/((x0 + x17)*(x17 + x2)*(x17 + x3)*(x17 + x4)) - x16*(Ktm*M + k0)**2*((-1)**J*x15*numpy.exp(-1j*x1) + x11*x9 + x12*x14 + x7 - x9)/((x0 + x1)*(x1 + x2)*(x1 + x3)*(x1 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex))
 
         Zplj = np.sum(Zplj_temp, axis=2)
         
@@ -259,16 +263,16 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
     
     # property method to define the Kronecker delta
     @property
-    def deltar(self):
+    def deltat(self):
         
-        return np.eye(len(self.cavity.r),1)[np.newaxis, np.newaxis, :]
+        return np.eye(len(self.t),1)[np.newaxis, np.newaxis, :]
     
-    # method to calculate kappar
-    def kappar(self, height_d):
+    # method to calculate kappat
+    def kappat(self, height_d):
         
-        R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
+        T = self.t[np.newaxis, np.newaxis, :, np.newaxis]
         
-        return ((R*np.pi)/(height_d))
+        return ((T*np.pi)/(height_d))
     
     # methode calculate the impedance matrix of the plate resonator
     def zmatrix(self, height_d, M, freq):
@@ -284,16 +288,16 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         # define expanded arrays of modes
         L = self.l[:, np.newaxis, np.newaxis, np.newaxis]
         J = self.j[np.newaxis, :, np.newaxis, np.newaxis]
-        R = self.cavity.r[np.newaxis, np.newaxis, :, np.newaxis]
+        T = self.t[np.newaxis, np.newaxis, :, np.newaxis]
         
         # calculate the impedance matrix of the plate induced sound
-        Krp = (-k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
-        Krm = (k0*M-1j*np.sqrt((1-M**2)*self.kappar(height_d)**2-k0**2, dtype=complex))/(1-M**2)
+        Ktp = (-k0*M-1j*np.sqrt((1-M**2)*self.kappat(height_d)**2-k0**2, dtype=complex))/(1-M**2)
+        Ktm = (k0*M-1j*np.sqrt((1-M**2)*self.kappat(height_d)**2-k0**2, dtype=complex))/(1-M**2)
         
         # for j=l
-        x0=Krm*M + k0
+        x0=Ktm*M + k0
         x1=numpy.pi*L
-        x2=Krm*self.length
+        x2=Ktm*self.length
         x3=-x1
         x4=1j*M
         x5=numpy.pi**4*L**4*x4
@@ -309,18 +313,18 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         x15=x13*x4
         x16=(-1)**L*x10
         x17=(1/2)*self.length/k0
-        x18=Krp*self.length
-        x19=Krp*M
+        x18=Ktp*self.length
+        x19=Ktp*M
         
         # calculate Zpll_temp with additional factor for two-sided plate resonator
-        Zpll_temp = (1+(-1)**R)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(x0*x17*(-Krm**3*x7 - Krm**2*x15 + Krm*x14 - x0*x16*numpy.exp(-1j*x2) + x11 + x12*x2 + x5)/((x1 + x2)**2*(x2 + x3)**2) + x17*(k0 - x19)*(-Krp**3*x7 + Krp**2*x15 + Krp*x14 + x11 - x12*x18 + x16*(-k0 + x19)*numpy.exp(-1j*x18) - x5)/((x1 + x18)**2*(x18 + x3)**2))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M**2), dtype=complex)))
+        Zpll_temp = (1+(-1)**T)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(x0*x17*(-Ktm**3*x7 - Ktm**2*x15 + Ktm*x14 - x0*x16*numpy.exp(-1j*x2) + x11 + x12*x2 + x5)/((x1 + x2)**2*(x2 + x3)**2) + x17*(k0 - x19)*(-Ktp**3*x7 + Ktp**2*x15 + Ktp*x14 + x11 - x12*x18 + x16*(-k0 + x19)*numpy.exp(-1j*x18) - x5)/((x1 + x18)**2*(x18 + x3)**2))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex)))
        
         Zpll = np.sum(Zpll_temp*(np.identity(len(self.l))[:, :, np.newaxis, np.newaxis]), axis=2)
         
         
         # for j != l#
         x0=numpy.pi*J
-        x1=Krm*self.length
+        x1=Ktm*self.length
         x2=numpy.pi*L
         x3=-x0
         x4=-x2
@@ -328,7 +332,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         x6=L**2
         x7=x5*x6
         x8=self.length**2
-        x9=Krm**2*x8
+        x9=Ktm**2*x8
         x10=J + L
         x11=(-1)**x10
         x12=(-1)**(x10 + 1)
@@ -337,12 +341,12 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         x15=x5*(x13 - x6)
         #x16=J*L*x8/(k0*x10*(J - L))
         x16 = np.divide(J*L*x8, (k0*x10*(J - L)), np.zeros_like(J*L*k0, dtype=complex), where=(k0*x10*(J - L))!=0)
-        x17=Krp*self.length
-        x18=Krp*M
-        x19=Krp**2*x8
+        x17=Ktp*self.length
+        x18=Ktp*M
+        x19=Ktp**2*x8
         
         # calculate Zplj_temp with additional factor for two-sided plate resonator
-        Zplj_temp = (1+(-1)**R)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(-x16*(-k0 + x18)*(k0 - x18)*((-1)**(L + 1)*x15*numpy.exp(-1j*x17) + x11*x19 + x12*x7 + x14 - x19)/((x0 + x17)*(x17 + x2)*(x17 + x3)*(x17 + x4)) - x16*(Krm*M + k0)**2*((-1)**J*x15*numpy.exp(-1j*x1) + x11*x9 + x12*x14 + x7 - x9)/((x0 + x1)*(x1 + x2)*(x1 + x3)*(x1 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappar(height_d)**2*(1 - M**2), dtype=complex)))
+        Zplj_temp = (1+(-1)**T)*((1/2)*1j*self.cavity.medium.c*self.cavity.medium.rho0*(2 - self.deltar)*(-x16*(-k0 + x18)*(k0 - x18)*((-1)**(L + 1)*x15*numpy.exp(-1j*x17) + x11*x19 + x12*x7 + x14 - x19)/((x0 + x17)*(x17 + x2)*(x17 + x3)*(x17 + x4)) - x16*(Ktm*M + k0)**2*((-1)**J*x15*numpy.exp(-1j*x1) + x11*x9 + x12*x14 + x7 - x9)/((x0 + x1)*(x1 + x2)*(x1 + x3)*(x1 + x4)))/(height_d*numpy.sqrt(-k0**2 + self.kappat(height_d)**2*(1 - M**2), dtype=complex)))
 
         Zplj = np.sum(Zplj_temp, axis=2)
         
@@ -1045,7 +1049,7 @@ class SinglePlateResonator3D(PlateResonators):
     plate = tr.Instance(Plate3D)
     
     # cavity
-    cavity = tr.Instance(Cavity3D)
+    cavity = tr.Instance(Cavities3D)
     
     # methode calculate the impedance matrix of the plate resonator 
     # accelerated by numba
@@ -1056,7 +1060,7 @@ class SinglePlateResonator3D(PlateResonators):
         
         # calculate impedance matrix of plate induced sound
         # accelerated by numba
-        Zprad = get_zprad(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.cavity.t, self.length, self.depth, height_d, M, freq)
+        Zprad = get_zprad(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.t, self.length, self.depth, height_d, M, freq)
         
         # calculate the total impedance matrix of the lining
         Z = Zc+Zprad
@@ -1708,7 +1712,7 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
     plate = tr.Instance(Plate3D)
     
     # cavities on both sides
-    cavity = tr.Instance(Cavity3D)
+    cavity = tr.Instance(Cavities3D)
     
     # methode calculate the impedance matrix of the plate resonator 
     # accelerated by numba
@@ -1719,7 +1723,7 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         
         # calculate impedance matrix of plate induced sound
         # accelerated by numba
-        Zprad = get_zprad_twosided(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.cavity.t, self.length, self.depth, height_d, M, freq)
+        Zprad = get_zprad_twosided(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.t, self.length, self.depth, height_d, M, freq)
         
         # calculate the total impedance matrix of the lining
         Z = Zc+Zprad

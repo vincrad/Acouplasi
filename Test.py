@@ -117,7 +117,7 @@ plate1 = SimplePlate3D(hp=0.0003, material=material1, temperature=temp1)
 
 cavity1 = Cavity3D(height=1, r=r, s=s, t=t, medium=fluid1)
 
-lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, plate=plate1, cavity=cavity1)
+lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, t=t, plate=plate1, cavity=cavity1)
 #lining2 = SimpleTwoSidedPlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, plate=plate1, cavity=cavity1)
 
 ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
