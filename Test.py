@@ -200,26 +200,3 @@ plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
 print(alpha1+beta1+tau1)
 
 plt.show()
-
-#%%     
-
-# =============================================================================
-# eye1 = np.eye(len(j), len(l))[:, np.newaxis, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
-# eye2 = np.eye(len(k), len(r), k=1)[np.newaxis, :, np.newaxis, np.newaxis, :, np.newaxis, np.newaxis]
-# eye3 = np.zeros((len(n), len(r)))
-# for ni in n:
-#     for ri in r:
-#         if ni==2*ri:
-#             eye3[ni, ri] = 1
-#         else:
-#             pass
-# eye3 = eye3[np.newaxis, np.newaxis, np.newaxis, :, :, np.newaxis, np.newaxis]
-# eye = eye1*eye2
-# =============================================================================
-
-# =============================================================================
-# eye1 = np.eye(len(j), len(l))[:,np.newaxis,:,np.newaxis]
-# eye2 = np.eye(len(k), len(n), k=1)[np.newaxis, :, np.newaxis, :]
-# eye3 = eye1*eye2
-# =============================================================================
-
