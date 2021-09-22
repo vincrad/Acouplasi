@@ -174,8 +174,8 @@ class SinglePlateResonator(PlateResonators):
         
         return vp
     
-    # method calculates the transmission coefficient of the plate silencer
-    def transmission(self, vp, height_d, I, M, medium, freq):
+    # method calculates the transmission factor of the plate silencer
+    def transmissionfactor(self, vp, height_d, I, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -194,12 +194,23 @@ class SinglePlateResonator(PlateResonators):
         
         temp = (1/2)*x0*(-x3*x5 + x3 - x4*x5 + x4)/(self.cavity.medium.c*height_d)
         
-        tau = np.abs(np.sum(vp*temp, axis=0)+1)**2
+        tra_fac = np.sum(vp*temp, axis=0)+1
         
-        return tau
+        return tra_fac
     
-    # method calculates the reflaction coefficient of the plate silencer
-    def reflection(self, vp, height_d, I, M, medium, freq):
+    # method calculates the transmittance of the plate silencer
+    def transmittance(self, vp, height_d, I, M, medium, freq):
+        
+        # call transmission factor
+        tra_fac = self.transmissionfactor(vp, height_d, I, M, medium, freq)
+        
+        # calculate transmittance
+        tra = np.abs(tra_fac)**2
+        
+        return tra
+    
+    # method calculates the reflection factor of the plate silencer
+    def reflectionfactor(self, vp, height_d, I, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -214,33 +225,44 @@ class SinglePlateResonator(PlateResonators):
         
         temp = (1/2)*numpy.pi*self.length*J*((-1)**J - numpy.exp(-x0))*numpy.exp(x0)/(self.cavity.medium.c*height_d*(self.length**2*k0**2 - M**2*x1 + 2*M*x1 - x1))
         
-        beta_temp = np.abs(np.sum(vp*temp, axis=0))**2
+        ref_fac = np.sum(vp*temp, axis=0)
         
-        # energetic correction of reflection coefficient due to mean flow
-        beta = beta_temp*((1-M)/(1+M))**2
-        
-        return beta
+        return ref_fac
     
-    # method to calculate the absorption coefficient of the plate silencer
-    def absorption(self, vp, height_d, I, M, medium, freq):
+    # method calculates the reflectance of the plate silencer
+    def reflectance(self, vp, height_d, I, M, medium, freq):
         
-        tau = self.transmission(vp, height_d, I, M, medium, freq)
+        # call reflection factor
+        ref_fac = self.reflectionfactor(vp, height_d, I, M, medium, freq)
         
-        beta = self.reflection(vp, height_d, I, M, medium, freq)
+        # calculate reflectance with energetic correction due to mean flow
+        ref = np.abs(ref_fac)**2*((1-M)/(1+M))**2
         
-        alpha = 1-tau-beta
+        return ref
+    
+    # method calculates the dissipation of the plate silencer
+    def dissipation(self, vp, height_d, I, M, medium, freq):
         
-        return alpha
+        # call transmittance
+        tra = self.transmittance(vp, height_d, I, M, medium, freq)
+        
+        # call reflectance
+        ref = self.reflectance(vp, height_d, I, M, medium, freq)
+        
+        # calculate dissipation
+        dis = 1-tra-ref
+        
+        return dis
     
     # method calculates the transmission loss of the plate silencer
     def transmissionloss(self, vp, height_d, I, M, medium, freq):
         
-        # transmission coefficient
-        tau = self.transmission(vp, height_d, I, M, medium, freq)        
-
+        # transmittance
+        tra = self.transmittance(vp, height_d, I, M, medium, freq)
+        
         # transmission loss
-        TL = -10*np.log10(tau)        
-
+        TL = -10*np.log10(tra)
+        
         return TL
     
 class SimpleTwoSidedPlateResonator(PlateResonators):
@@ -373,8 +395,8 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         
         return vp
     
-    # method to calculate the transmission coefficient of the plate silencer
-    def transmission(self, vp, height_d, I, M, medium, freq):
+    # method calculates the transmission factor of the plate silencer
+    def transmissionfactor(self, vp, height_d, I, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -393,12 +415,23 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         
         temp = (1/2)*x0*(-x3*x5 + x3 - x4*x5 + x4)/(self.cavity.medium.c*height_d)
         
-        tau = np.abs(np.sum(vp*(2*temp), axis=0)+1)**2
+        tra_fac = np.sum(vp*(2*temp), axis=0)+1
         
-        return tau
+        return tra_fac
     
-    # method calculates the reflaction coefficient of the plate silencer
-    def reflection(self, vp, height_d, I, M, medium, freq):
+    # method calculates the transmittance of the plate silencer
+    def transmittance(self, vp, height_d, I, M, medium, freq):
+        
+        # call transmission factor
+        tra_fac = self.transmissionfactor(vp, height_d, I, M, medium, freq)
+        
+        # calculate transmittance
+        tra = np.abs(tra_fac)**2
+        
+        return tra
+    
+    # method calculates the reflection factor of the plate silencer
+    def reflectionfactor(self, vp, height_d, I, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -413,34 +446,45 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         
         temp = (1/2)*numpy.pi*self.length*J*((-1)**J - numpy.exp(-x0))*numpy.exp(x0)/(self.cavity.medium.c*height_d*(self.length**2*k0**2 - M**2*x1 + 2*M*x1 - x1))
         
-        beta_temp = np.abs(np.sum(vp*(2*temp), axis=0))**2
+        ref_fac = np.sum(vp*(2*temp), axis=0)
         
-        # energetic correction of reflection coefficient due to mean flow
-        beta = beta_temp*((1-M)/(1+M))**2
-        
-        return beta
+        return ref_fac
     
-    # method to calculate the absorption coefficient of the plate silencer
-    def absorption(self, vp, height_d, I, M, medium, freq):
+    # method calculates the reflectance of the plate silencer
+    def reflectance(self, vp, height_d, I, M, medium, freq):
         
-        tau = self.transmission(vp, height_d, I, M, medium, freq)
+        # call reflection factor
+        ref_fac = self.reflectionfactor(vp, height_d, I, M, medium, freq)
         
-        beta = self.reflection(vp, height_d, I, M, medium, freq)
+        # calculate reflectance with energetic correction due to mean flow
+        ref = np.abs(ref_fac)**2*((1-M)/(1+M))**2
         
-        alpha = 1-tau-beta
+        return ref
+    
+    # method calculates the dissipation of the plate silencer
+    def dissipation(self, vp, height_d, I, M, medium, freq):
         
-        return alpha
+        # call transmittance
+        tra = self.transmittance(vp, height_d, I, M, medium, freq)
         
+        # call reflectance
+        ref = self.reflectance(vp, height_d, I, M, medium, freq)
+        
+        # calculate dissipation
+        dis = 1-tra-ref
+        
+        return dis
+    
     # method calculates the transmission loss of the plate silencer
     def transmissionloss(self, vp, height_d, I, M, medium, freq):
         
         # transmission coefficient
-        tau = self.transmission(vp, height_d, I, M, medium, freq)        
+        tra = self.transmittance(vp, height_d, I, M, medium, freq)        
 
         # transmission loss
-        TL = -10*np.log10(tau)        
+        TL = -10*np.log10(tra)        
 
-        return TL    
+        return TL 
     
 
     
