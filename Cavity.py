@@ -94,7 +94,7 @@ class Cavity2D(Cavities2D):
         #x3=length*L/(-numpy.pi*L**2 + x0)
         x3 = np.divide(length*L, (-numpy.pi*L**2 + x0), out=np.zeros_like(L*self.R, dtype=float), where=(-numpy.pi*L**2 + x0)!=0)
         
-        Zc_temp = 1j*omega*self.medium.rho0*(2 - self.deltar)*(2 - self.deltas)*((-1)**J*x1*x2 - x1)*((-1)**L*x2*x3 - x3)/(length*self.height*(-k0**2 + 2*1j*k0*self.kappars(length)*self.zetars + self.kappars(length)**2))
+        Zc_temp = 1j*omega*self.medium.rho0*(2 - self.deltar)*(2 - self.deltat)*((-1)**J*x1*x2 - x1)*((-1)**L*x2*x3 - x3)/(length*self.height*(-k0**2 + 2*1j*k0*self.kappart(length)*self.zetart + self.kappart(length)**2))
         
         # building the final Zc matrix by summation over R and T
         Zc = np.sum(Zc_temp, axis=(2,3))
