@@ -70,22 +70,20 @@ Tl = duct1.tl()
 plt.figure()
 plt.plot(f,Tl)
 plt.title('Transmission Loss')
-plt.show()
-
 
 #%%
 
-a,r,t = duct1.coefficients()
+t,r,d = duct1.coefficients()
 
 labels = ['t', 'r', 'a']
 
 fig, ax = plt.subplots()
-ax.stackplot(f, t, r, a, labels=labels)
+ax.stackplot(f, t, r, d, labels=labels)
 ax.legend()
 plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
 plt.show()
 
-test = a+r+t
+test = d+r+t
 # =============================================================================
 
 #%% Test plate silencer 3D
