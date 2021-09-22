@@ -79,8 +79,8 @@ class DuctElement(tr.HasTraits):
                 T = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
         
             return T
-    
-    # method calculate the transmission, reflection and absorption coefficient of the plate silencer duct element
+
+    # method calculates the transmittance, reflectance and dissipation of the plate silencer duct element
     def coefficients(self, height_d, freq):
         
         # incident sound
@@ -89,16 +89,16 @@ class DuctElement(tr.HasTraits):
         # plate velocity
         vp = self.lining.platevelocity(height_d, I, self.M, freq)
         
-        # transmission coefficient
-        tau = self.lining.transmission(vp, height_d, I, self.M, self.medium, freq)
+        # transmittance
+        tra = self.lining.transmittance(vp, height_d, I, self.M, self.medium, freq)
         
-        # reflection coefficient
-        beta = self.lining.reflection(vp, height_d, I, self.M, self.medium, freq)
+        # reflectance
+        ref = self.lining.reflectance(vp, height_d, I, self.M, self.medium, freq)
         
-        # absorption coefficient
-        alpha = self.lining.absorption(vp, height_d, I, self.M, self.medium, freq)
+        # dissipation
+        dis = self.lining.dissipation(vp, height_d, I, self.M, self.medium, freq)
         
-        return alpha, beta, tau
+        return tra, ref, dis
         
 #%%
 
