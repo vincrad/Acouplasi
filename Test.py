@@ -61,9 +61,19 @@ cavity1 = Cavity2D(height=1, r=r, t=t, medium=fluid1)
 lining1 = SinglePlateResonator(length=5, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
 #lining1 = SimpleTwoSidedPlateResonator(length=5, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
 
-ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0.3)
+lining3 = SinglePlateResonator(length=10, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
+
+ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0)
+
+ductelement2 = DuctElement(lining=lining1, medium=fluid1, M=0)
+
+ductelement3 = DuctElement(lining=lining3, medium=fluid1, M=0)
 
 duct1 = Duct(freq=f, height_d=1, elements=[ductelement1])
+
+duct2 = Duct(freq=f, height_d=1, elements=[ductelement1, ductelement2])
+
+duct3 = Duct(freq=f, height_d=1, elements=[ductelement3])
 
 Tl = duct1.tl()
 
@@ -81,10 +91,22 @@ fig, ax = plt.subplots()
 ax.stackplot(f, t, r, d, labels=labels)
 ax.legend()
 plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
-plt.show()
+#plt.show()
 
 test = d+r+t
 # =============================================================================
+#%% Transfer matrix test
+
+TL2 =  duct1.tl2()
+
+plt.figure()
+plt.plot(f, TL2, f, Tl, '-.')
+plt.title('Transmission Loss')
+plt.xlabel('f in Hz')
+plt.ylabel('TL in dB')
+plt.legend(['with transfer matrix', 'without transfer matrix'])
+plt.show()
+
 
 #%% Test plate silencer 3D
 
