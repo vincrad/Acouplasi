@@ -39,8 +39,8 @@ class Duct(tr.HasTraits):
             
             return TL
         
-    # method calculates the transmission loss of the duct from transfer matrices
-    def tl2(self):
+    # method calculates the transfer matrix of the overall duct
+    def transfermatrix(self):
         
         TM = np.empty((2,2,len(self.freq)), dtype=complex)
         
@@ -57,8 +57,14 @@ class Duct(tr.HasTraits):
                 for idx2, f in enumerate(self.freq):
                     
                     TM[:,:,idx2] = TM[:,:,idx2] @ tm[:,:,idx2]
-            
-            
+                    
+        return TM
+                    
+    # method calculates the transmission loss of the duct from overall transfer matrix
+    def tl2(self):
+        
+        TM = self.transfermatrix()
+        
         # characteristic flow impedance of the 1st and n-th element
         Z1 = self.elements[0].medium.rho0*self.elements[0].medium.c/self.height_d
         Zn = self.elements[-1].medium.rho0*self.elements[-1].medium.c/self.height_d
