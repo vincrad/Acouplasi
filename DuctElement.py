@@ -184,6 +184,32 @@ class DuctElement3D(tr.HasTraits):
             
             print('Wrong dimensions of plate silencer!')
             
+    # method calculates the transfer matrix of the plate silencer duct element
+    def tmatrix2(self, height_d, freq):
+        
+        # incident sound
+        I = self.incidentsound(self.M, freq)
+        
+        # plate velocity
+        vp = self.lining.platevelocity(height_d, I, self.M, freq)
+        
+        # transmission factor
+        tra_fac = self.lining.transmissionfactor(vp, height_d, I, self.M, self.medium, freq)
+        
+        # reflection factor
+        ref_fac = self.lining.reflectionfactor(vp, height_d, I, self.M, self.medium, freq)
+        
+        # energetic correction????
+        
+        # transfer matrix
+        TM = np.empty((2, 2, len(freq)), dtype=complex)
+        
+        TM[0,0,:] = (-ref_fac**2+tra_fac**2+1)/(2*tra_fac)
+        TM[0,1,:] = (self.medium.rho0*self.medium.c*(ref_fac-tra_fac+1)*(ref_fac+tra_fac+1))/(2*tra_fac)
+        TM[1,0,:] = -((-ref_fac+tra_fac+1)*(ref_fac+tra_fac-1))/(2*tra_fac*self.medium.rho0*self.medium.c)
+        TM[1,1,:] = (-ref_fac**2+tra_fac**2+1)/(2*tra_fac)
+        
+        return TM
     # method calculate the transmission, reflection and absorption coefficient of the plate silencer duct element
     def coefficients(self, height_d, freq):
         
