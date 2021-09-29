@@ -194,15 +194,15 @@ class DuctElement3D(tr.HasTraits):
         vp = self.lining.platevelocity(height_d, I, self.M, freq)
         
         # transmission coefficient
-        tau = self.lining.transmission(vp, height_d, I, self.M, self.medium, freq)
+        tra = self.lining.transmittance(vp, height_d, I, self.M, self.medium, freq)
         
         # reflection coefficient
-        beta = self.lining.reflection(vp, height_d, I, self.M, self.medium, freq)
+        ref = self.lining.reflectance(vp, height_d, I, self.M, self.medium, freq)
         
         # absorption coefficient
-        alpha = self.lining.absorption(vp, height_d, I, self.M, self.medium, freq)
+        dis = self.lining.dissipation(vp, height_d, I, self.M, self.medium, freq)
         
-        return alpha, beta, tau
+        return tra, ref, dis
     
     
     
