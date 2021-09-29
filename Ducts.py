@@ -120,9 +120,9 @@ class Duct3D(tr.HasTraits):
         
         for i in self.elements:
             
-            alpha, beta, tau = i.coefficients(self.height_d, self.freq)
+            tra, ref, dis = i.coefficients(self.height_d, self.freq)
             
-            return alpha, beta, tau
+            return tra, ref, dis
     
     
     
