@@ -173,6 +173,18 @@ fig, ax = plt.subplots()
 ax.stackplot(f, tra, ref, dis, labels=labels)
 ax.legend()
 plt.title('Transmissions-, Reflexions-, Absorptionsgrad')
+
+
+#%% Transfermatrix test
+
+TL2 = duct1.tl2()
+
+plt.figure()
+plt.plot(f, TL2, f, TL1, '-.')
+plt.title('Transmission Loss')
+plt.xlabel('f in Hz')
+plt.ylabel('TL in dB')
+plt.legend(['with transfer matrix', 'without transfer matrix'])
 plt.show()
 
 #%% Vergleich mit 2D
