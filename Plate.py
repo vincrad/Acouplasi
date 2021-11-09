@@ -238,8 +238,8 @@ class SimplePlate3D(Plate3D):
         
         # expand L matrix taking into account jk=lm
         # building an array with 1 for jk=lm and 0 for jk!=lm
-        j,k = np.ogrid[:len(l), :len(l)]
-        kron = np.zeros((len(l), len(l), len(l), len(l)))[:, :, :, :, np.newaxis]
+        j,k = np.ogrid[:len(l), :len(n)]
+        kron = np.zeros((len(l), len(n), len(l), len(n)))[:, :, :, :, np.newaxis]
         kron[j,k,j,k] = 1
         
         # expand L matrix
@@ -296,8 +296,8 @@ class DoubleLayerPlate3D(Plate3D):
         
         # expand L matrix taking into account jk=lm
         # building an array with 1 for jk=lm and 0 for jk!=lm
-        j,k = np.ogrid[:len(l), :len(l)]
-        kron = np.zeros((len(l), len(l), len(l), len(l)))[:, :, :, :, np.newaxis]
+        j,k = np.ogrid[:len(l), :len(n)]
+        kron = np.zeros((len(l), len(n), len(l), len(n)))[:, :, :, :, np.newaxis]
         kron[j,k,j,k] = 1
         
         # expand L matrix
@@ -365,8 +365,8 @@ class TripleLayerPlate3D(Plate3D):
         
         # expand L matrix taking into account jk=lm
         # building an array with 1 for jk=lm and 0 for jk!=lm
-        j,k = np.ogrid[:len(l), :len(l)]
-        kron = np.zeros((len(l), len(l), len(l), len(l)))[:, :, :, :, np.newaxis]
+        j,k = np.ogrid[:len(l), :len(n)]
+        kron = np.zeros((len(l), len(n), len(l), len(n)))[:, :, :, :, np.newaxis]
         kron[j,k,j,k] = 1
         
         # expand L matrix
