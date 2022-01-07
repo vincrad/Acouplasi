@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#pylint: disable-msg=E0611, E1101, C0103, R0901, R0902, R0903, R0904, W0232
 #------------------------------------------------------------------------------
 # Copyright (c) 2021,
 #------------------------------------------------------------------------------
@@ -7,28 +6,28 @@
 """
 
 import unittest
-#import acoular as ac
-from traitlets import HasTraits, Int, Float, Bool, Range, TraitEnum, Enum
+import acouplasi as acpl
+from traitlets import HasTraits, Int, Float, Bool, Enum
 
 class Test_Instancing(unittest.TestCase):
-    """Test that ensures that digest of Acoular classes changes correctly on
+    """Test that ensures that digest of classes changes correctly on
     changes of CArray and List attributes.
     """
 
     def test_instancing(self):
-        """ test that all Acoular classes can be instatiated """
-        # iterate over all Acoular definitions labels
-        for i in dir(ac):
+        """ test that all classes can be instatiated """
+        # iterate over all definitions labels
+        for i in dir(acpl):
             with self.subTest(i):
-                j = getattr(ac,i) # class, function or variable
+                j = getattr(acpl,i) # class, function or variable
                 if isinstance(j,type): # is this a class ?
                     j() # this is an instance of the class
 
     def test_set_traits(self):
-        """ test that important traits can be set"""
-        # iterate over all Acoular definitions labels
-        for i in dir(ac):
-            j = getattr(ac,i) # class, function or variable
+        """ test that important traitlets can be set"""
+        # iterate over all definitions labels
+        for i in dir(acpl):
+            j = getattr(acpl,i) # class, function or variable
             # HasTraits derived class ?
             if isinstance(j,type) \
                 and issubclass(j,HasTraits) \
@@ -47,13 +46,6 @@ class Test_Instancing(unittest.TestCase):
                                     setattr(obj,k,0.1)
                                 elif tr.is_trait_type(Bool):
                                     setattr(obj,k,False)
-                                elif tr.is_trait_type(Range):
-                                    low = tr.handler._low
-                                    high = tr.handler._high
-                                    setattr(obj,k,(high+low)/2)
-                                elif tr.is_trait_type(TraitEnum) or tr.is_trait_type(Enum):
-                                    v = tr.handler.values
-                                    setattr(obj,k,v[len(v)//2])
 
 if __name__ == '__main__':
     unittest.main()

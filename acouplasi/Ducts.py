@@ -8,9 +8,10 @@ Created on Tue Aug 25 07:35:22 2020
 
 import traitlets as tr
 import numpy as np
-from DuctElement import DuctElement, DuctElement3D
 from numpy import log10
 from numpy import abs
+
+from .DuctElement import DuctElement, DuctElement3D
  
 #%%
        

@@ -8,13 +8,12 @@ Created on Tue Aug 25 09:58:19 2020
 
 import traitlets as tr
 import numpy as np, numpy
-from Fluid import Fluid
-from Cavity import Cavities2D, Cavities3D
-from Plate import Plate, Plate3D
-
 import numba as nb
 
-#%%
+from .Fluid import Fluid
+from .Cavity import Cavities2D, Cavities3D
+from .Plate import Plate, Plate3D
+
 
 class Linings(tr.HasTraits):
     

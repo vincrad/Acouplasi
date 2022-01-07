@@ -30,7 +30,7 @@ setup_requires = list([
         'setuptools',
 	])
 
-setup(name="placeholder", 
+setup(name="acouplasi", 
       version=bf_version, 
       description="Library for calculating Silencers",
       long_description=long_description,
@@ -46,8 +46,8 @@ setup(name="placeholder",
       'Programming Language :: Python :: 3.7',
       'Programming Language :: Python :: 3.8',
       ],
-      keywords='acoustic silencers plates ',
-      packages = ['placeholder'],
+      keywords='acoustic silencers plates mufflers',
+      packages = ['acouplasi'],
 
       install_requires = install_requires,
 

@@ -8,8 +8,9 @@ Created on Tue Aug 25 10:34:23 2020
 
 import traitlets as tr
 import numpy as np
-from Material import Material
-from Temperature import Temperature
+
+from .Material import Material
+from .Temperature import Temperature
 
 #%%
 
