@@ -7,7 +7,7 @@
 
 import unittest
 import acouplasi as acpl
-from traitlets import HasTraits, Int, Float, Bool, Enum
+from traitlets import HasTraits, Int, Float, Bool
 
 class Test_Instancing(unittest.TestCase):
     """Test that ensures that digest of classes changes correctly on
