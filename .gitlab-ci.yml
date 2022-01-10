@@ -33,7 +33,7 @@ test:
     - python3 setup.py install
     - python3 -c 'import acouplasi'
     - chmod +x ./tests/run_tests.sh
-    - cd /tests/
+    - cd ./tests/
     - bash run_tests.sh
     
 
