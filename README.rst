@@ -7,7 +7,7 @@ acouplasi
 **acouplasi** is an easy-to-use Python toolbox for the calculation of Silencers. 
 
 .. Badges:
-.. |python-version| image:: https://img.shields.io/badge/python-3.7%20%7C%203.8-blue
+.. |python-version| image::https://img.shields.io/badge/python-3.7%20|%203.8%20|%20%203.9-blue
    :target: https://www.python.org/
     
 Literature
