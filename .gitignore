@@ -1,0 +1,18 @@
+# files and file types to ignore
+*.pyc
+*.pyd
+*.so
+*~
+
+# ignore the build directories
+*.egg-info/
+.eggs/
+build/
+__pycache__/
+dist/
+__pycache__/
+*.nbc
+*.nbi
+*.pyd
+.vscode/
+*/__pycache__/*

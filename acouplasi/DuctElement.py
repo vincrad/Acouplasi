@@ -8,8 +8,8 @@ Created on Tue Aug 25 09:47:36 2020
 
 import traitlets as tr
 import numpy as np, numpy
-from Fluid import Fluid
-from Linings import Linings, PlateResonators, SinglePlateResonator, SinglePlateResonator3D
+from .Fluid import Fluid
+from .Linings import Linings, PlateResonators, SinglePlateResonator, SinglePlateResonator3D
 
 #%%
 

@@ -9,9 +9,9 @@ Created on Tue Aug 25 11:49:08 2020
 import traitlets as tr
 import numpy as np, numpy
 import numba as nb
-from Fluid import Fluid
 
-#%% 2D Cavities
+from .Fluid import Fluid
+
 
 class Cavities2D(tr.HasTraits):
     

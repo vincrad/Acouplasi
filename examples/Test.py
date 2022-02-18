@@ -12,17 +12,21 @@ Created on Fri Sep  4 14:06:20 2020
 # Schalldämpfer Test
 ##############################################################################
 
-
 import numpy as np, numpy
 import matplotlib.pyplot as plt
-from DuctElement import DuctElement, DuctElement3D
-from Ducts import Duct, Duct3D
-from Temperature import Temperature
-from Fluid import Fluid
-from Material import Material
-from Linings import PlateResonators, SinglePlateResonator, SimpleTwoSidedPlateResonator, SinglePlateResonator3D, SimpleTwoSidedPlateResonator3D
-from Plate import Plate, SimplePlate, DoubleLayerPlate, TripleLayerPlate, Plate3D, SimplePlate3D, DoubleLayerPlate3D, TripleLayerPlate3D
-from Cavity import Cavities2D, Cavity2D, CavityAlt2D, Cavity3D, CavityAlt3D
+
+from acouplasi import DuctElement, DuctElement3D , Duct, Duct3D ,Temperature, Fluid, Material, PlateResonators, SinglePlateResonator,\
+SimpleTwoSidedPlateResonator, SinglePlateResonator3D, SimpleTwoSidedPlateResonator3D , Plate, SimplePlate, DoubleLayerPlate,TripleLayerPlate,\
+Plate3D, SimplePlate3D, DoubleLayerPlate3D, TripleLayerPlate3D, Cavities2D, Cavity2D, CavityAlt2D, Cavity3D, CavityAlt3D
+
+# from DuctElement import DuctElement, DuctElement3D
+# from Ducts import Duct, Duct3D
+# from Temperature import Temperature
+# from Fluid import Fluid
+# from Material import Material
+# from Linings import PlateResonators, SinglePlateResonator, SimpleTwoSidedPlateResonator, SinglePlateResonator3D, SimpleTwoSidedPlateResonator3D
+# from Plate import Plate, SimplePlate, DoubleLayerPlate, TripleLayerPlate, Plate3D, SimplePlate3D, DoubleLayerPlate3D, TripleLayerPlate3D
+# from Cavity import Cavities2D, Cavity2D, CavityAlt2D, Cavity3D, CavityAlt3D
 
 import time
 import numba as nb

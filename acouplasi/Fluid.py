@@ -9,7 +9,7 @@ Created on Tue Aug 25 12:02:55 2020
 import traitlets as tr
 import numpy as np
 from numpy import sqrt
-from Temperature import Temperature
+from .Temperature import Temperature
 
 #%%
     
