@@ -2,15 +2,48 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2021,
 #------------------------------------------------------------------------------
-"""Implements testing of classes
+"""Implements writing of Testdatafile for the silencers.
+   Only run this after major fixes in the Code.
 """
 
-import unittest
 import numpy as np
 
-from acouplasi import DuctElement , Duct ,Temperature, Fluid, Material, SinglePlateResonator,\
-SimpleTwoSidedPlateResonator , SimplePlate, DoubleLayerPlate,\
-DoubleLayerPlate3D, TripleLayerPlate3D, Cavities2D, Cavity2D, CavityAlt2D
+from acouplasi import  DuctElement3D , Duct3D ,Temperature, Fluid, Material,\
+SinglePlateResonator3D, SimplePlate3D,  Cavity3D, DuctElement , Duct ,  SinglePlateResonator,\
+SimpleTwoSidedPlateResonator , SimplePlate, Cavity2D
+
+
+# frequency
+f = np.arange(10, 260, 10)
+# temperature
+temp1 = Temperature(C=20)
+# # number of plate modes
+N = 1
+# plate modes
+j = np.arange(1, N+1, 1)
+k = np.arange(1, N+1, 1)
+l = np.arange(1, N+1, 1)
+n = np.arange(1, N+1, 1)
+# cavity modes
+r = np.arange(0,10,1)
+s = np.arange(0,10,1)
+t = np.arange(0,10,1)
+
+fluid1 = Fluid(temperature=temp1)
+material1 = Material(rho = 2700, mu = .34, E = lambda freq, temp: 7.21e10*(1+1j*.0001))
+plate1 = SimplePlate3D(hp=0.0003, material=material1, temperature=temp1)
+cavity1 = Cavity3D(height=1, r=r, s=s, t=t, medium=fluid1)
+#cavity1 = CavityAlt3D(height=1, r=r, s=s, medium=fluid1)
+lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, t=t, plate=plate1, cavity=cavity1)
+#lining1 = SimpleTwoSidedPlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, t=t, plate=plate1, cavity=cavity1)
+ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
+duct1 = Duct3D(freq=f, height_d=1, elements=[ductelement1])
+
+
+np.save('silencer3d.npy', [duct1.tl(),duct1.coefficients()]) 
+
+#%%
+####### 2D here
 
 # # frequency
 f = np.arange(10,260,10)
@@ -46,33 +79,7 @@ duct1 = Duct(freq=f, height_d=1, elements=[ductelement1])
 duct2 = Duct(freq=f, height_d=1, elements=[ductelement1, ductelement2])
 duct3 = Duct(freq=f, height_d=1, elements=[ductelement3])
 
-Data = np.load('silencer2d.npy', allow_pickle = True)
-
-class Test_Silencer2d(unittest.TestCase):
-    """Test that ensures that the calculation routines of 
-    a 2d plate silence did not change
-    """
-
-    def test_TL(self):
-        """ test that Transmission loss did not changed"""
-        # calculate TL
-        TL1 = duct1.tl()
-        TL2 = duct2.tl()
-        TL3 = duct3.tl()
-        self.assertEqual(TL1[3],Data[0][3])
-        self.assertEqual(TL2[3],Data[2][3])
-        self.assertEqual(TL3[3],Data[4][3])
-        
-        
-    def test_transmission_and_reflection(self):
-        """ test that factors did not change"""
-        t1,r1,d1 = duct1.coefficients()
-        t2,r2,d2 = duct2.coefficients()
-        t3,r3,d3 = duct3.coefficients()
-        self.assertEqual(t1[3],Data[1][0][3])
-        self.assertEqual(r2[3],Data[3][1][3])
-        self.assertEqual(d3[3],Data[5][2][3])
+np.save('silencer2d.npy', [duct1.tl(),duct1.coefficients(),duct2.tl(),duct2.coefficients(),duct3.tl(),duct3.coefficients()]) 
 
 
-if __name__ == '__main__':
-    unittest.main()
+

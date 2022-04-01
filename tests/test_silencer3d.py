@@ -37,6 +37,8 @@ lining1 = SinglePlateResonator3D(length=5, depth=1, j=j, l=l, k=k, n=n, t=t, pla
 ductelement1 = DuctElement3D(lining=lining1, medium=fluid1, M=0)
 duct1 = Duct3D(freq=f, height_d=1, elements=[ductelement1])
 
+Data = np.load('silencer3d.npy', allow_pickle = True)
+
 
 class Test_Silencer3d(unittest.TestCase):
     """Test that ensures that the calculation routines of 
@@ -47,14 +49,14 @@ class Test_Silencer3d(unittest.TestCase):
         """ test that Transmission loss did not changed"""
         # calculate TL
         TL1 = duct1.tl()
-        self.assertEqual(TL1[4],9.267057002970104)
+        self.assertEqual(TL1[4],Data[0][4])
         
     def test_transmission_and_reflection(self):
         """ test that factors did not change"""
         [tra, ref, dis] = duct1.coefficients()
-        self.assertEqual(tra[4],0.11838435156577545)
-        self.assertEqual(ref[4],0.7199828692333913)
-        self.assertEqual(dis[4],0.1616327792008333)
+        self.assertEqual(tra[4],Data[1][0][4])
+        self.assertEqual(ref[4],Data[1][1][4])
+        self.assertEqual(dis[4],Data[1][2][4])
 
 
 
