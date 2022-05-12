@@ -54,6 +54,51 @@ class DuctElement(tr.HasTraits):
         
         return I
     
+    # method calculates the scattering matrix of the duct element
+    def scatteringmatrix(self, height_d, freq):
+        
+        # plate resonator silencer
+        if isinstance(self.lining, PlateResonators)==True:
+            
+            # incident sound
+            I = self.incidentsound(self.M, freq)
+            
+            # plate velocity
+            vp = self.lining.platevelocity(height_d, I, self.M, freq)
+            
+            # transmission factor
+            tra_fac = self.lining.transmissionfactor(vp, height_d, I, self.M, self.medium, freq)
+            
+            # reflection factor
+            ref_fac = self.lining.reflectionfactor(vp, height_d, I, self.M, self.medium, freq)
+            
+            # scattering matrix
+            SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
+            
+            return SM
+        
+        # reflection and absorption silencer
+        else:
+            
+            pass
+        
+    # method calculates the transmission coefficients, reflection coefficient and dissipation coefficient from the scattering matrix of the duct element
+    def scatteringcoefficients(self, height_d, freq):
+        
+        # scattering matrix
+        SM = self.scatteringmatrix(height_d, freq)
+        
+        # transmission coefficient
+        tra = np.abs(SM[1,0,:])**2
+        
+        # reflaction coefficient
+        ref = np.abs(SM[0,0,:])**2*((1-self.M)/(1+self.M))**2
+        
+        # dissipation coefficient
+        dis = 1-tra-ref
+        
+        return tra, ref, dis
+        
     # method calculates the transfer matrix for reflection and absorption silencer
     # or returns the transmission loss for plate silencer
     def tmatrix(self, height_d, freq):
@@ -164,6 +209,51 @@ class DuctElement3D(tr.HasTraits):
         I = -self.lining.length*self.lining.depth*(self.medium.c)**(2+0j)*L*self.medium.rho0*((-1)**(N+0j) - 1)*((-1)**(L + 1+0j) + numpy.exp(x2))*(x0 + x1 + 1)*numpy.exp(-x2)/(N*(-(self.lining.length)**(2+0j)*(k0)**(2+0j) + x0*x3 + x1*x3 + x3))
         
         return I
+    
+        # method calculates the scattering matrix of the duct element
+    def scatteringmatrix(self, height_d, freq):
+        
+        # plate resonator silencer
+        if isinstance(self.lining, PlateResonators)==True:
+            
+            # incident sound
+            I = self.incidentsound(self.M, freq)
+            
+            # plate velocity
+            vp = self.lining.platevelocity(height_d, I, self.M, freq)
+            
+            # transmission factor
+            tra_fac = self.lining.transmissionfactor(vp, height_d, I, self.M, self.medium, freq)
+            
+            # reflection factor
+            ref_fac = self.lining.reflectionfactor(vp, height_d, I, self.M, self.medium, freq)
+            
+            # scattering matrix
+            SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
+            
+            return SM
+        
+        # reflection and absorption silencer
+        else:
+            
+            pass
+        
+    # method calculates the transmission coefficients, reflection coefficient and dissipation coefficient from the scattering matrix of the duct element
+    def scatteringcoefficients(self, height_d, freq):
+        
+        # scattering matrix
+        SM = self.scatteringmatrix(height_d, freq)
+        
+        # transmission coefficient
+        tra = np.abs(SM[1,0,:])**2
+        
+        # reflaction coefficient
+        ref = np.abs(SM[0,0,:])**2*((1-self.M)/(1+self.M))**2
+        
+        # dissipation coefficient
+        dis = 1-tra-ref
+        
+        return tra, ref, dis
 
     # method returns the transmission loss for plate silencer
     def tmatrix(self, height_d, freq):
