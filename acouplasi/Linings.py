@@ -496,17 +496,16 @@ class ReflectionLining(Linings):
     # geometry
     height = tr.Float()
     
-    @property
-    def S(self):
+    def S(self, height_d):
         
-        return self.depth*self.height
+        return self.depth*(2*self.height+height_d)
         
     
     # method calculate kz and Z
-    def Zkz(self, medium, freq):
+    def Zkz(self, medium, height_d, freq):
         
         kz = (2*np.pi*freq)/medium.c
-        Z = (medium.rho0*medium.c*kz)/(self.S*kz)
+        Z = (medium.rho0*medium.c*kz)/(self.S(height_d)*kz)
         
         return (kz, Z)
        
