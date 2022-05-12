@@ -531,11 +531,30 @@ class AbsorptionLining(Linings):
         return self.depth*self.height
     
     
-    # method calculate kz and Z
-    def Zkz(self, medium, freq):
+    # Wall impedance of the porous absorber according to Delany/Bazley
+    def Zw(self, medium, freq):
         
-        # Anpassen nach Vorbild von ReflectionLining!!!
-        pass
+        X = (medium.rho0*freq)/(self.Xi)
+        
+        Za = medium.rho0*medium.c*(1+0.0571*X**(-0.754)-1j*0.087*X**(-0.732))
+        ka = (2*np.pi*freq/medium.c)*(1+0.0978*X**(-0.7)-1j*0.189*X**(-0.595))
+        
+        Zw = -1j*Za*(1/(np.tan(ka*self.dw)))
+        
+        return Zw
+    
+    def Zkz(self, medium, height_d, freq):
+        
+        omega = 2*np.pi*freq
+        k = omega/medium.c
+        
+        Zw = self.Zw(medium, freq)
+        
+        kz = np.sqrt(k**2-((1j*omega*medium.rho0)/(Zw*self.height)))
+    
+        Z = (medium.rho0*medium.c*kz)/(1*kz)
+        
+        return(kz, Z)
 
 
 #%% SinglePlateResonator3D
