@@ -193,7 +193,7 @@ class SinglePlateResonator(PlateResonators):
         
         temp = (1/2)*x0*(-x3*x5 + x3 - x4*x5 + x4)/(self.cavity.medium.c*height_d)
         
-        tra_fac = np.sum(vp*temp, axis=0)+1
+        tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))*(np.sum(vp*temp, axis=0)+1)
         
         return tra_fac
     
@@ -414,7 +414,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         
         temp = (1/2)*x0*(-x3*x5 + x3 - x4*x5 + x4)/(self.cavity.medium.c*height_d)
         
-        tra_fac = np.sum(vp*(2*temp), axis=0)+1
+        tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))*(np.sum(vp*(2*temp), axis=0)+1)
         
         return tra_fac
     
@@ -743,7 +743,7 @@ class SinglePlateResonator3D(PlateResonators):
         
         temp = (1/2)*self.length*J*((-1)**(K + 1+0j) - numpy.exp(1j*x1) + numpy.exp(1j*(numpy.pi*K + x1)) + 1)/(medium.c*height_d*K*(-(self.length)**(2+0j)*(k0)**(2+0j) + (M)**(2+0j)*x0 + 2*M*x0 + x0))
         
-        tra_fac = np.sum(vp*temp, axis=(0,1))+1
+        tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))*(np.sum(vp*temp, axis=(0,1))+1)
         
         return tra_fac
     
@@ -1019,7 +1019,7 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         temp = (1/2)*self.length*J*((-1)**(K + 1+0j) - numpy.exp(1j*x1) + numpy.exp(1j*(numpy.pi*K + x1)) + 1)/(medium.c*height_d*K*(-(self.length)**(2+0j)*(k0)**(2+0j) + (M)**(2+0j)*x0 + 2*M*x0 + x0))
         
         # two-sided plate silencer = 2*temp
-        tra_fac = np.sum(vp*(2*temp), axis=(0,1))+1
+        tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))*(np.sum(vp*(2*temp), axis=(0,1))+1)
         
         return tra_fac
     
