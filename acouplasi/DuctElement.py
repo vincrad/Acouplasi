@@ -80,7 +80,35 @@ class DuctElement(tr.HasTraits):
         # reflection and absorption silencer
         else:
             
-            pass
+            # calculate Z and kz for absorption or reflection lining
+            [kz, Z] = self.lining.Zkz(self.medium, height_d, freq)
+
+            # calculate the transfer matrix for the certain duct element
+            TM = np.array([[np.cos(kz*self.lining.length), 1j*Z*np.sin(kz*self.lining.length)],[1j*(1/Z)*np.sin(kz*self.lining.length), np.cos(kz*self.lining.length)]])
+            
+            # calculate the scattering matrix from transfer matrix
+            # admittance matrix
+            YM = np.empty((2,2,len(freq)), dtype=complex)
+            
+            YM[0,0,:] = TM[1,1,:]/TM[0,1,:]
+            YM[0,1,:] = TM[1,0,:]-((TM[0,0,:]*TM[1,1,:])/(TM[0,1,:]))
+            YM[1,0,:] = -1/TM[0,1,:]
+            YM[1,1,:] = TM[0,0,:]/TM[0,1,:]
+            
+            # scattering matrix of the duct element
+            Z0 = self.medium.rho0*self.medium.c
+            E = np.eye(2, dtype=complex)
+            
+            SM = np.empty((2,2,len(freq)), dtype=complex)
+            
+            for idx, item in enumerate(freq):
+                
+                SM[:,:,idx] = (E-Z0*YM[:,:,idx]) @ np.linalg.inv(E+Z0*YM[:,:,idx])
+            
+            return SM
+            
+            
+            
         
     # method calculates the transmission coefficients, reflection coefficient and dissipation coefficient from the scattering matrix of the duct element
     def scatteringcoefficients(self, height_d, freq):
