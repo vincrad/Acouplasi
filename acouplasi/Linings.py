@@ -197,17 +197,6 @@ class SinglePlateResonator(PlateResonators):
         
         return tra_fac
     
-    # method calculates the transmittance of the plate silencer
-    def transmittance(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmission factor
-        tra_fac = self.transmissionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate transmittance
-        tra = np.abs(tra_fac)**2
-        
-        return tra
-    
     # method calculates the reflection factor of the plate silencer
     def reflectionfactor(self, vp, height_d, I, M, medium, freq):
         
@@ -227,42 +216,6 @@ class SinglePlateResonator(PlateResonators):
         ref_fac = np.sum(vp*temp, axis=0)
         
         return ref_fac
-    
-    # method calculates the reflectance of the plate silencer
-    def reflectance(self, vp, height_d, I, M, medium, freq):
-        
-        # call reflection factor
-        ref_fac = self.reflectionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate reflectance with energetic correction due to mean flow
-        ref = np.abs(ref_fac)**2*((1-M)/(1+M))**2
-        
-        return ref
-    
-    # method calculates the dissipation of the plate silencer
-    def dissipation(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmittance
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # call reflectance
-        ref = self.reflectance(vp, height_d, I, M, medium, freq)
-        
-        # calculate dissipation
-        dis = 1-tra-ref
-        
-        return dis
-    
-    # method calculates the transmission loss of the plate silencer
-    def transmissionloss(self, vp, height_d, I, M, medium, freq):
-        
-        # transmittance
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # transmission loss
-        TL = -10*np.log10(tra)
-        
-        return TL
     
 class SimpleTwoSidedPlateResonator(PlateResonators):
     
@@ -417,18 +370,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))*(np.sum(vp*(2*temp), axis=0)+1)
         
         return tra_fac
-    
-    # method calculates the transmittance of the plate silencer
-    def transmittance(self, vp, height_d, I, M, medium, freq):
         
-        # call transmission factor
-        tra_fac = self.transmissionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate transmittance
-        tra = np.abs(tra_fac)**2
-        
-        return tra
-    
     # method calculates the reflection factor of the plate silencer
     def reflectionfactor(self, vp, height_d, I, M, medium, freq):
         
@@ -448,44 +390,6 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         ref_fac = np.sum(vp*(2*temp), axis=0)
         
         return ref_fac
-    
-    # method calculates the reflectance of the plate silencer
-    def reflectance(self, vp, height_d, I, M, medium, freq):
-        
-        # call reflection factor
-        ref_fac = self.reflectionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate reflectance with energetic correction due to mean flow
-        ref = np.abs(ref_fac)**2*((1-M)/(1+M))**2
-        
-        return ref
-    
-    # method calculates the dissipation of the plate silencer
-    def dissipation(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmittance
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # call reflectance
-        ref = self.reflectance(vp, height_d, I, M, medium, freq)
-        
-        # calculate dissipation
-        dis = 1-tra-ref
-        
-        return dis
-    
-    # method calculates the transmission loss of the plate silencer
-    def transmissionloss(self, vp, height_d, I, M, medium, freq):
-        
-        # transmission coefficient
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)        
-
-        # transmission loss
-        TL = -10*np.log10(tra)        
-
-        return TL 
-    
-
     
 class ReflectionLining(Linings):
     
@@ -765,17 +669,6 @@ class SinglePlateResonator3D(PlateResonators):
         
         return tra_fac
     
-    # method calculates the transmittance of the plate silencer
-    def transmittance(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmission factor
-        tra_fac = self.transmissionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculation of transmittance
-        tra = np.abs(tra_fac)**2
-        
-        return tra
-    
     # method calculates the reflection factor of the plate silencer
     def reflectionfactor(self, vp, height_d, I, M, medium, freq):
         
@@ -797,42 +690,6 @@ class SinglePlateResonator3D(PlateResonators):
         ref_fac = np.sum(vp*temp, axis=(0,1))
         
         return ref_fac
-    
-    # method calculates the reflectance of the plate silencer
-    def reflectance(self, vp, height_d, I, M, medium, freq):
-        
-        # call reflection factor
-        ref_fac = self.reflectionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate reflectance with energetic correction due to mean flow
-        ref = np.abs(ref_fac)**2*((1-M)/(1+M))**2
-        
-        return ref
-    
-    # method calculates the dissipation of the plate silencer
-    def dissipation(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmittance
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # call reflectance
-        ref = self.reflectance(vp, height_d, I, M, medium, freq)
-        
-        # calculate dissipation
-        dis = 1-tra-ref
-        
-        return dis
-    
-    # method calculate the transmission loss of the plate silencer
-    def transmissionloss(self, vp, height_d, I, M, medium, freq):
-        
-        # transmission coefficient
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # transmission loss
-        TL = -10*np.log10(tra)
-        
-        return TL
     
 #%% SimpleTwoSidedPlateResonator3D
 
@@ -1041,17 +898,6 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         
         return tra_fac
     
-    # method calculates the transmittance of the plate silencer
-    def transmittance(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmission factor
-        tra_fac = self.transmissionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate transmittance
-        tra = np.abs(tra_fac)**2
-        
-        return tra
-    
     # method calculates the reflection factor of the plate silencer
     def reflectionfactor(self, vp, height_d, I, M, medium, freq):
         
@@ -1074,40 +920,3 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         ref_fac = np.sum(vp*(2*temp), axis=(0,1))
         
         return ref_fac
-    
-    # method calculates the reflectance of the plate silencer
-    def reflectance(self, vp, height_d, I, M, medium, freq):
-        
-        # call reflection factor
-        ref_fac = self.reflectionfactor(vp, height_d, I, M, medium, freq)
-        
-        # calculate reflectance with energetic correction due mean flow
-        ref = np.abs(ref_fac)**2*((1-M)/(1+M))**2
-        
-        return ref
-    
-    # method calculates the dissipation of the plate silencer
-    def dissipation(self, vp, height_d, I, M, medium, freq):
-        
-        # call transmittance
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # call reflectance
-        ref = self.reflectance(vp, height_d, I, M, medium, freq)
-        
-        # calculate dissipation
-        dis = 1-tra-ref
-        
-        return dis
-    
-    # method calculate the transmission loss of the plate silencer
-    def transmissionloss(self, vp, height_d, I, M, medium, freq):
-        
-        # transmission coefficient
-        tra = self.transmittance(vp, height_d, I, M, medium, freq)
-        
-        # transmission loss
-        TL = -10*np.log10(tra)
-        
-        return TL
-    
