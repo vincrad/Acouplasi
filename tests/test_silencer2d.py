@@ -8,7 +8,9 @@
 import unittest
 import numpy as np
 
-from acouplasi import DuctElement , Duct ,Temperature, Fluid, Material, SinglePlateResonator,\
+from acouplasi import DuctElement , Duct ,Temperature, Fluid, \
+Material, TPU1195A, \
+SinglePlateResonator,\
 SimpleTwoSidedPlateResonator , SimplePlate, DoubleLayerPlate,\
 DoubleLayerPlate3D, TripleLayerPlate3D, Cavities2D, Cavity2D, CavityAlt2D
 
@@ -27,15 +29,16 @@ t = np.arange(0,30,1)
 fluid1 = Fluid(temperature=temp1)
 
 material1 = Material(rho = 2700, mu = .34, E = lambda freq, temp: 7.21e10*(1+1j*.0001))
-#Polyurethane TPU1195A
-TPU1195A = Material(rho = 1150, mu = .48, E = lambda freq, temp: 3.1e8*.97**(temp.C-7*np.log10(freq))+1j*4.7e7*.96**(temp.C-7*np.log10(freq)))
+material2 = TPU1195A
 
-plate1 = SimplePlate(hp=0.0003, material=TPU1195A, temperature=temp1)
+plate1 = SimplePlate(hp=0.0003, material=material1, temperature=temp1)
+plate2 = SimplePlate(hp=0.0003, material=material2, temperature=temp1)
 
-cavity1 = Cavity2D(height=1, r=r, t=t, medium=fluid1)
+cavity1 = Cavity2D(height=1, r=r, t=t, zetart=0.01, medium=fluid1)
+cavity2 = CavityAlt2D(height=0.65, r=r, medium=fluid1)
 
 lining1 = SinglePlateResonator(length=5, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
-lining2 = SimpleTwoSidedPlateResonator(length=5, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
+lining2 = SimpleTwoSidedPlateResonator(length=4.7, depth=1, j=j, l=l, t=t, plate=plate2, cavity=cavity2)
 lining3 = SinglePlateResonator(length=10, depth=1, j=j, l=l, t=t, plate=plate1, cavity=cavity1)
 
 ductelement1 = DuctElement(lining=lining1, medium=fluid1, M=0)
@@ -52,26 +55,25 @@ class Test_Silencer2d(unittest.TestCase):
     """Test that ensures that the calculation routines of 
     a 2d plate silence did not change
     """
-
-    def test_TL(self):
-        """ test that Transmission loss did not changed"""
-        # calculate TL
-        TL1 = duct1.tl()
-        TL2 = duct2.tl()
-        TL3 = duct3.tl()
-        self.assertEqual(TL1[3],Data[0][3])
-        self.assertEqual(TL2[3],Data[2][3])
-        self.assertEqual(TL3[3],Data[4][3])
         
+    def test_scatteringcoefficients(self):
+        """ test that coefficients did not change"""
         
-    def test_transmission_and_reflection(self):
-        """ test that factors did not change"""
-        t1,r1,d1 = duct1.coefficients()
-        t2,r2,d2 = duct2.coefficients()
-        t3,r3,d3 = duct3.coefficients()
-        self.assertEqual(t1[3],Data[1][0][3])
-        self.assertEqual(r2[3],Data[3][1][3])
-        self.assertEqual(d3[3],Data[5][2][3])
+        t1,r1,d1 = duct1.scatteringcoefficients()
+        t2,r2,d2 = duct2.scatteringcoefficients()
+        t3,r3,d3 = duct3.scatteringcoefficients()
+        
+        self.assertEqual(t1[3],Data[0][0][3])
+        self.assertEqual(r1[3],Data[0][1][3])
+        self.assertEqual(d1[3],Data[0][2][3])
+        
+        self.assertEqual(t2[3],Data[1][0][3])
+        self.assertEqual(r2[3],Data[1][1][3])
+        self.assertEqual(d2[3],Data[1][2][3])
+        
+        self.assertEqual(t3[3],Data[2][0][3])
+        self.assertEqual(r3[3],Data[2][1][3])
+        self.assertEqual(d3[3],Data[2][2][3])
 
 
 if __name__ == '__main__':
