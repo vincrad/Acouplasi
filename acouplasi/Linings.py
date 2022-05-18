@@ -25,7 +25,34 @@ class Linings(tr.HasTraits):
     length = tr.Float()
     depth = tr.Float(default_value=1)
     
+class NoLining(Linings):
     
+    '''
+    Class for a simple duct section without lining.
+    '''
+    
+    def transmissionfactor(self, M, medium, freq):
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/medium.c
+        
+        tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))
+        
+        return tra_fac
+    
+    def reflectionfactor(self, M, medium, freq):
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/medium.c
+        
+        ref_fac = (0+0j)*k0
+        
+        return ref_fac
+        
+        
+
 class PlateResonators(Linings):
     
     '''
@@ -459,6 +486,34 @@ class AbsorptionLining(Linings):
         Z = (medium.rho0*medium.c*kz)/(1*kz)
         
         return(kz, Z)
+
+
+#%% 3D-Linings
+class NoLining3D(Linings):
+    
+    '''
+    Class for a simple duct section without lining.
+    '''
+    
+    def transmissionfactor(self, M, medium, freq):
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/medium.c
+        
+        tra_fac = np.exp(-1j*((k0*self.length)/(1+M)))
+        
+        return tra_fac
+    
+    def reflectionfactor(self, M, medium, freq):
+        
+        # circular frequency and wave number
+        omega = 2*np.pi*freq
+        k0 = omega/medium.c
+        
+        ref_fac = (0+0j)*k0
+        
+        return ref_fac
 
 
 #%% SinglePlateResonator3D

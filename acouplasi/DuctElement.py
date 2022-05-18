@@ -9,7 +9,7 @@ Created on Tue Aug 25 09:47:36 2020
 import traitlets as tr
 import numpy as np, numpy
 from .Fluid import Fluid
-from .Linings import Linings, PlateResonators, SinglePlateResonator, SinglePlateResonator3D
+from .Linings import Linings, NoLining, NoLining3D, PlateResonators, SinglePlateResonator, SinglePlateResonator3D
 
 #%%
 
@@ -71,6 +71,19 @@ class DuctElement(tr.HasTraits):
             
             # reflection factor
             ref_fac = self.lining.reflectionfactor(vp, height_d, I, self.M, self.medium, freq)
+            
+            # scattering matrix
+            SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
+            
+            return SM
+        
+        elif isinstance(self.lining, NoLining)==True:
+            
+            # transmission factor
+            tra_fac = self.lining.transmissionfactor(self.M, self.medium, freq)
+            
+            # reflection factor
+            ref_fac = self.lining.reflectionfactor(self.M, self.medium, freq)
             
             # scattering matrix
             SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
@@ -187,6 +200,19 @@ class DuctElement3D(tr.HasTraits):
             SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
             
             return SM
+        
+        elif isinstance(self.lining, NoLining3D)==True:
+            
+            # transmission factor
+            tra_fac = self.lining.transmissionfactor(self.M, self.medium, freq)
+            
+            # reflection factor
+            ref_fac = self.lining.reflectionfactor(self.M, self.medium, freq)
+            
+            # scattering matrix
+            SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
+            
+            return SM        
         
         # reflection and absorption silencer
         else:
