@@ -95,17 +95,24 @@ class SinglePlateResonator(PlateResonators):
         T = self.t[np.newaxis, np.newaxis, :, np.newaxis]
         
         return ((T*np.pi)/(height_d))
-        
     
-    # methode calculate the impedance matrix of the plate resonator
-    def zmatrix(self, height_d, M, freq):
+    # method calls the impedance matrix of the cavity and the plate
+    def zcavplate(self, freq):
+        
+        # cavity impedance matrix
+        Zc = self.cavity.cavityimpedance(self.length, self.depth, self.j, self.l, freq)
+        
+        # plate impedance matrix
+        Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, freq)
+        
+        return Zc, Lmatrix
+    
+    # method calculates the impedance matrix of the plate induced sound
+    def zprad(self, height_d, M, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
         k0 = omega/self.cavity.medium.c
-        
-        # cavity impedance matrix
-        Zc = self.cavity.cavityimpedance(self.length, self.depth, self.j, self.l, freq)
         
         # impedance matrix of the plate induced sound
         # define expanded arrays of modes
@@ -174,23 +181,16 @@ class SinglePlateResonator(PlateResonators):
         # calculate the overall impedance matrix of the plate induced sound
         Zprad = Zplj+Zpll
         
-        # calculate the total impedance matrix of the lining
-        Z = Zc+Zprad
-        
-        return Z
-   
+        return Zprad
+    
     # method calculate the plate velocity
-    def platevelocity(self, height_d, I, M, freq):
+    def platevelocity(self, Zc, Lmatrix, height_d, I, M, freq):
         
-        # impedance matrix
-        Z = self.zmatrix(height_d, M, freq)
+        # impedance matrix of plate induced sound
+        Zprad = self.zprad(height_d, M, freq)
         
-        # L matrix with material properties of the plate
-        Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, freq)
-        
-        # solving the linear system of equations
-        # building lhs matrix from Z and Lmatrix
-        lhs = Z+Lmatrix
+        # build impedance matrix of the overall lining
+        lhs = Zprad+Zc+Lmatrix
         
         # calculate the plate velocity
         vp = np.zeros_like(I, dtype=complex)
@@ -201,7 +201,7 @@ class SinglePlateResonator(PlateResonators):
         return vp
     
     # method calculates the transmission factor of the plate silencer
-    def transmissionfactor(self, vp, height_d, I, M, medium, freq):
+    def transmissionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -225,7 +225,7 @@ class SinglePlateResonator(PlateResonators):
         return tra_fac
     
     # method calculates the reflection factor of the plate silencer
-    def reflectionfactor(self, vp, height_d, I, M, medium, freq):
+    def reflectionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -269,15 +269,23 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         
         return ((T*np.pi)/(height_d))
     
-    # methode calculate the impedance matrix of the plate resonator
-    def zmatrix(self, height_d, M, freq):
+    # method calls the impedance matrix of the cavity and the plate
+    def zcavplate(self, freq):
+        
+        # cavity impedance matrix
+        Zc = self.cavity.cavityimpedance(self.length, self.depth, self.j, self.l, freq)
+        
+        # plate impedance matrix
+        Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, freq)
+        
+        return Zc, Lmatrix
+    
+    # method calculates the impedance matrix of the plate induced sound
+    def zprad(self, height_d, M, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
         k0 = omega/self.cavity.medium.c
-        
-        # cavity impedance matrix
-        Zc = self.cavity.cavityimpedance(self.length, self.depth, self.j, self.l, freq)
         
         # impedance matrix of the plate induced sound
         # define expanded arrays of modes
@@ -348,23 +356,16 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         # calculate the overall impedance matrix of the plate induced sound
         Zprad = Zplj+Zpll
         
-        # calculate the total impedance matrix of the lining
-        Z = Zc+Zprad
-        
-        return Z
-   
+        return Zprad
+    
     # method calculate the plate velocity
-    def platevelocity(self, height_d, I, M, freq):
+    def platevelocity(self, Zc, Lmatrix, height_d, I, M, freq):
         
-        # impedance matrix
-        Z = self.zmatrix(height_d, M, freq)
+        # impedance matrix of plate induced sound
+        Zprad = self.zprad(height_d, M, freq)
         
-        # L matrix with material properties of the plate
-        Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, freq)
-        
-        # solving the linear system of equations
-        # building lhs matrix from Z and Lmatrix
-        lhs = Z+Lmatrix
+        # build impedance matrix of the overall lining
+        lhs = Zprad+Zc+Lmatrix
         
         # calculate the plate velocity
         vp = np.zeros_like(I, dtype=complex)
@@ -375,7 +376,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         return vp
     
     # method calculates the transmission factor of the plate silencer
-    def transmissionfactor(self, vp, height_d, I, M, medium, freq):
+    def transmissionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -399,7 +400,7 @@ class SimpleTwoSidedPlateResonator(PlateResonators):
         return tra_fac
         
     # method calculates the reflection factor of the plate silencer
-    def reflectionfactor(self, vp, height_d, I, M, medium, freq):
+    def reflectionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -666,34 +667,33 @@ class SinglePlateResonator3D(PlateResonators):
     # cavity
     cavity = tr.Instance(Cavities3D)
     
-    # methode calculate the impedance matrix of the plate resonator 
-    # accelerated by numba
-    def zmatrix(self, height_d, M, freq):
+    # method calculates the impedance matrix of the cavity and the plate
+    def zcavplate(self, freq):
         
         # cavity impedance matrix
         Zc = self.cavity.cavityimpedance(self.length, self.depth, self.j, self.k, self.l, self.n, freq)
         
-        # calculate impedance matrix of plate induced sound
-        # accelerated by numba
-        Zprad = get_zprad(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.t, self.length, self.depth, height_d, M, freq)
-        
-        # calculate the total impedance matrix of the lining
-        Z = Zc+Zprad
-        
-        return Z
-    
-    # method calculate the plate velocity
-    def platevelocity(self, height_d, I, M, freq):
-        
-        # impedance matrix
-        Z = self.zmatrix(height_d, M, freq)
-        
-        # L matrix with material properties of the plate
+        # plate impedance matrix
         Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, self.n, freq)
         
-        # solving the linear system of equations
-        # building lhs matrix from Z and Lmatrix
-        lhs = Z+Lmatrix
+        return Zc, Lmatrix
+    
+    # method calculates the impedance matrix of the plate induced sound
+    # accelerated by numba
+    def zprad(self, height_d, M, freq):
+        
+        Zprad = get_zprad(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.t, self.length, self.depth, height_d, M, freq)
+        
+        return Zprad
+    
+    # method calculate the plate velocity
+    def platevelocity(self, Zc, Lmatrix, height_d, I, M, freq):
+        
+        # impedance matrix of plate induced sound
+        Zprad = self.zprad(height_d, M, freq)
+        
+        # build impedance matrix of the overall lining
+        lhs = Zprad+Zc+Lmatrix
         
         #calculate the plate velocity
         vp = np.zeros_like(I, dtype = complex)
@@ -704,7 +704,7 @@ class SinglePlateResonator3D(PlateResonators):
         return vp
     
     # method calculates the transmission factor of the plate silencer
-    def transmissionfactor(self, vp, height_d, I, M, medium, freq):
+    def transmissionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -725,7 +725,7 @@ class SinglePlateResonator3D(PlateResonators):
         return tra_fac
     
     # method calculates the reflection factor of the plate silencer
-    def reflectionfactor(self, vp, height_d, I, M, medium, freq):
+    def reflectionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -894,6 +894,26 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
     # cavities on both sides
     cavity = tr.Instance(Cavities3D)
     
+    # method calculates the impedance matrix of the cavity and the plate
+    def zcavplate(self, freq):
+        
+        # cavity impedance matrix
+        Zc = self.cavity.cavityimpedance(self.length, self.depth, self.j, self.k, self.l, self.n, freq)
+        
+        # plate impedance matrix
+        Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, self.n, freq)
+        
+        return Zc, Lmatrix
+    
+    # method calculates the impedance matrix of the plate induced sound
+    # accelerated by numba
+    def zprad(self, height_d, M, freq):
+        
+        Zprad = get_zprad_twosided(self.cavity.medium.c, self.cavity.medium.rho0, self.j, self.k, self.l, self.n, self.cavity.s, self.t, self.length, self.depth, height_d, M, freq)
+        
+        return Zprad
+    
+    
     # methode calculate the impedance matrix of the plate resonator 
     # accelerated by numba
     def zmatrix(self, height_d, M, freq):
@@ -911,17 +931,13 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         return Z
     
     # method calculate the plate velocity
-    def platevelocity(self, height_d, I, M, freq):
+    def platevelocity(self, Zc, Lmatrix, height_d, I, M, freq):
         
-        # impedance matrix
-        Z = self.zmatrix(height_d, M, freq)
+        # impedance matrix of plate induced sound
+        Zprad = self.zprad(height_d, M, freq)
         
-        # L matrix with material properties of the plate
-        Lmatrix = self.plate.lmatrix(self.length, self.depth, self.l, self.n, freq)
-        
-        # solving the linear system of equations
-        # building lhs matrix from Z and Lmatrix
-        lhs = Z+Lmatrix
+        # build impedance matrix of the overall lining
+        lhs = Zprad+Zc+Lmatrix
         
         #calculate the plate velocity
         vp = np.zeros_like(I, dtype = complex)
@@ -932,7 +948,7 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         return vp
     
     # method calculates the transmission factor of the plate silencer
-    def transmissionfactor(self, vp, height_d, I, M, medium, freq):
+    def transmissionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
@@ -954,7 +970,7 @@ class SimpleTwoSidedPlateResonator3D(PlateResonators):
         return tra_fac
     
     # method calculates the reflection factor of the plate silencer
-    def reflectionfactor(self, vp, height_d, I, M, medium, freq):
+    def reflectionfactor(self, vp, height_d, M, medium, freq):
         
         # circular frequency and wave number
         omega = 2*np.pi*freq
