@@ -69,8 +69,8 @@ class Duct(tr.HasTraits):
         
         return SM  
     
-    # method calculates the transmission coefficient, reflection coefficients and dissipation coefficient of the overall duct from the overall scattering matrix
-    def scatteringcoefficients(self):
+    # method calculates the transmission coefficient, reflection coefficient and dissipation coefficient of the overall duct from the overall scattering matrix
+    def scatteringcoefficients(self, direction:str):
         
         # mach number
         M = self.elements[0].M
@@ -78,16 +78,35 @@ class Duct(tr.HasTraits):
         # scattering matrix of the overall duct
         SM = self.scatteringmatrix()
         
-        # transmittance of the overall duct
-        tra = np.abs(SM[1,0,:])**2
+        if direction == 'forward':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[1,0,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1-M)**2/(1+M)**2)*np.abs(SM[0,0,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # reflectance of the overall duct
-        ref = ((1-M)**2/(1+M)**2)*np.abs(SM[0,0,:])**2
+        elif direction == 'reverse':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[0,1,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1+M)**2/(1-M)**2)*np.abs(SM[1,1,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # dissipation of the overall duct
-        dis = 1-tra-ref
-        
-        return tra, ref, dis
+        else:
+            
+            print('Incorrect choice. Choose forward or reverse.')
         
 #%%
 class Duct3D(tr.HasTraits):
@@ -153,7 +172,7 @@ class Duct3D(tr.HasTraits):
         return SM  
     
     # method calculates the transmission coefficient, reflection coefficients and dissipation coefficient of the overall duct from the overall scattering matrix
-    def scatteringcoefficients(self):
+    def scatteringcoefficients(self, direction:str):
         
         # mach number
         M = self.elements[0].M
@@ -161,13 +180,32 @@ class Duct3D(tr.HasTraits):
         # scattering matrix of the overall duct
         SM = self.scatteringmatrix()
         
-        # transmittance of the overall duct
-        tra = np.abs(SM[1,0,:])**2
+        if direction == 'forward':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[1,0,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1-M)**2/(1+M)**2)*np.abs(SM[0,0,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # reflectance of the overall duct
-        ref = ((1-M)**2/(1+M)**2)*np.abs(SM[0,0,:])**2
+        elif direction == 'reverse':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[0,1,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1+M)**2/(1-M)**2)*np.abs(SM[1,1,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # dissipation of the overall duct
-        dis = 1-tra-ref
-        
-        return tra, ref, dis
+        else:
+            
+            print('Incorrect choice. Choose forward or reverse.')

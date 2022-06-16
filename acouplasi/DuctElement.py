@@ -60,23 +60,53 @@ class DuctElement(tr.HasTraits):
         # plate resonator silencer
         if isinstance(self.lining, PlateResonators)==True:
             
+            ## independent of the Mach number
+            # call cavity and plate impedance matrices
+            Zc, Lmatrix = self.lining.zcavplate(freq)
+            
+            ## forward
+            # calculate with the passed Mach number
             # incident sound
             I = self.incidentsound(self.M, freq)
             
             # plate velocity
-            vp = self.lining.platevelocity(height_d, I, self.M, freq)
+            vp = self.lining.platevelocity(Zc, Lmatrix, height_d, I, self.M, freq)
             
             # transmission factor
-            tra_fac = self.lining.transmissionfactor(vp, height_d, I, self.M, self.medium, freq)
+            tra_fac = self.lining.transmissionfactor(vp, height_d, self.M, self.medium, freq)
             
             # reflection factor
-            ref_fac = self.lining.reflectionfactor(vp, height_d, I, self.M, self.medium, freq)
+            ref_fac = self.lining.reflectionfactor(vp, height_d, self.M, self.medium, freq)
+            
+            if self.M != 0:
+                
+                ## reverse
+                # calculate with the negative value of the passed Mach number
+                # incident sound
+                I_reverse = self.incidentsound(-self.M, freq)
+                
+                # plate velocity
+                vp_reverse = self.lining.platevelocity(Zc, Lmatrix, height_d, I_reverse, -self.M, freq)
+                
+                # transmission factor
+                tra_fac_reverse = self.lining.transmissionfactor(vp_reverse, height_d, -self.M, self.medium, freq)
+                
+                # reflection factor
+                ref_fac_reverse = self.lining.reflectionfactor(vp_reverse, height_d, -self.M, self.medium, freq)
+                
+            else:
+                
+                # transmission factor
+                tra_fac_reverse = np.copy(tra_fac)
+                
+                # reflection factor
+                ref_fac_reverse = np.copy(ref_fac)
             
             # scattering matrix
-            SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
-            
+            SM = np.array([[ref_fac, tra_fac_reverse], [tra_fac, ref_fac_reverse]])
+                
             return SM
-        
+            
         elif isinstance(self.lining, NoLining)==True:
             
             # transmission factor
@@ -124,21 +154,40 @@ class DuctElement(tr.HasTraits):
             
         
     # method calculates the transmission coefficients, reflection coefficient and dissipation coefficient from the scattering matrix of the duct element
-    def scatteringcoefficients(self, height_d, freq):
+    def scatteringcoefficients(self, height_d, freq, direction:str):
         
         # scattering matrix
         SM = self.scatteringmatrix(height_d, freq)
         
-        # transmission coefficient
-        tra = np.abs(SM[1,0,:])**2
+        if direction == 'forward':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[1,0,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1-self.M)**2/(1+self.M)**2)*np.abs(SM[0,0,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # reflaction coefficient
-        ref = np.abs(SM[0,0,:])**2*((1-self.M)/(1+self.M))**2
+        elif direction == 'reverse':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[0,1,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1+self.M)**2/(1-self.M)**2)*np.abs(SM[1,1,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # dissipation coefficient
-        dis = 1-tra-ref
-        
-        return tra, ref, dis
+        else:
+            
+            print('Incorrect choice. Choose forward or reverse.')
         
 #%%
 
@@ -180,25 +229,55 @@ class DuctElement3D(tr.HasTraits):
     
         # method calculates the scattering matrix of the duct element
     def scatteringmatrix(self, height_d, freq):
-        
+            
         # plate resonator silencer
         if isinstance(self.lining, PlateResonators)==True:
             
+            ## independent of the Mach number
+            # call cavity and plate impedance matrices
+            Zc, Lmatrix = self.lining.zcavplate(freq)
+            
+            ## forward
+            # calculate with the passed Mach number
             # incident sound
             I = self.incidentsound(self.M, freq)
             
             # plate velocity
-            vp = self.lining.platevelocity(height_d, I, self.M, freq)
+            vp = self.lining.platevelocity(Zc, Lmatrix, height_d, I, self.M, freq)
             
             # transmission factor
-            tra_fac = self.lining.transmissionfactor(vp, height_d, I, self.M, self.medium, freq)
+            tra_fac = self.lining.transmissionfactor(vp, height_d, self.M, self.medium, freq)
             
             # reflection factor
-            ref_fac = self.lining.reflectionfactor(vp, height_d, I, self.M, self.medium, freq)
+            ref_fac = self.lining.reflectionfactor(vp, height_d, self.M, self.medium, freq)
+            
+            if self.M != 0:
+                
+                ## reverse
+                # calculate with the negative value of the passed Mach number
+                # incident sound
+                I_reverse = self.incidentsound(-self.M, freq)
+                
+                # plate velocity
+                vp_reverse = self.lining.platevelocity(Zc, Lmatrix, height_d, I_reverse, -self.M, freq)
+                
+                # transmission factor
+                tra_fac_reverse = self.lining.transmissionfactor(vp_reverse, height_d, -self.M, self.medium, freq)
+                
+                # reflection factor
+                ref_fac_reverse = self.lining.reflectionfactor(vp_reverse, height_d, -self.M, self.medium, freq)
+                
+            else:
+                
+                # transmission factor
+                tra_fac_reverse = np.copy(tra_fac)
+                
+                # reflection factor
+                ref_fac_reverse = np.copy(ref_fac)
             
             # scattering matrix
-            SM = np.array([[ref_fac, tra_fac], [tra_fac, ref_fac]])
-            
+            SM = np.array([[ref_fac, tra_fac_reverse], [tra_fac, ref_fac_reverse]])
+                
             return SM
         
         elif isinstance(self.lining, NoLining3D)==True:
@@ -220,18 +299,37 @@ class DuctElement3D(tr.HasTraits):
             pass
         
     # method calculates the transmission coefficients, reflection coefficient and dissipation coefficient from the scattering matrix of the duct element
-    def scatteringcoefficients(self, height_d, freq):
+    def scatteringcoefficients(self, height_d, freq, direction:str):
         
         # scattering matrix
         SM = self.scatteringmatrix(height_d, freq)
         
-        # transmission coefficient
-        tra = np.abs(SM[1,0,:])**2
+        if direction == 'forward':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[1,0,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1-self.M)**2/(1+self.M)**2)*np.abs(SM[0,0,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # reflaction coefficient
-        ref = np.abs(SM[0,0,:])**2*((1-self.M)/(1+self.M))**2
+        elif direction == 'reverse':
+            
+            # transmittance of the overall duct
+            tra = np.abs(SM[0,1,:])**2
+            
+            # reflectance of the overall duct
+            ref = ((1+self.M)**2/(1-self.M)**2)*np.abs(SM[1,1,:])**2
+            
+            # dissipation of the overall duct
+            dis = 1-tra-ref
+            
+            return tra, ref, dis
         
-        # dissipation coefficient
-        dis = 1-tra-ref
-        
-        return tra, ref, dis
+        else:
+            
+            print('Incorrect choice. Choose forward or reverse.')
