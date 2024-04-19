@@ -1,0 +1,42 @@
+{
+    "title": "Acouplasi v24.04",
+    "upload_type": "software",
+    "description": "<p><strong>Acouplasi</strong> is a Python toolbox for calculating plate resonator silencer.</p>",
+    "access_right": "open",
+    "license": "BSD-3-Clause",
+    "keywords": [
+      "acoustics",
+      "plate resonator",
+      "silencer"
+    ],
+    "creators": [
+        {
+            "affiliation": "Department of Engineering Acoustics, TU Berlin",
+            "name": "Radmann, Vincent",
+            "orcid": "0009-0006-3055-0048"
+          },
+          {
+            "name": "Schwäricke, Felix"
+          },
+          {
+            "name": "Jekosch, Simon"
+          },
+          {
+            "affiliation": "Department of Engineering Acoustics, TU Berlin",
+            "name": "Sarradj, Ennes",
+            "orcid": "0000-0002-0274-8456"
+          }    
+    ],
+    "contributors": [
+        {
+            "name": "Schneehagen, Erik W.",
+            "type": "Other",
+            "orcid": "0000-0002-1372-859X"
+        },
+        {
+            "name": "Jüterbock, Tobias",
+            "type": "Other"
+        }
+    ],
+    "references": ["Radmann, V., Kohlenberg, F. and Sarradj, E.: Modeling of a 3D Plate Resonator Liner and Comparison to Numerical and Experimental Investigations. AIAA AVIATION 2023 Forum, American Institute of Aeronautics and Astronautics, 2023, DOI: 10.2514/6.2023-3639"]
+  }
